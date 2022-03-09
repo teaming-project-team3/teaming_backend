@@ -32,3 +32,14 @@ export class AuthCredentialsDto {
   @MaxLength(20)
   passwordCheck: string;
 }
+
+export class AuthSignUpDto {
+  @IsEmail()
+  email: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(3)
+  @MaxLength(20)
+  password: string;
+}

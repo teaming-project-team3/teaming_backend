@@ -6,15 +6,15 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { AuthCredentialsDto } from './dto/auth-credential.dto';
+import { AuthCredentialsDto, AuthSignUpDto } from './dto/auth-credential.dto';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersRepository {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  async create(authcredentialsDto: AuthCredentialsDto): Promise<any> {
-    const { email, nickname, password, passwordCheck } = authcredentialsDto;
+  async create(authCredentialsDto: AuthCredentialsDto): Promise<any> {
+    const { email, nickname, password, passwordCheck } = authCredentialsDto;
 
     if (password !== passwordCheck) {
       return { msg: 'IsNotEqual', boolean: false };
@@ -35,10 +35,15 @@ export class UsersRepository {
     } catch (error) {
       console.log(error);
       if (error.code === 11000) {
-        throw new ConflictException('Exisiting username');
+        throw new ConflictException(`Exisiting ${Object.keys(error.keyValue)}`);
       } else {
         throw new InternalServerErrorException();
       }
     }
+  }
+
+  async findOne(authSignUpDto: AuthSignUpDto): Promise<any> {
+    const { email } = authSignUpDto;
+    return await this.userModel.findOne({ email });
   }
 }
