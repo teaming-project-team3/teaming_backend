@@ -5,7 +5,12 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb://localhost/nest'), AuthModule],
+  imports: [
+    MongooseModule.forRoot('mongodb://localhost/nest', {
+      autoIndex: true,
+    }),
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

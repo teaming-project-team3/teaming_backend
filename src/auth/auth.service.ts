@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import { Model } from 'mongoose';
-import { User } from './auth.model';
+import { User } from './auth.interface';
+import { UsersRepository } from './users.repository';
 @Injectable()
 export class AuthService {
-  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
 
   async signUp(authcredentialsDto: AuthCredentialsDto): Promise<any> {
     const { password, passwordCheck } = authcredentialsDto;
@@ -13,11 +14,7 @@ export class AuthService {
       return { msg: 'IsNotEqual', boolean: false };
     }
 
-    const existUsers = await this.userModel.findOne({});
-    await this.userModel.create({
-      ...authcredentialsDto,
-      createdAt: new Date(),
-    });
+    await this.usersRepository.create(authcredentialsDto);
     return { msg: '회원가입 성공', boolean: true };
   }
 }

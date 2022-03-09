@@ -15,23 +15,20 @@ export class AuthCredentialsDto {
   @IsString()
   @MinLength(3)
   @MaxLength(20)
+  @Matches(/^[a-zA-Z0-9]*$/, {
+    message: 'pwd only accepts english and number',
+  })
   nickname: string;
 
   @IsNotEmpty()
   @IsString()
   @MinLength(3)
   @MaxLength(20)
-  @Matches(/^[a-zA-Z0-9]*$/, {
-    message: 'pwd only accepts english and number',
-  })
   password: string;
 
   @IsNotEmpty()
   @IsString()
   @MinLength(3)
   @MaxLength(20)
-  @Matches(/^[a-zA-Z0-9]*$/, {
-    message: 'pwd only accepts english and number',
-  })
   passwordCheck: string;
 }
