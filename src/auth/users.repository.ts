@@ -46,4 +46,8 @@ export class UsersRepository {
     const { email } = authSignUpDto;
     return await this.userModel.findOne({ email });
   }
+
+  async findOneByEmail(email: string): Promise<any> {
+    return await this.userModel.findOne({ email });
+  }
 }

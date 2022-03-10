@@ -26,7 +26,7 @@ export class AuthService {
       return {
         msg: '로그인 성공',
         boolean: true,
-        Authorization: `Bearea ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       };
     } else {
       throw new UnauthorizedException({ msg: '로그인 실패', boolean: false });
