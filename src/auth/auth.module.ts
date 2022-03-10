@@ -4,10 +4,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtStrategy } from './strategy/jwt.strategy';
 import { User, UserSchema } from './schemas/user.schema';
 import { UsersRepository } from './users.repository';
 import * as dotenv from 'dotenv';
+import { HttpModule } from '@nestjs/axios';
 dotenv.config();
 @Module({
   imports: [
@@ -19,6 +20,7 @@ dotenv.config();
       },
     }),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    HttpModule,
   ],
   controllers: [AuthController],
 

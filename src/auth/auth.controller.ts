@@ -1,7 +1,11 @@
 import {
   Body,
   Controller,
+  Get,
+  HttpCode,
   Post,
+  Req,
+  Res,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -12,7 +16,7 @@ import { AuthCredentialsDto, AuthSignUpDto } from './dto/auth-credential.dto';
 import { GetUser } from './get-user.decorator';
 import { User } from './schemas/user.schema';
 
-@Controller('users')
+@Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
@@ -37,4 +41,9 @@ export class AuthController {
     const temp = Object(test);
     console.log(temp);
   }
+
+  // @Get('/kakao')
+  // @HttpCode(200)
+  // @UseGuards(AuthGuard('kakao'))
+  // @Get('/kakao/redirect')
 }
