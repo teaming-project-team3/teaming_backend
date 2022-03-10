@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-kakao';
 import { UsersRepository } from '../users.repository';
@@ -33,6 +33,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
         kakao_account.has_email && !kakao_account.email_needs_agreement
           ? kakao_account.email
           : null,
+      accessToken,
     };
     done(null, payload);
   }

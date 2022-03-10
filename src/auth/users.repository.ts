@@ -42,6 +42,15 @@ export class UsersRepository {
     }
   }
 
+  async createKakao(userKakaoDto: UserKakaoDto) {
+    const { email, name, kakaoId } = userKakaoDto;
+    await this.userModel.create({
+      email,
+      nickname: name,
+      createdAt: new Date(),
+    });
+  }
+
   async findOne(authSignUpDto: AuthSignUpDto): Promise<any> {
     const { email } = authSignUpDto;
     return await this.userModel.findOne({ email });

@@ -1,6 +1,7 @@
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
@@ -38,4 +39,21 @@ export class AuthSignUpDto {
   @MinLength(3)
   @MaxLength(20)
   password: string;
+}
+
+export class UserKakaoDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsEmail()
+  email: string | null;
+
+  @IsString()
+  @IsNotEmpty()
+  kakaoId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  accessToken: string;
 }

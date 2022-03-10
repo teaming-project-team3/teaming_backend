@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpStatus,
   Post,
   Req,
   Res,
@@ -12,7 +13,11 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import mongoose from 'mongoose';
 import { AuthService } from './auth.service';
-import { AuthCredentialsDto, AuthSignUpDto } from './dto/auth-credential.dto';
+import {
+  AuthCredentialsDto,
+  AuthSignUpDto,
+  UserKakaoDto,
+} from './dto/auth-credential.dto';
 import { GetUser } from './get-user.decorator';
 import { User } from './schemas/user.schema';
 
@@ -42,8 +47,17 @@ export class AuthController {
     console.log(temp);
   }
 
-  // @Get('/kakao')
-  // @HttpCode(200)
-  // @UseGuards(AuthGuard('kakao'))
-  // @Get('/kakao/redirect')
+  @Get('/kakao')
+  @HttpCode(200)
+  @UseGuards(AuthGuard('kakao'))
+  async kakaoLogin() {
+    return HttpStatus.OK;
+  }
+
+  @Get('/kakao/redirect')
+  @HttpCode(200)
+  @UseGuards(AuthGuard('kakao'))
+  async kakaoLoginCallback(@Req() req): Promise<any> {
+    return this.authService.kakaoLogin(req.user as UserKakaoDto);
+  }
 }

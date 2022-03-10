@@ -1,5 +1,14 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthCredentialsDto, AuthSignUpDto } from './dto/auth-credential.dto';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import {
+  AuthCredentialsDto,
+  AuthSignUpDto,
+  UserKakaoDto,
+} from './dto/auth-credential.dto';
 import { UsersRepository } from './users.repository';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
@@ -31,5 +40,31 @@ export class AuthService {
     } else {
       throw new UnauthorizedException({ msg: '로그인 실패', boolean: false });
     }
+  }
+
+  async kakaoLogin(userKakaoDto: UserKakaoDto): Promise<any> {
+    const { kakaoId, name, email } = userKakaoDto;
+
+    try {
+      await this.usersRepository.createKakao({
+        kakaoId,
+        name,
+        email,
+      });
+    } catch (error) {
+      console.log(error);
+      if (error.code === 11000) {
+        throw new ConflictException(`Exisiting ${Object.keys(error.keyValue)}`);
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
+    const payload = { email, accessToken: userKakaoDto.accessToken };
+    const accessToken = await this.jwtService.sign(payload);
+    return {
+      msg: '카카오 로그인 성공',
+      boolean: true,
+      Authorization: `Bearer ${accessToken}`,
+    };
   }
 }

@@ -9,6 +9,7 @@ import { User, UserSchema } from './schemas/user.schema';
 import { UsersRepository } from './users.repository';
 import * as dotenv from 'dotenv';
 import { HttpModule } from '@nestjs/axios';
+import { KakaoStrategy } from './strategy/kakao.strategy';
 dotenv.config();
 @Module({
   imports: [
@@ -25,7 +26,7 @@ dotenv.config();
   controllers: [AuthController],
 
   // proviers에는 해당 모듈에서 사용하기 위한 것들을 등록
-  providers: [AuthService, UsersRepository, JwtStrategy],
+  providers: [AuthService, UsersRepository, JwtStrategy, KakaoStrategy],
   // 해당 모듈을 제외한 외부에서 사용하고 싶다면 exports에 등록
   exports: [JwtStrategy, PassportModule],
 })
