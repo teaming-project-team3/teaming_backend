@@ -15,19 +15,19 @@ export class AuthService {
     return await this.usersRepository.create(authCredentialsDto);
   }
 
-  async signIn(authSignUpDto: AuthSignUpDto): Promise<object> {
+  async signIn(authSignUpDto: AuthSignUpDto): Promise<any> {
     const { email, password } = authSignUpDto;
     const user = await this.usersRepository.findOne(authSignUpDto);
 
     if (user && (await bcrypt.compare(password, user.password))) {
       // 유저 토큰 생성
       const payload = { email };
-      const accessToken = await this.jwtService.sign(payload);
-      return Object.assign({
+      const accessToken = this.jwtService.sign(payload);
+      return {
         msg: '로그인 성공',
         boolean: true,
         Authorization: `Bearer ${accessToken}`,
-      });
+      };
     } else {
       throw new UnauthorizedException({ msg: '로그인 실패', boolean: false });
     }
