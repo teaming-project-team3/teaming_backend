@@ -23,11 +23,11 @@ export class AuthService {
       // 유저 토큰 생성
       const payload = { email };
       const accessToken = await this.jwtService.sign(payload);
-      return {
+      return Object.assign({
         msg: '로그인 성공',
         boolean: true,
         Authorization: `Bearer ${accessToken}`,
-      };
+      });
     } else {
       throw new UnauthorizedException({ msg: '로그인 실패', boolean: false });
     }
