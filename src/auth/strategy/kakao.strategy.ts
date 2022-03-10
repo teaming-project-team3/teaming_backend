@@ -1,17 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-kakao';
-import { UsersRepository } from '../users.repository';
 import * as dotenv from 'dotenv';
-import { AuthService } from '../auth.service';
 dotenv.config();
 
 @Injectable()
 export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
-  constructor(
-    private readonly usersRepository: UsersRepository,
-    private readonly authService: AuthService,
-  ) {
+  constructor() {
     super({
       clientID: process.env.KAKAO_KEY,
       callbackURL: process.env.KAKAO_CALLBACK_URL,
@@ -24,6 +19,16 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     profile: any,
     done: any,
   ): Promise<any> {
+    console.log('accessToken : ', accessToken);
+    console.log('=============================');
+    console.log('refreshToken : ', refreshToken);
+    console.log('=============================');
+
+    console.log('profile : ', profile);
+    console.log('=============================');
+
+    console.log('done : ', done);
+
     const profileJson = profile._json;
     const kakao_account = profileJson.kakao_account;
     const payload = {

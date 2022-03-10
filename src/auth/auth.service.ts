@@ -46,11 +46,7 @@ export class AuthService {
     const { kakaoId, name, email } = userKakaoDto;
 
     try {
-      await this.usersRepository.createKakao({
-        kakaoId,
-        name,
-        email,
-      });
+      await this.usersRepository.createKakao(userKakaoDto);
     } catch (error) {
       console.log(error);
       if (error.code === 11000) {
