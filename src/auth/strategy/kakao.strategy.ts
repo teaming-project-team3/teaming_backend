@@ -9,7 +9,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
   constructor() {
     super({
       clientID: process.env.KAKAO_KEY,
-      callbackURL: process.env.KAKAO_CALLBACK_URL,
+      callbackURL: 'http://localhost:3000/auth/kakao/redirect',
     });
   }
 
