@@ -7,10 +7,10 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { User, UserSchema } from './schemas/user.schema';
 import { UsersRepository } from './users.repository';
-import * as dotenv from 'dotenv';
 import { HttpModule } from '@nestjs/axios';
 import { KakaoStrategy } from './strategy/kakao.strategy';
-dotenv.config();
+// import * as dotenv from 'dotenv';
+// dotenv.config();
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),

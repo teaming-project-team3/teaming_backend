@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-kakao';
-import * as dotenv from 'dotenv';
-dotenv.config();
+// import * as dotenv from 'dotenv';
+// dotenv.config();
 
 @Injectable()
 export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
@@ -23,10 +23,8 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     console.log('=============================');
     console.log('refreshToken : ', refreshToken);
     console.log('=============================');
-
     console.log('profile : ', profile);
     console.log('=============================');
-
     console.log('done : ', done);
 
     const profileJson = profile._json;
