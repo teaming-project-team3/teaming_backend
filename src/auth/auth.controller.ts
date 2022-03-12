@@ -37,20 +37,6 @@ export class AuthController {
     return this.authService.signIn(authSignInDto);
   }
 
-  @Post('/test')
-  @UseGuards(AuthGuard())
-  test(@GetUser() user: User) {
-    console.log(user._id);
-
-    console.log(String(user._id));
-    const test = String(user._id);
-    console.log(new mongoose.Types.ObjectId(test));
-
-    const ttttt = this.authService.findAll();
-    console.log(ttttt);
-    return ttttt;
-  }
-
   @Get('/kakao')
   @HttpCode(200)
   @UseGuards(AuthGuard('kakao'))
@@ -63,5 +49,25 @@ export class AuthController {
   @UseGuards(AuthGuard('kakao'))
   async kakaoLoginCallback(@Req() req): Promise<any> {
     return this.authService.kakaoLogin(req.user as UserKakaoDto);
+  }
+
+  @Get('/kakao/logout')
+  @HttpCode(200)
+  @UseGuards(AuthGuard())
+  async kakaoLogout(@Req() req): Promise<any> {
+    return this.authService.kakaoLogout(req);
+  }
+
+  @Post('/test')
+  @UseGuards(AuthGuard())
+  test(@GetUser() userObj, @Req() req) {
+    console.log(req);
+    console.log('======================================');
+    console.log(userObj);
+    const { user } = userObj;
+    console.log(user);
+    console.log(String(user._id));
+    const test = String(user._id);
+    console.log(new mongoose.Types.ObjectId(test));
   }
 }

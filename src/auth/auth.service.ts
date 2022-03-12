@@ -12,13 +12,17 @@ import {
 import { UsersRepository } from './users.repository';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class AuthService {
+  private http: HttpService;
   constructor(
     private readonly usersRepository: UsersRepository,
     private jwtService: JwtService,
-  ) {}
+  ) {
+    this.http = new HttpService();
+  }
 
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<any> {
     return await this.usersRepository.create(authCredentialsDto);
@@ -64,7 +68,16 @@ export class AuthService {
     };
   }
 
-  async findAll(): Promise<any> {
+  async kakaoLogout(req): Promise<any> {
+    const KAKAO_ACCESS_TOKEN = req.accessToken;
+    const _url = 'https://kapi.kakao.com/v1/user/unlink';
+    const _header = {
+      Authorization: `bearer ${KAKAO_ACCESS_TOKEN}`,
+    };
+    return await this.http.post(_url, '', { headers: _header });
+  }
+
+  async UserfindAll(): Promise<any> {
     return await this.usersRepository.find();
   }
 }

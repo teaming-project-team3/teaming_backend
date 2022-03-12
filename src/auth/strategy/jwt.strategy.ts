@@ -17,12 +17,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload) {
-    const { email } = payload;
-    const user: User = await this.usersRepository.findOneByEmail(email);
+    const { email, nickname, kakaoAccessToken } = payload;
 
+    const user = await this.usersRepository.findOneByEmail(email);
     if (!user) {
       throw new UnauthorizedException({ msg: '사이트 회원이 아닙니다.' });
     }
-    return user;
+    const userObj = {
+      kakaoToken: 'kakaoToken',
+      user,
+    };
+
+    return userObj;
   }
 }
