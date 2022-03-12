@@ -19,7 +19,7 @@ import {
   UserKakaoDto,
 } from './dto/auth-credential.dto';
 import { GetUser } from './get-user.decorator';
-import { User } from './schemas/user.schema';
+import { User } from '../schemas/user.schema';
 
 @Controller('auth')
 export class AuthController {
@@ -40,11 +40,15 @@ export class AuthController {
   @Post('/test')
   @UseGuards(AuthGuard())
   test(@GetUser() user: User) {
+    console.log(user._id);
+
     console.log(String(user._id));
     const test = String(user._id);
     console.log(new mongoose.Types.ObjectId(test));
-    const temp = Object(test);
-    console.log(temp);
+
+    const ttttt = this.authService.findAll();
+    console.log(ttttt);
+    return ttttt;
   }
 
   @Get('/kakao')

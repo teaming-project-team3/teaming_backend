@@ -30,6 +30,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
 
     const profileJson = profile._json;
     const kakao_account = profileJson.kakao_account;
+    const provider = profile.provider;
     const payload = {
       name: kakao_account.profile.nickname,
       kakaoId: profileJson.id,
@@ -37,7 +38,9 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
         kakao_account.has_email && !kakao_account.email_needs_agreement
           ? kakao_account.email
           : null,
-      accessToken,
+      kakaoAccessToken: accessToken,
+      provider,
+      profileUrl: kakao_account.profile.profile_image,
     };
     done(null, payload);
   }

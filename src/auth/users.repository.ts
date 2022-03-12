@@ -1,4 +1,4 @@
-import { User, UserDocument } from './schemas/user.schema';
+import { User, UserDocument } from '../schemas/user.schema';
 import {
   ConflictException,
   Injectable,
@@ -8,7 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
   AuthCredentialsDto,
-  AuthSignUpDto,
+  AuthSignInDto,
   UserKakaoDto,
 } from './dto/auth-credential.dto';
 import * as bcrypt from 'bcryptjs';
@@ -47,20 +47,25 @@ export class UsersRepository {
   }
 
   async createKakao(userKakaoDto: UserKakaoDto) {
-    const { email, name, kakaoId } = userKakaoDto;
+    const { kakaoId, name, email, provider, profileUrl } = userKakaoDto;
     await this.userModel.create({
       email,
-      nickname: name,
+      nickname: name + '&' + kakaoId,
+      profileUrl,
       createdAt: new Date(),
     });
   }
 
-  async findOne(authSignUpDto: AuthSignUpDto): Promise<any> {
-    const { email } = authSignUpDto;
+  async findOne(authSignInDto: AuthSignInDto): Promise<any> {
+    const { email } = authSignInDto;
     return await this.userModel.findOne({ email });
   }
 
   async findOneByEmail(email: string): Promise<any> {
     return await this.userModel.findOne({ email });
+  }
+
+  async find(): Promise<any> {
+    return await this.userModel.find().exec();
   }
 }

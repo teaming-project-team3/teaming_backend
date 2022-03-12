@@ -45,6 +45,7 @@ export class User {
     default: null,
   })
   createdAt: Date;
+
   @Prop({
     default: null,
   })

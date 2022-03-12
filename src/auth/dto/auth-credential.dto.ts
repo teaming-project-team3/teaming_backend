@@ -30,7 +30,7 @@ export class AuthCredentialsDto {
   passwordCheck: string;
 }
 
-export class AuthSignUpDto {
+export class AuthSignInDto {
   @IsEmail()
   email: string;
 
@@ -55,5 +55,11 @@ export class UserKakaoDto {
 
   @IsString()
   @IsNotEmpty()
-  accessToken: string;
+  kakaoAccessToken: string;
+
+  @IsString()
+  provider: string;
+
+  @IsString()
+  profileUrl: string;
 }
