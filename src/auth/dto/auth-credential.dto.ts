@@ -1,8 +1,11 @@
 import {
+  IsAlphanumeric,
+  IsBase64,
   IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
+  Matches,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -15,6 +18,9 @@ export class AuthCredentialsDto {
   @IsString()
   @MinLength(3)
   @MaxLength(20)
+  @Matches(/^[a-zA-Zㄱ-힣0-9]*$/g, {
+    message: '특수문자는 사용할 수 없습니다.',
+  })
   nickname: string;
 
   @IsNotEmpty()
