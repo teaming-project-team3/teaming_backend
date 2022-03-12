@@ -15,7 +15,7 @@ import mongoose from 'mongoose';
 import { AuthService } from './auth.service';
 import {
   AuthCredentialsDto,
-  AuthSignUpDto,
+  AuthSignInDto,
   UserKakaoDto,
 } from './dto/auth-credential.dto';
 import { GetUser } from './get-user.decorator';
@@ -33,8 +33,8 @@ export class AuthController {
   }
 
   @Post('/signin')
-  signIn(@Body(ValidationPipe) authSignUpDto: AuthSignUpDto): Promise<object> {
-    return this.authService.signIn(authSignUpDto);
+  signIn(@Body(ValidationPipe) authSignInDto: AuthSignInDto): Promise<object> {
+    return this.authService.signIn(authSignInDto);
   }
 
   @Post('/test')
