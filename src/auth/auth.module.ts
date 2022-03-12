@@ -27,7 +27,7 @@ import { KakaoStrategy } from './strategy/kakao.strategy';
 
   // proviers에는 해당 모듈에서 사용하기 위한 것들을 등록
   providers: [AuthService, UsersRepository, JwtStrategy, KakaoStrategy],
-  // 해당 모듈을 제외한 외부에서 사용하고 싶다면 exports에 등록
+  // 해당 모듈을 제외한 외부모듈에서 사용하고 싶다면 exports에 등록
   exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}

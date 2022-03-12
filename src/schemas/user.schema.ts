@@ -50,7 +50,6 @@ export class User {
     default: null,
   })
   updatedAt: Date;
-
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
