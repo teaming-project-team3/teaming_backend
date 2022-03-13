@@ -6,8 +6,8 @@ import {
   HttpStatus,
   Post,
   Req,
-  Res,
   UseGuards,
+  UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -19,9 +19,10 @@ import {
   UserKakaoDto,
 } from './dto/auth-credential.dto';
 import { GetUser } from './get-user.decorator';
-import { User } from '../schemas/user.schema';
+import { SuccessInterceptor } from '../common/interceptors/success.interceptor';
 
 @Controller('auth')
+@UseInterceptors(SuccessInterceptor)
 export class AuthController {
   constructor(private authService: AuthService) {}
 

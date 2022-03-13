@@ -42,6 +42,10 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
       provider,
       profileUrl: kakao_account.profile.profile_image,
     };
+    console.log(
+      'kakao_account.profile.profile_image ' +
+        kakao_account.profile.profile_image,
+    );
     done(null, payload);
   }
 }
