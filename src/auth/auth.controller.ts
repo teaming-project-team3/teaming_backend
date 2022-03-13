@@ -62,9 +62,8 @@ export class AuthController {
   @Post('/test')
   @UseGuards(AuthGuard())
   test(@GetUser() userObj, @Req() req) {
-    console.log(req);
+    console.log(process.env);
     console.log('======================================');
-    console.log(userObj);
     const { user } = userObj;
     console.log(user);
     console.log(String(user._id));

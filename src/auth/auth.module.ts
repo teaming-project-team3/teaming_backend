@@ -17,7 +17,7 @@ import { KakaoStrategy } from './strategy/kakao.strategy';
     JwtModule.register({
       secret: process.env.JWT_SCERTKEY,
       signOptions: {
-        expiresIn: 60 * 60, //유효 시간
+        expiresIn: process.env.JWT_EXPIRESIN, //유효 시간
       },
     }),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),

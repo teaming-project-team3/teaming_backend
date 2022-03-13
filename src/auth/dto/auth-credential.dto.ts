@@ -1,9 +1,6 @@
 import {
-  IsAlphanumeric,
-  IsBase64,
   IsEmail,
   IsNotEmpty,
-  IsOptional,
   IsString,
   Matches,
   MaxLength,
