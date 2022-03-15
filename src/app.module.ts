@@ -4,6 +4,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { BoardsModule } from './boards/boards.module';
 import { logMiddleware } from './log.middleware';
 import { WebRtcModule } from './web-rtc/web-rtc.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -21,6 +24,7 @@ import { WebRtcModule } from './web-rtc/web-rtc.module';
     ),
     BoardsModule,
     WebRtcModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
