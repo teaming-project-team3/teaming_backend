@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BoardsModule } from './boards/boards.module';
 import { logMiddleware } from './log.middleware';
-import { WebRtcModule } from './web-rtc/web-rtc.module';
 import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { ChatsModule } from './chats/chats.module';
@@ -22,11 +21,10 @@ import mongoose from 'mongoose';
         useNewUrlParser: true,
         useUnifiedTopology: true,
         ignoreUndefined: true,
-        dbName: 'db_nest',
+        dbName: 'db_nest1',
       },
     ),
     BoardsModule,
-    WebRtcModule,
     AuthModule,
     ChatsModule,
   ],
