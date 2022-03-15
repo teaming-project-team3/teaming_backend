@@ -2,4 +2,4 @@ server:
   port: 3000
 
 jwt:
-  expiresIn: 3600
+  expiresIn: 99999999

@@ -6,31 +6,35 @@ import {
 } from '@nestjs/common';
 import {
   AuthCredentialsDto,
-  AuthSignUpDto,
+  AuthSignInDto,
   UserKakaoDto,
 } from './dto/auth-credential.dto';
 import { UsersRepository } from './users.repository';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class AuthService {
+  private http: HttpService;
   constructor(
     private readonly usersRepository: UsersRepository,
     private jwtService: JwtService,
-  ) {}
+  ) {
+    this.http = new HttpService();
+  }
 
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<any> {
     return await this.usersRepository.create(authCredentialsDto);
   }
 
-  async signIn(authSignUpDto: AuthSignUpDto): Promise<any> {
-    const { email, password } = authSignUpDto;
-    const user = await this.usersRepository.findOne(authSignUpDto);
+  async signIn(authSignInDto: AuthSignInDto): Promise<any> {
+    const { email, password } = authSignInDto;
+    const user = await this.usersRepository.findOne(authSignInDto);
 
     if (user && (await bcrypt.compare(password, user.password))) {
       // 유저 토큰 생성
-      const payload = { email };
+      const payload = { email, nickname: user.nickname };
       const accessToken = this.jwtService.sign(payload);
       return {
         msg: '로그인 성공',
@@ -43,8 +47,8 @@ export class AuthService {
   }
 
   async kakaoLogin(userKakaoDto: UserKakaoDto): Promise<any> {
-    const { kakaoId, name, email } = userKakaoDto;
-
+    const { kakaoId, name, email, provider, kakaoAccessToken } = userKakaoDto;
+    const nickname = name + '&' + kakaoId;
     try {
       await this.usersRepository.createKakao(userKakaoDto);
     } catch (error) {
@@ -55,12 +59,25 @@ export class AuthService {
         throw new InternalServerErrorException();
       }
     }
-    const payload = { email, accessToken: userKakaoDto.accessToken };
+    const payload = { nickname, kakaoAccessToken };
     const accessToken = await this.jwtService.sign(payload);
     return {
       msg: '카카오 로그인 성공',
       boolean: true,
       Authorization: `Bearer ${accessToken}`,
     };
+  }
+
+  async kakaoLogout(req): Promise<any> {
+    const KAKAO_ACCESS_TOKEN = req.accessToken;
+    const _url = 'https://kapi.kakao.com/v1/user/unlink';
+    const _header = {
+      Authorization: `bearer ${KAKAO_ACCESS_TOKEN}`,
+    };
+    return await this.http.post(_url, '', { headers: _header });
+  }
+
+  async UserfindAll(): Promise<any> {
+    return await this.usersRepository.find();
   }
 }
