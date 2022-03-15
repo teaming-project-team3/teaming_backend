@@ -19,7 +19,7 @@ import {
 } from './dto/auth-credential.dto';
 import { GetUser } from './get-user.decorator';
 import { SuccessInterceptor } from '../common/interceptors/success.interceptor';
-import { User } from 'src/schemas/user.schema';
+import { User } from 'src/schemas/User.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 

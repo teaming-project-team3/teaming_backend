@@ -1,4 +1,4 @@
-import { User } from '../schemas/user.schema';
+import { User } from '../schemas/User.schema';
 import {
   ConflictException,
   Injectable,

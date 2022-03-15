@@ -1,9 +1,9 @@
-import { DmListSchema, DmList } from './../schemas/dmlists.schema';
-import { DmContent, DmContentSchema } from './../schemas/dmContents.schema';
+import { DmListSchema, DmList } from '../schemas/DmLists.schema';
+import { DmContent, DmContentSchema } from '../schemas/DmContents.schema';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ChatsGateway } from './chats.gateway';
-import { User, UserSchema } from './../schemas/user.schema';
+import { User, UserSchema } from '../schemas/User.schema';
 import { WaitchatsGateway } from './waitchats.gateway';
 
 @Module({

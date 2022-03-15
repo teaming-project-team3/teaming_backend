@@ -1,4 +1,4 @@
-import { DmList } from './dmlists.schema';
+import { DmList } from './DmLists.schema';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaOptions, Types } from 'mongoose';

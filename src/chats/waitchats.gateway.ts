@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
-import { DmContent } from './../schemas/dmContents.schema';
-import { DmList } from './../schemas/dmLists.schema';
+import { DmContent } from '../schemas/DmContents.schema';
+import { DmList } from '../schemas/DmLists.schema';
 import { Model } from 'mongoose';
 import {
   ConnectedSocket,
@@ -14,7 +14,7 @@ import {
 } from '@nestjs/websockets';
 import { InjectModel } from '@nestjs/mongoose';
 import { Socket, Server } from 'socket.io';
-import { User } from 'src/schemas/user.schema';
+import { User } from 'src/schemas/User.schema';
 
 // 대기방 채팅
 @WebSocketGateway({
