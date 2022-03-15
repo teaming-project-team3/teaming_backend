@@ -11,7 +11,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import mongoose from 'mongoose';
 import { AuthService } from './auth.service';
 import {
   AuthCredentialsDto,
@@ -20,11 +19,17 @@ import {
 } from './dto/auth-credential.dto';
 import { GetUser } from './get-user.decorator';
 import { SuccessInterceptor } from '../common/interceptors/success.interceptor';
+import { User } from 'src/schemas/user.schema';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Controller('auth')
 @UseInterceptors(SuccessInterceptor)
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    @InjectModel(User.name) private userModel: Model<User>,
+  ) {}
 
   @Post('/signup')
   signUp(
@@ -60,14 +65,31 @@ export class AuthController {
   }
 
   @Post('/test')
-  @UseGuards(AuthGuard())
-  test(@GetUser() userObj, @Req() req) {
-    console.log(process.env);
-    console.log('======================================');
-    const { user } = userObj;
-    console.log(user);
-    console.log(String(user._id));
-    const test = String(user._id);
-    console.log(new mongoose.Types.ObjectId(test));
+  // @UseGuards(AuthGuard())
+  async test(@GetUser() userObj, @Req() req) {
+    await this.userModel.findOneAndUpdate(
+      { nickname: '1111' },
+      {
+        $push: { dmRooms: 'data.room' },
+      },
+    );
+    await this.userModel.findOneAndUpdate(
+      { nickname: '2222' },
+      {
+        $push: { dmRooms: 'data.room' },
+      },
+    );
+
+    return await this.userModel
+      .find()
+      .or([{ nickname: '2222' }, { nickname: '1111' }]);
+
+    // console.log(process.env);
+    // console.log('======================================');
+    // const { user } = userObj;
+    // console.log(user);
+    // console.log(String(user._id));
+    // const test = String(user._id);
+    // console.log(new mongoose.Types.ObjectId(test));
   }
 }

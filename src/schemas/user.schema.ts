@@ -1,16 +1,13 @@
 import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
-import { Document, ObjectId } from 'mongoose';
+import { Document, ObjectId, Types } from 'mongoose';
 
-export type UserDocument = User & Document;
 const options: SchemaOptions = {
-  toJSON: {
-    getters: true,
-    virtuals: true,
-  },
+  collection: 'users',
+  timestamps: true,
 };
 @Schema(options)
-export class User {
+export class User extends Document {
   @Transform(({ value }) => value.toString())
   _id: ObjectId;
 
@@ -42,14 +39,9 @@ export class User {
   position: string;
 
   @Prop({
-    default: null,
+    default: [],
   })
-  createdAt: Date;
-
-  @Prop({
-    default: null,
-  })
-  updatedAt: Date;
+  dmRooms: [];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

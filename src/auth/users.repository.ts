@@ -1,4 +1,4 @@
-import { User, UserDocument } from '../schemas/user.schema';
+import { User } from '../schemas/user.schema';
 import {
   ConflictException,
   Injectable,
@@ -15,7 +15,7 @@ import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersRepository {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async create(authCredentialsDto: AuthCredentialsDto): Promise<any> {
     const { email, nickname, password, passwordCheck } = authCredentialsDto;

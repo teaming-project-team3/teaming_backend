@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
+import { ChatsModule } from './chats/chats.module';
 
 @Module({
   imports: [
@@ -11,14 +12,17 @@ import { LoggerMiddleware } from './common/middlewares/logger.middleware';
       isGlobal: true,
     }),
     MongooseModule.forRoot(
-      `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PW}@${process.env.MONGODB_KEY}:${process.env.MONGODB_PORT}`,
+      // `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PW}@${process.env.MONGODB_KEY}:${process.env.MONGODB_PORT}`,
+      `mongodb://localhost`,
       {
-        autoIndex: true,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
         ignoreUndefined: true,
         dbName: 'db_nest',
       },
     ),
     AuthModule,
+    ChatsModule,
   ],
   controllers: [],
   providers: [],
