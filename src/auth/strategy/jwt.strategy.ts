@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { User } from '../schemas/user.schema';
+import { User } from 'src/schemas/User.schema';
 import { UsersRepository } from '../users.repository';
 import * as dotenv from 'dotenv';
 dotenv.config();

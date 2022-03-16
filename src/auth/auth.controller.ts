@@ -19,7 +19,7 @@ import {
   UserKakaoDto,
 } from './dto/auth-credential.dto';
 import { GetUser } from './get-user.decorator';
-import { User } from './schemas/user.schema';
+import { User } from 'src/schemas/User.schema';
 
 @Controller('auth')
 export class AuthController {

@@ -16,6 +16,7 @@ export class User {
 
   @Prop({
     index: { unique: true, dropDups: true },
+    required: true,
     type: String,
   })
   email: string;
