@@ -28,7 +28,7 @@ import { Model } from 'mongoose';
 export class AuthController {
   constructor(
     private authService: AuthService,
-    @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(User.name) private userModel: Model<User>, // 테스트 용
   ) {}
 
   @Post('/signup')
@@ -67,6 +67,12 @@ export class AuthController {
   @Post('/test')
   // @UseGuards(AuthGuard())
   async test(@GetUser() userObj, @Req() req) {
+    const temp = await this.userModel.create({
+      email: 'test',
+      nickname: 'test',
+      password: 'test',
+    });
+    console.log('temp:     ' + temp);
     await this.userModel.findOneAndUpdate(
       { nickname: '1111' },
       {

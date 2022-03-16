@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { User } from '../../schemas/User.schema';
-import { UsersRepository } from '../users.repository';
+import { UsersRepository } from '../auth.repository';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -17,14 +17,25 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload) {
-    const { email, nickname, kakaoAccessToken } = payload;
+    const { _id, kakaoAccessToken } = payload;
 
-    const user = await this.usersRepository.findOneByEmail(email);
+    const user = await this.usersRepository.findOneById(_id);
     if (!user) {
       throw new UnauthorizedException({ msg: '사이트 회원이 아닙니다.' });
     }
-    const userObj = {
-      kakaoToken: 'kakaoToken',
+
+    let userObj = {};
+
+    if (payload.hasOwnProperty('kakaoAccessToken')) {
+      userObj = {
+        kakaoAccessToken,
+        user,
+      };
+    } else {
+    }
+
+    userObj = {
+      kakaoAccessToken: null,
       user,
     };
 

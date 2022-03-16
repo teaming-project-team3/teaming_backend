@@ -21,7 +21,7 @@ export class UsersRepository {
     const { email, nickname, password, passwordCheck } = authCredentialsDto;
 
     if (password !== passwordCheck) {
-      return { msg: 'IsNotEqual', boolean: false };
+      return { msg: 'IsNotEqual', success: false };
     }
 
     // 암호화
@@ -33,9 +33,8 @@ export class UsersRepository {
         email,
         nickname,
         password: hashedPassword,
-        createdAt: new Date(),
       });
-      return { msg: '회원가입 성공', boolean: true };
+      return { msg: '회원가입 성공', success: true };
     } catch (error) {
       console.log(error);
       if (error.code === 11000) {
@@ -48,11 +47,11 @@ export class UsersRepository {
 
   async createKakao(userKakaoDto: UserKakaoDto) {
     const { kakaoId, name, email, provider, profileUrl } = userKakaoDto;
-    await this.userModel.create({
+    return await this.userModel.create({
       email,
-      nickname: name + '&' + kakaoId,
+      nickname: name,
       profileUrl,
-      createdAt: new Date(),
+      kakaoId,
     });
   }
 
@@ -61,8 +60,16 @@ export class UsersRepository {
     return await this.userModel.findOne({ email });
   }
 
-  async findOneByEmail(email: string): Promise<any> {
-    return await this.userModel.findOne({ email });
+  // async findOneByEmail(email: string): Promise<any> {
+  //   return await this.userModel.findOne({ email });
+  // }
+
+  // async findOneByNickname(nickname: string): Promise<any> {
+  //   return await this.userModel.findOne({ nickname });
+  // }
+
+  async findOneById(_id): Promise<any> {
+    return await this.userModel.findOne({ _id });
   }
 
   async find(): Promise<any> {
