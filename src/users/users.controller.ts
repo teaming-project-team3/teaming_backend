@@ -31,7 +31,7 @@ export class UsersController {
     return this.usersService.deleteUser(req);
   }
 
-  @Post('/suvey/dev')
+  @Post('/suvey')
   @UseGuards(AuthGuard())
   suveyDev(
     @Body(ValidationPipe) suveyInfoDto: SuveyInfoDto,

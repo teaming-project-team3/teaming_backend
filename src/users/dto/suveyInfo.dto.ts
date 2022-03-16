@@ -1,19 +1,29 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsObject, IsString } from 'class-validator';
 
 export class SuveyInfoDto {
   @IsNotEmpty()
   @IsString()
   position: string;
 
-  @IsNotEmpty()
-  ability: [[name: string, time: string, rate: string]];
+  @IsObject()
+  front: {
+    ability: [[name: string, time: string, rate: string]];
+    skills: [[name: string, time: string, rate: string]];
+  };
 
-  @IsNotEmpty()
-  skills: [[name: string, time: string, rate: string]];
+  @IsObject()
+  back: {
+    ability: [[name: string, time: string, rate: string]];
+    skills: [[name: string, time: string, rate: string]];
+  };
 
-  @IsNotEmpty()
-  url: { git: string; boj: string };
+  @IsObject()
+  design: {
+    skills: [[name: string, time: string, rate: string]];
+  };
 
-  @IsNotEmpty()
-  portfolioUrl: [];
+  @IsArray()
+  portfolioUrl: [string];
+
+  url: any;
 }

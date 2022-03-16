@@ -1,3 +1,4 @@
+import { UserInfo, UserInfoSchema } from './../schemas/UserInfo.schema';
 import { AuthModule } from './../auth/auth.module';
 import { Module } from '@nestjs/common';
 import { UsersController } from './users.controller';
@@ -14,6 +15,7 @@ import { User, UserSchema } from 'src/schemas/User.schema';
       { name: User.name, schema: UserSchema },
       { name: Dev.name, schema: DevSchema },
       { name: Design.name, schema: DesignSchema },
+      { name: UserInfo.name, schema: UserInfoSchema },
     ]),
   ],
   controllers: [UsersController],
