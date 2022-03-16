@@ -1,18 +1,35 @@
 import {
   Body,
   Controller,
+  Delete,
   Post,
+  Put,
   Req,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { SuveyInfoDto } from './dto/suveyInfo.dto';
+import { UpdateUserInfoDto } from './dto/updateUserInfo.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
+
+  @Put('/')
+  @UseGuards(AuthGuard())
+  userUpdate(
+    @Body(ValidationPipe) updateUserInfoDto: UpdateUserInfoDto,
+    @Req() req,
+  ): Promise<any> {
+    return this.usersService.updateUser(updateUserInfoDto, req);
+  }
+  @Delete('/')
+  @UseGuards(AuthGuard())
+  userDelete(@Req() req): Promise<any> {
+    return this.usersService.deleteUser(req);
+  }
 
   @Post('/suvey/dev')
   @UseGuards(AuthGuard())

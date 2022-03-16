@@ -44,6 +44,11 @@ export class User extends Document {
     default: [],
   })
   dmRooms: [];
+
+  @Prop({
+    default: null,
+  })
+  kakaoId: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
