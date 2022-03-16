@@ -28,7 +28,7 @@ import { Model } from 'mongoose';
 export class AuthController {
   constructor(
     private authService: AuthService,
-    @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(User.name) private userModel: Model<User>, // 테스트 용
   ) {}
 
   @Post('/signup')

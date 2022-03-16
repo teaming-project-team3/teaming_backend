@@ -33,7 +33,6 @@ export class UsersRepository {
         email,
         nickname,
         password: hashedPassword,
-        createdAt: new Date(),
       });
       return { msg: '회원가입 성공', boolean: true };
     } catch (error) {
@@ -63,6 +62,10 @@ export class UsersRepository {
 
   async findOneByEmail(email: string): Promise<any> {
     return await this.userModel.findOne({ email });
+  }
+
+  async findOneByNickname(nickname: string): Promise<any> {
+    return await this.userModel.findOne({ nickname });
   }
 
   async find(): Promise<any> {

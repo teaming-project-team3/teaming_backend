@@ -69,7 +69,7 @@ export class AuthService {
   }
 
   async kakaoLogout(req): Promise<any> {
-    const KAKAO_ACCESS_TOKEN = req.accessToken;
+    const KAKAO_ACCESS_TOKEN = req.user.kakaoAccessToken;
     const _url = 'https://kapi.kakao.com/v1/user/unlink';
     const _header = {
       Authorization: `bearer ${KAKAO_ACCESS_TOKEN}`,

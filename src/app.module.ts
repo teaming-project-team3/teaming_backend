@@ -6,6 +6,7 @@ import { logMiddleware } from './log.middleware';
 import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { ChatsModule } from './chats/chats.module';
+import { UsersModule } from './users/users.module';
 import mongoose from 'mongoose';
 
 @Module({
@@ -21,12 +22,13 @@ import mongoose from 'mongoose';
         useNewUrlParser: true,
         useUnifiedTopology: true,
         ignoreUndefined: true,
-        dbName: 'db_nest1',
+        dbName: 'db_nest',
       },
     ),
     BoardsModule,
     AuthModule,
     ChatsModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],

@@ -1,15 +1,18 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
-import { Document, ObjectId } from 'mongoose';
+import { Document, ObjectId, Types } from 'mongoose';
 
 export type DevDocument = Dev & Document;
-
-@Schema()
+const options: SchemaOptions = {
+  collection: 'devs',
+  timestamps: true,
+};
+@Schema(options)
 export class Dev {
   @Transform(({ value }) => value.toString())
   _id: ObjectId;
 
-  @Prop({ type: Object, required: true })
+  @Prop({ type: Types.ObjectId, required: true, ref: 'users' })
   userId: object;
 
   @Prop({
@@ -38,9 +41,6 @@ export class Dev {
     default: null,
   })
   portfolioUrl: string[]; // 포트폴리오 주소 3개
-
-  @Prop({ type: Date, required: true })
-  CreatedAt: Date;
 }
 
 export const DevSchema = SchemaFactory.createForClass(Dev);
