@@ -1,4 +1,4 @@
-import { User, UserDocument } from 'src/schemas/User.schema';
+import { User } from '../schemas/User.schema';
 import {
   ConflictException,
   Injectable,
@@ -8,20 +8,20 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
   AuthCredentialsDto,
-  AuthSignUpDto,
+  AuthSignInDto,
   UserKakaoDto,
 } from './dto/auth-credential.dto';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersRepository {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async create(authCredentialsDto: AuthCredentialsDto): Promise<any> {
     const { email, nickname, password, passwordCheck } = authCredentialsDto;
 
     if (password !== passwordCheck) {
-      return { msg: 'IsNotEqual', boolean: false };
+      return { msg: 'IsNotEqual', success: false };
     }
 
     // 암호화
@@ -33,9 +33,8 @@ export class UsersRepository {
         email,
         nickname,
         password: hashedPassword,
-        createdAt: new Date(),
       });
-      return { msg: '회원가입 성공', boolean: true };
+      return { msg: '회원가입 성공', success: true };
     } catch (error) {
       console.log(error);
       if (error.code === 11000) {
@@ -47,20 +46,33 @@ export class UsersRepository {
   }
 
   async createKakao(userKakaoDto: UserKakaoDto) {
-    const { email, name, kakaoId } = userKakaoDto;
-    await this.userModel.create({
+    const { kakaoId, name, email, provider, profileUrl } = userKakaoDto;
+    return await this.userModel.create({
       email,
       nickname: name,
-      createdAt: new Date(),
+      profileUrl,
+      kakaoId,
     });
   }
 
-  async findOne(authSignUpDto: AuthSignUpDto): Promise<any> {
-    const { email } = authSignUpDto;
+  async findOne(authSignInDto: AuthSignInDto): Promise<any> {
+    const { email } = authSignInDto;
     return await this.userModel.findOne({ email });
   }
 
-  async findOneByEmail(email: string): Promise<any> {
-    return await this.userModel.findOne({ email });
+  // async findOneByEmail(email: string): Promise<any> {
+  //   return await this.userModel.findOne({ email });
+  // }
+
+  // async findOneByNickname(nickname: string): Promise<any> {
+  //   return await this.userModel.findOne({ nickname });
+  // }
+
+  async findOneById(_id): Promise<any> {
+    return await this.userModel.findOne({ _id });
+  }
+
+  async find(): Promise<any> {
+    return await this.userModel.find().exec();
   }
 }
