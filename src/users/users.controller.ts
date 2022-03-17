@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Post,
   Put,
   Req,
@@ -33,7 +34,7 @@ export class UsersController {
 
   @Post('/suvey')
   @UseGuards(AuthGuard())
-  suveyDev(
+  suveyUser(
     @Body(ValidationPipe) suveyInfoDto: SuveyInfoDto,
     @Req() req,
   ): Promise<any> {
@@ -43,12 +44,9 @@ export class UsersController {
     return this.usersService.insertInfo(suveyInfoDto, req);
   }
 
-  @Post('/suvey/design')
+  @Get('/mypage')
   @UseGuards(AuthGuard())
-  suveyDesign(
-    @Body(ValidationPipe) suveyInfoDto: SuveyInfoDto,
-    @Req() req,
-  ): Promise<any> {
-    return this.usersService.insertInfo(suveyInfoDto, req);
+  getUserInfo(@Req() req): Promise<any> {
+    return this.usersService.getUserInfo(req);
   }
 }

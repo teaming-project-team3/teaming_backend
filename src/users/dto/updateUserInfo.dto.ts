@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsObject, IsString } from 'class-validator';
 
 export class UpdateUserInfoDto {
   @IsNotEmpty()
@@ -9,21 +9,25 @@ export class UpdateUserInfoDto {
   @IsString()
   position: string;
 
-  @IsNotEmpty()
-  ability: [[name: string, time: string, rate: string]];
+  @IsObject()
+  front: {
+    ability: [[name: string, time: string, rate: string]];
+    skills: [[name: string, time: string, rate: string]];
+  };
 
-  @IsNotEmpty()
-  skills: [[name: string, time: string, rate: string]];
+  @IsObject()
+  back: {
+    ability: [[name: string, time: string, rate: string]];
+    skills: [[name: string, time: string, rate: string]];
+  };
 
-  @IsNotEmpty()
-  portfolioUrl: [];
+  @IsObject()
+  design: {
+    skills: [[name: string, time: string, rate: string]];
+  };
 
-  @IsString()
-  gitUrl: string | null;
+  @IsArray()
+  portfolioUrl: [string];
 
-  @IsString()
-  bojUrl: string | null;
-
-  @IsString()
-  url: string | null;
+  url: any;
 }

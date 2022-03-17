@@ -14,9 +14,9 @@ export class UserInfo extends Document {
   @Transform(({ value }) => value.toString())
   _id: ObjectId;
 
-  @Prop({ type: Types.ObjectId, required: true, ref: 'users' })
+  @Prop({ type: Types.ObjectId, required: true, ref: 'User' })
   @IsNotEmpty()
-  userId: object;
+  userId: ObjectId;
 
   @Prop({
     default: {},
