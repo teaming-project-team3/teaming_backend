@@ -49,7 +49,7 @@ export class UsersRepository {
     const { kakaoId, name, email, provider, profileUrl } = userKakaoDto;
     return await this.userModel.create({
       email,
-      nickname: name,
+      nickname: name + '&' + kakaoId,
       profileUrl,
       kakaoId,
     });
