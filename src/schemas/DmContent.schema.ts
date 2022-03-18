@@ -1,4 +1,4 @@
-import { DmList } from './DmLists.schema';
+import { DmList } from './DmList.schema';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaOptions, Types } from 'mongoose';
@@ -12,7 +12,7 @@ const options: SchemaOptions = {
 export class DmContent extends Document {
   @Prop({
     type: {
-      _id: { type: Types.ObjectId, required: true, ref: 'dmlists' },
+      _id: { type: Types.ObjectId, required: true, ref: 'DmList' },
       roomName: { type: String, required: true },
     },
   })

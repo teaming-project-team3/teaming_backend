@@ -1,5 +1,5 @@
-import { DmListSchema, DmList } from '../schemas/DmLists.schema';
-import { DmContent, DmContentSchema } from '../schemas/DmContents.schema';
+import { DmListSchema, DmList } from '../schemas/DmList.schema';
+import { DmContent, DmContentSchema } from '../schemas/DmContent.schema';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ChatsGateway } from './chats.gateway';

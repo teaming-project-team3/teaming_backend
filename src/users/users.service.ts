@@ -77,7 +77,6 @@ export class UsersService {
 
   async getUserInfo(req: any) {
     const { _id } = req.user.user;
-
     return await this.userInfoModel.findOne({ userId: _id }).populate('userId');
   }
 }

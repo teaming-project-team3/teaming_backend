@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
-import { DmContent } from '../schemas/DmContents.schema';
-import { DmList } from '../schemas/DmLists.schema';
+import { DmContent } from '../schemas/DmContent.schema';
+import { DmList } from '../schemas/DmList.schema';
 import { Model } from 'mongoose';
 import {
   ConnectedSocket,
