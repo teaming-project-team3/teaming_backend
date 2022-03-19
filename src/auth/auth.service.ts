@@ -9,7 +9,7 @@ import {
   AuthSignInDto,
   UserKakaoDto,
 } from './dto/auth-credential.dto';
-import { UsersRepository } from './auth.repository';
+import { UsersRepository } from './repository/auth.repository';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { HttpService } from '@nestjs/axios';
@@ -54,7 +54,7 @@ export class AuthService {
     try {
       const user = await this.usersRepository.createKakao(userKakaoDto);
       const payload = { _id: user._id, kakaoAccessToken };
-      const accessToken = await this.jwtService.sign(payload);
+      const accessToken = this.jwtService.sign(payload);
       return {
         msg: '카카오 로그인 성공',
         success: true,

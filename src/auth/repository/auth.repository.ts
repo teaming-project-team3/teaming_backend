@@ -1,6 +1,8 @@
-import { User } from '../schemas/User.schema';
+import { User } from '../../schemas/User.schema';
 import {
   ConflictException,
+  HttpException,
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
@@ -10,7 +12,7 @@ import {
   AuthCredentialsDto,
   AuthSignInDto,
   UserKakaoDto,
-} from './dto/auth-credential.dto';
+} from '../dto/auth-credential.dto';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
@@ -18,10 +20,28 @@ export class UsersRepository {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async create(authCredentialsDto: AuthCredentialsDto): Promise<any> {
-    const { email, nickname, password, passwordCheck } = authCredentialsDto;
+    const { email, nickname, password, passwordCheck, profileUrl } =
+      authCredentialsDto;
+
+    const specialRule = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+    if (specialRule.test(nickname)) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: '닉네임에 특수문자를 사용할 수 없습니다.',
+        },
+        400,
+      );
+    }
 
     if (password !== passwordCheck) {
-      return { msg: 'IsNotEqual', success: false };
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'IsNotEqual',
+        },
+        400,
+      );
     }
 
     // 암호화
@@ -33,6 +53,7 @@ export class UsersRepository {
         email,
         nickname,
         password: hashedPassword,
+        profileUrl,
       });
       return { msg: '회원가입 성공', success: true };
     } catch (error) {

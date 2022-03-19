@@ -56,11 +56,6 @@ export class UserInfo extends Document {
     default: null,
   })
   position: string;
-
-  @Prop({
-    default: false,
-  })
-  suveyCheck: boolean;
 }
 
 export const UserInfoSchema = SchemaFactory.createForClass(UserInfo);

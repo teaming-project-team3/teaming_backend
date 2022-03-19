@@ -24,7 +24,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 @Controller('auth')
-@UseInterceptors(SuccessInterceptor)
+// @UseInterceptors(SuccessInterceptor)
 export class AuthController {
   constructor(
     private authService: AuthService,

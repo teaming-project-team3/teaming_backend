@@ -22,6 +22,13 @@ export class UsersService {
     const ProtfolioOgData: Array<string> =
       await this.portfolioScrap.ogdataScrap(portfolioUrl);
 
+    await this.userModel.findOneAndUpdate(
+      { _id },
+      {
+        $set: { suveyCheck: true },
+      },
+    );
+
     await this.userInfoModel.create({
       userId: _id,
       front,
@@ -29,7 +36,6 @@ export class UsersService {
       design,
       position,
       portfolioUrl: ProtfolioOgData,
-      suveyCheck: true,
     });
 
     return {

@@ -6,7 +6,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { User, UserSchema } from '../schemas/User.schema';
-import { UsersRepository } from './auth.repository';
+import { UsersRepository } from './repository/auth.repository';
 import { HttpModule } from '@nestjs/axios';
 import { KakaoStrategy } from './strategy/kakao.strategy';
 // import * as dotenv from 'dotenv';

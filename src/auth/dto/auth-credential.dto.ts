@@ -13,11 +13,9 @@ export class AuthCredentialsDto {
 
   @IsNotEmpty()
   @IsString()
+  // @Matches(/^[a-zA-Zㄱ-힣0-9]*$/g)
   @MinLength(3)
   @MaxLength(20)
-  @Matches(/^[a-zA-Zㄱ-힣0-9]*$/g, {
-    message: '특수문자는 사용할 수 없습니다.',
-  })
   nickname: string;
 
   @IsNotEmpty()
@@ -31,6 +29,9 @@ export class AuthCredentialsDto {
   @MinLength(3)
   @MaxLength(20)
   passwordCheck: string;
+
+  @IsString()
+  profileUrl: string;
 }
 
 export class AuthSignInDto {
