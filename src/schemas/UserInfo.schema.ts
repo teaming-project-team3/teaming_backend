@@ -51,6 +51,16 @@ export class UserInfo extends Document {
     default: null,
   })
   portfolioUrl: Array<string>; // 포트폴리오 주소 3개
+
+  @Prop({
+    default: null,
+  })
+  position: string;
+
+  @Prop({
+    default: false,
+  })
+  suveyCheck: boolean;
 }
 
 export const UserInfoSchema = SchemaFactory.createForClass(UserInfo);

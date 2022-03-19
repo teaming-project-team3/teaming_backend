@@ -16,18 +16,15 @@ export class UsersService {
   async insertInfo(suveyInfoDto: SuveyInfoDto, req: any): Promise<any> {
     const { _id, nickname } = req.user.user;
     const { position, front, back, design, url, portfolioUrl } = suveyInfoDto;
-    await this.userModel.findOneAndUpdate(
-      { nickname },
-      {
-        $set: { position },
-      },
-    );
+
     await this.userInfoModel.create({
       userId: _id,
       front,
       back,
       design,
       portfolioUrl,
+      position,
+      suveyCheck: true,
     });
 
     return {

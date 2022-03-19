@@ -16,8 +16,8 @@ import mongoose from 'mongoose';
       isGlobal: true,
     }),
     MongooseModule.forRoot(
-      `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PW}@${process.env.MONGODB_KEY}:${process.env.MONGODB_PORT}`,
-      // `mongodb://localhost`,
+      // `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PW}@${process.env.MONGODB_KEY}:${process.env.MONGODB_PORT}`,
+      `mongodb://localhost`,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,

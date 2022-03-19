@@ -36,11 +36,6 @@ export class User extends Document {
   profileUrl: string;
 
   @Prop({
-    default: null,
-  })
-  position: string;
-
-  @Prop({
     default: [],
   })
   dmRooms: [];

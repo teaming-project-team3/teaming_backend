@@ -52,7 +52,8 @@ export class WaitchatsGateway
 
   @SubscribeMessage('message')
   handleMessage(
-    @MessageBody() message: { sender: string; room: string; message: string },
+    @MessageBody()
+    message: { sender: string; room: string; message: string },
     @ConnectedSocket() socket: Socket,
   ): any {
     socket.to(message.room).emit('sendMessage', message);

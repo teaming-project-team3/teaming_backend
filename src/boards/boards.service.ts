@@ -28,7 +28,8 @@ export class BoardsService {
     @InjectModel(Dev.name) private DevModel: Model<DevDocument>,
     @InjectModel(Design.name) private DesignModel: Model<DesignDocument>,
     @InjectModel(Like.name) private LikeModel: Model<LikeDocument>,
-    @InjectModel(WaitRoom.name) private WaiteRoomModel: Model<WaitRoomDocument>,
+    @InjectModel(WaitRoom.name)
+    private WaiteRoomModel: Model<WaitRoomDocument>,
     private jwtService: JwtService,
   ) {}
 
@@ -132,7 +133,16 @@ export class BoardsService {
     if (category === 'design-mate') {
       for (const n in mate) {
         const tempProject: any[] = await this.projectModel
-          .find({}, { _id: 0, userId: 0, chatId: 0, createdAt: 0, updateAt: 0 })
+          .find(
+            {},
+            {
+              _id: 0,
+              userId: 0,
+              chatId: 0,
+              createdAt: 0,
+              updateAt: 0,
+            },
+          )
           .exec();
         const tempPortfolio: ds = await this.DesignModel.findOne({
           _id: mate[n]._id,

@@ -42,7 +42,10 @@ export class AuthService {
         Authorization: `Bearer ${accessToken}`,
       };
     } else {
-      throw new UnauthorizedException({ msg: '로그인 실패', success: false });
+      throw new UnauthorizedException({
+        msg: '로그인 실패',
+        success: false,
+      });
     }
   }
 
