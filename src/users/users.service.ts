@@ -1,3 +1,4 @@
+import { PortfolioScrap } from './scrap/portfolio.scrap';
 import { UserInfo } from './../schemas/UserInfo.schema';
 import { Injectable } from '@nestjs/common';
 import { User } from 'src/schemas/User.schema';
@@ -11,19 +12,23 @@ export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(UserInfo.name) private userInfoModel: Model<UserInfo>,
+    private portfolioScrap: PortfolioScrap,
   ) {}
 
   async insertInfo(suveyInfoDto: SuveyInfoDto, req: any): Promise<any> {
     const { _id, nickname } = req.user.user;
     const { position, front, back, design, url, portfolioUrl } = suveyInfoDto;
 
+    const ProtfolioOgData: Array<string> =
+      await this.portfolioScrap.ogdataScrap(portfolioUrl);
+
     await this.userInfoModel.create({
       userId: _id,
       front,
       back,
       design,
-      portfolioUrl,
       position,
+      portfolioUrl: ProtfolioOgData,
       suveyCheck: true,
     });
 

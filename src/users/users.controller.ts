@@ -38,9 +38,6 @@ export class UsersController {
     @Body(ValidationPipe) suveyInfoDto: SuveyInfoDto,
     @Req() req,
   ): Promise<any> {
-    console.log(req);
-    console.log(suveyInfoDto);
-
     return this.usersService.insertInfo(suveyInfoDto, req);
   }
 

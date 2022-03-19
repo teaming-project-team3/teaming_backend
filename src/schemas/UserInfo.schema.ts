@@ -48,9 +48,9 @@ export class UserInfo extends Document {
   design: object;
 
   @Prop({
-    default: null,
+    default: [],
   })
-  portfolioUrl: Array<string>; // 포트폴리오 주소 3개
+  portfolioUrl: [];
 
   @Prop({
     default: null,
