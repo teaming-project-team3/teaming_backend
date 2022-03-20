@@ -23,7 +23,11 @@ export class AuthService {
   }
 
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<any> {
-    return await this.usersRepository.create(authCredentialsDto);
+    await this.usersRepository.create(authCredentialsDto);
+
+    return {
+      msg: '회원가입 성공',
+    };
   }
 
   async signIn(authSignInDto: AuthSignInDto): Promise<any> {
@@ -36,8 +40,10 @@ export class AuthService {
       const accessToken = this.jwtService.sign(payload);
       return {
         msg: '로그인 성공',
-        success: true,
         Authorization: `Bearer ${accessToken}`,
+        nickname: user.nickname,
+        profileUrl: user.profileUrl,
+        suveyCheck: user.suveyCheck,
       };
     } else {
       throw new UnauthorizedException({
@@ -50,13 +56,18 @@ export class AuthService {
   async kakaoLogin(userKakaoDto: UserKakaoDto): Promise<any> {
     const { kakaoId, name, email, provider, kakaoAccessToken } = userKakaoDto;
     try {
-      const user = await this.usersRepository.createKakao(userKakaoDto);
+      let user = await this.usersRepository.findOneByName(name);
+      if (!user) {
+        user = await this.usersRepository.createKakao(userKakaoDto);
+      }
       const payload = { _id: user._id, kakaoAccessToken };
       const accessToken = this.jwtService.sign(payload);
       return {
         msg: '카카오 로그인 성공',
-        success: true,
         Authorization: `Bearer ${accessToken}`,
+        nickname: user.nickname,
+        profileUrl: user.profileUrl,
+        suveyCheck: user.suveyCheck,
       };
     } catch (error) {
       console.log(error);
@@ -81,7 +92,6 @@ export class AuthService {
     }
     return {
       msg: '카카오 로그아웃 완료',
-      success: true,
     };
   }
 

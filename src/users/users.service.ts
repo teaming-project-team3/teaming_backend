@@ -40,7 +40,6 @@ export class UsersService {
 
     return {
       msg: `${position} 설문조사 완료`,
-      boolean: true,
     };
   }
 
@@ -50,7 +49,6 @@ export class UsersService {
     await this.userInfoModel.deleteOne({ userId: _id });
     return {
       msg: `${nickname} 회원탈퇴 완료`,
-      boolean: true,
     };
   }
 
@@ -79,7 +77,6 @@ export class UsersService {
     );
     return {
       msg: `${nickname} 회원정보 수정 완료`,
-      boolean: true,
     };
   }
 

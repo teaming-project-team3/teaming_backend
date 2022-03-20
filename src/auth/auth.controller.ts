@@ -22,7 +22,7 @@ import { AuthCredentialsDto } from './dto/auth-credential.dto copy';
 import { AuthSignInDto } from './dto/auth-signin.dto';
 
 @Controller('auth')
-// @UseInterceptors(SuccessInterceptor)
+@UseInterceptors(SuccessInterceptor)
 export class AuthController {
   constructor(
     private authService: AuthService,
@@ -63,37 +63,11 @@ export class AuthController {
   }
 
   @Post('/test')
-  // @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard())
   async test(@GetUser() userObj, @Req() req) {
-    const temp = await this.userModel.create({
-      email: 'test',
-      nickname: 'test',
-      password: 'test',
-    });
-    console.log('temp:     ' + temp);
-    await this.userModel.findOneAndUpdate(
-      { nickname: '1111' },
-      {
-        $push: { dmRooms: 'data.room' },
-      },
-    );
-    await this.userModel.findOneAndUpdate(
-      { nickname: '2222' },
-      {
-        $push: { dmRooms: 'data.room' },
-      },
-    );
-
     return await this.userModel
       .find()
-      .or([{ nickname: '2222' }, { nickname: '1111' }]);
-
-    // console.log(process.env);
-    // console.log('======================================');
-    // const { user } = userObj;
-    // console.log(user);
-    // console.log(String(user._id));
-    // const test = String(user._id);
-    // console.log(new mongoose.Types.ObjectId(test));
+      .or([{ nickname: '2222' }, { nickname: '1111' }])
+      .select({ _id: false, nickname: true, profileUrl: true });
   }
 }

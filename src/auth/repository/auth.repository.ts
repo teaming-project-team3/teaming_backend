@@ -47,13 +47,13 @@ export class UsersRepository {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     try {
-      await this.userModel.create({
+      const user = await this.userModel.create({
         email,
         nickname,
         password: hashedPassword,
         profileUrl,
       });
-      return { msg: '회원가입 성공', success: true };
+      return user;
     } catch (error) {
       console.log(error);
       if (error.code === 11000) {
@@ -68,7 +68,7 @@ export class UsersRepository {
     const { kakaoId, name, email, provider, profileUrl } = userKakaoDto;
     return await this.userModel.create({
       email,
-      nickname: name + '&' + kakaoId,
+      nickname: name,
       profileUrl,
       kakaoId,
     });
@@ -79,8 +79,12 @@ export class UsersRepository {
     return await this.userModel.findOne({ email });
   }
 
-  async findOneById(_id): Promise<any> {
+  async findOneById(_id: string): Promise<any> {
     return await this.userModel.findOne({ _id });
+  }
+
+  async findOneByName(name: string): Promise<any> {
+    return await this.userModel.findOne({ nickname: name });
   }
 
   async find(): Promise<any> {

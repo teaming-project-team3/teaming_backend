@@ -7,14 +7,17 @@ import {
   Put,
   Req,
   UseGuards,
+  UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { SuveyInfoDto } from './dto/suveyInfo.dto';
 import { UpdateUserInfoDto } from './dto/updateUserInfo.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
+@UseInterceptors(SuccessInterceptor)
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
