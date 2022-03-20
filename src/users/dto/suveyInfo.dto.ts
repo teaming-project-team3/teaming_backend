@@ -25,5 +25,5 @@ export class SuveyInfoDto {
   @IsArray()
   portfolioUrl: [];
 
-  url: any;
+  url: string;
 }

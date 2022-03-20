@@ -56,6 +56,11 @@ export class UserInfo extends Document {
     default: null,
   })
   position: string;
+
+  @Prop({
+    default: null,
+  })
+  url: string;
 }
 
 export const UserInfoSchema = SchemaFactory.createForClass(UserInfo);

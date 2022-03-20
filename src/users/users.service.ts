@@ -36,6 +36,7 @@ export class UsersService {
       design,
       position,
       portfolioUrl: ProtfolioOgData,
+      url,
     });
 
     return {
@@ -63,7 +64,7 @@ export class UsersService {
     await this.userModel.findOneAndUpdate(
       { _id },
       {
-        $set: { position, nickname },
+        $set: { nickname },
       },
     );
 
@@ -72,7 +73,7 @@ export class UsersService {
         userId: _id,
       },
       {
-        $set: { front, back, design, portfolioUrl },
+        $set: { position, front, back, design, portfolioUrl, url },
       },
     );
     return {
@@ -82,6 +83,12 @@ export class UsersService {
 
   async getUserInfo(req: any) {
     const { _id } = req.user.user;
-    return await this.userInfoModel.findOne({ userId: _id }).populate('userId');
+    const userInfo = await this.userInfoModel
+      .findOne({ userId: _id })
+      .populate('userId', { password: false });
+    return {
+      msg: ` 회원정보 조회 완료`,
+      userInfo,
+    };
   }
 }
