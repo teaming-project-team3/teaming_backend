@@ -4,15 +4,13 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
-import {
-  AuthCredentialsDto,
-  AuthSignInDto,
-  UserKakaoDto,
-} from './dto/auth-credential.dto';
+import { UserKakaoDto } from './dto/auth-userkakao.dto';
 import { UsersRepository } from './repository/auth.repository';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { HttpService } from '@nestjs/axios';
+import { AuthCredentialsDto } from './dto/auth-credential.dto copy';
+import { AuthSignInDto } from './dto/auth-signin.dto';
 
 @Injectable()
 export class AuthService {
@@ -70,7 +68,7 @@ export class AuthService {
     }
   }
 
-  async kakaoLogout(req): Promise<any> {
+  async kakaoLogout(req: any): Promise<any> {
     const KAKAO_ACCESS_TOKEN = req.user.kakaoAccessToken;
     const _url = 'https://kapi.kakao.com/v1/user/unlink';
     const _header = {

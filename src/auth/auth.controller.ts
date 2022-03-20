@@ -12,16 +12,14 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
-import {
-  AuthCredentialsDto,
-  AuthSignInDto,
-  UserKakaoDto,
-} from './dto/auth-credential.dto';
+import { UserKakaoDto } from './dto/auth-userkakao.dto';
 import { GetUser } from './get-user.decorator';
 import { SuccessInterceptor } from '../common/interceptors/success.interceptor';
 import { User } from 'src/schemas/User.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { AuthCredentialsDto } from './dto/auth-credential.dto copy';
+import { AuthSignInDto } from './dto/auth-signin.dto';
 
 @Controller('auth')
 // @UseInterceptors(SuccessInterceptor)

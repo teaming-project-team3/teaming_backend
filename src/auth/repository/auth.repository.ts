@@ -8,12 +8,10 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import {
-  AuthCredentialsDto,
-  AuthSignInDto,
-  UserKakaoDto,
-} from '../dto/auth-credential.dto';
 import * as bcrypt from 'bcryptjs';
+import { AuthSignInDto } from '../dto/auth-signin.dto';
+import { UserKakaoDto } from '../dto/auth-userkakao.dto';
+import { AuthCredentialsDto } from '../dto/auth-credential.dto copy';
 
 @Injectable()
 export class UsersRepository {
@@ -80,14 +78,6 @@ export class UsersRepository {
     const { email } = authSignInDto;
     return await this.userModel.findOne({ email });
   }
-
-  // async findOneByEmail(email: string): Promise<any> {
-  //   return await this.userModel.findOne({ email });
-  // }
-
-  // async findOneByNickname(nickname: string): Promise<any> {
-  //   return await this.userModel.findOne({ nickname });
-  // }
 
   async findOneById(_id): Promise<any> {
     return await this.userModel.findOne({ _id });
