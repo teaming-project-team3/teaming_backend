@@ -4,15 +4,13 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
-import {
-  AuthCredentialsDto,
-  AuthSignInDto,
-  UserKakaoDto,
-} from './dto/auth-credential.dto';
-import { UsersRepository } from './auth.repository';
+import { UserKakaoDto } from './dto/auth-userkakao.dto';
+import { UsersRepository } from './repository/auth.repository';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { HttpService } from '@nestjs/axios';
+import { AuthCredentialsDto } from './dto/auth-credential.dto copy';
+import { AuthSignInDto } from './dto/auth-signin.dto';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +23,11 @@ export class AuthService {
   }
 
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<any> {
-    return await this.usersRepository.create(authCredentialsDto);
+    await this.usersRepository.create(authCredentialsDto);
+
+    return {
+      msg: '회원가입 성공',
+    };
   }
 
   async signIn(authSignInDto: AuthSignInDto): Promise<any> {
@@ -38,24 +40,34 @@ export class AuthService {
       const accessToken = this.jwtService.sign(payload);
       return {
         msg: '로그인 성공',
-        success: true,
         Authorization: `Bearer ${accessToken}`,
+        nickname: user.nickname,
+        profileUrl: user.profileUrl,
+        suveyCheck: user.suveyCheck,
       };
     } else {
-      throw new UnauthorizedException({ msg: '로그인 실패', success: false });
+      throw new UnauthorizedException({
+        msg: '로그인 실패',
+        success: false,
+      });
     }
   }
 
   async kakaoLogin(userKakaoDto: UserKakaoDto): Promise<any> {
     const { kakaoId, name, email, provider, kakaoAccessToken } = userKakaoDto;
     try {
-      const user = await this.usersRepository.createKakao(userKakaoDto);
+      let user = await this.usersRepository.findOneByName(name);
+      if (!user) {
+        user = await this.usersRepository.createKakao(userKakaoDto);
+      }
       const payload = { _id: user._id, kakaoAccessToken };
-      const accessToken = await this.jwtService.sign(payload);
+      const accessToken = this.jwtService.sign(payload);
       return {
         msg: '카카오 로그인 성공',
-        success: true,
         Authorization: `Bearer ${accessToken}`,
+        nickname: user.nickname,
+        profileUrl: user.profileUrl,
+        suveyCheck: user.suveyCheck,
       };
     } catch (error) {
       console.log(error);
@@ -67,7 +79,7 @@ export class AuthService {
     }
   }
 
-  async kakaoLogout(req): Promise<any> {
+  async kakaoLogout(req: any): Promise<any> {
     const KAKAO_ACCESS_TOKEN = req.user.kakaoAccessToken;
     const _url = 'https://kapi.kakao.com/v1/user/unlink';
     const _header = {
@@ -80,7 +92,6 @@ export class AuthService {
     }
     return {
       msg: '카카오 로그아웃 완료',
-      success: true,
     };
   }
 

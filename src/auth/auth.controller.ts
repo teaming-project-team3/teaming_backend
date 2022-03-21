@@ -12,16 +12,14 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
-import {
-  AuthCredentialsDto,
-  AuthSignInDto,
-  UserKakaoDto,
-} from './dto/auth-credential.dto';
+import { UserKakaoDto } from './dto/auth-userkakao.dto';
 import { GetUser } from './get-user.decorator';
 import { SuccessInterceptor } from '../common/interceptors/success.interceptor';
 import { User } from 'src/schemas/User.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { AuthCredentialsDto } from './dto/auth-credential.dto copy';
+import { AuthSignInDto } from './dto/auth-signin.dto';
 
 @Controller('auth')
 @UseInterceptors(SuccessInterceptor)
@@ -65,37 +63,11 @@ export class AuthController {
   }
 
   @Post('/test')
-  // @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard())
   async test(@GetUser() userObj, @Req() req) {
-    const temp = await this.userModel.create({
-      email: 'test',
-      nickname: 'test',
-      password: 'test',
-    });
-    console.log('temp:     ' + temp);
-    await this.userModel.findOneAndUpdate(
-      { nickname: '1111' },
-      {
-        $push: { dmRooms: 'data.room' },
-      },
-    );
-    await this.userModel.findOneAndUpdate(
-      { nickname: '2222' },
-      {
-        $push: { dmRooms: 'data.room' },
-      },
-    );
-
     return await this.userModel
       .find()
-      .or([{ nickname: '2222' }, { nickname: '1111' }]);
-
-    // console.log(process.env);
-    // console.log('======================================');
-    // const { user } = userObj;
-    // console.log(user);
-    // console.log(String(user._id));
-    // const test = String(user._id);
-    // console.log(new mongoose.Types.ObjectId(test));
+      .or([{ nickname: '2222' }, { nickname: '1111' }])
+      .select({ _id: false, nickname: true, profileUrl: true });
   }
 }

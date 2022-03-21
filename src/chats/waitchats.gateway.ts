@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
-import { DmContent } from '../schemas/DmContents.schema';
-import { DmList } from '../schemas/DmLists.schema';
+import { DmContent } from '../schemas/DmContent.schema';
+import { DmList } from '../schemas/DmList.schema';
 import { Model } from 'mongoose';
 import {
   ConnectedSocket,
@@ -52,7 +52,8 @@ export class WaitchatsGateway
 
   @SubscribeMessage('message')
   handleMessage(
-    @MessageBody() message: { sender: string; room: string; message: string },
+    @MessageBody()
+    message: { sender: string; room: string; message: string },
     @ConnectedSocket() socket: Socket,
   ): any {
     socket.to(message.room).emit('sendMessage', message);

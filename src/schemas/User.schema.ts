@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
+import { Matches } from 'class-validator';
 import { Document, ObjectId, Types } from 'mongoose';
 
 export type UserDocument = User & Document;
@@ -36,11 +37,6 @@ export class User extends Document {
   profileUrl: string;
 
   @Prop({
-    default: null,
-  })
-  position: string;
-
-  @Prop({
     default: [],
   })
   dmRooms: [];
@@ -49,6 +45,11 @@ export class User extends Document {
     default: null,
   })
   kakaoId: number;
+
+  @Prop({
+    default: false,
+  })
+  suveyCheck: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

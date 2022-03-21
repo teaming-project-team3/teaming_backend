@@ -23,7 +23,7 @@ export class SuveyInfoDto {
   };
 
   @IsArray()
-  portfolioUrl: [string];
+  portfolioUrl: [];
 
-  url: any;
+  url: string;
 }

@@ -9,9 +9,8 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
   constructor() {
     super({
       clientID: process.env.KAKAO_KEY,
-      // callbackURL:
-      //   'http://reactproject2.s3-website.ap-northeast-2.amazonaws.com/auth/kakao/redirect',
-      callbackURL: 'http://localhost:3000/auth/kakao/redirect',
+      callbackURL:
+        'http://teamingdeploy.s3-website.ap-northeast-2.amazonaws.com/auth/kakao/redirect',
     });
   }
 
@@ -33,7 +32,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     const kakao_account = profileJson.kakao_account;
     const provider = profile.provider;
     const payload = {
-      name: kakao_account.profile.nickname,
+      name: kakao_account.profile.nickname + '&' + profileJson.id,
       kakaoId: profileJson.id,
       email:
         kakao_account.has_email && !kakao_account.email_needs_agreement
