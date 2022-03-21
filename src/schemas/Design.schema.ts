@@ -1,24 +1,34 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
+import { Transform } from 'class-transformer';
+import { Document, ObjectId } from 'mongoose';
 
 export type DesignDocument = Design & Document;
-
-@Schema()
+const options: SchemaOptions = {
+  collection: 'designs',
+  timestamps: true,
+};
+@Schema(options)
 export class Design {
-  @Prop({ required: true })
+  @Transform(({ value }) => value.toString())
+  _id: ObjectId;
+
+  @Prop({ type: Object, required: true })
   userId: object;
 
-  @Prop()
-  url: string;
+  @Prop({
+    default: null,
+  })
+  behanceUrl: string;
 
-  @Prop([[String, Date, Number]])
-  skills: Array<[string, Date, number]>;
+  @Prop({
+    default: [],
+  })
+  skills: Array<[string, number, number]>; // tool 사용기간 ex) 피그마 1년 작품수
 
-  @Prop([String])
-  portfolioUrl: string[];
-
-  @Prop()
-  _id: object;
+  @Prop({
+    default: [],
+  })
+  portfolioUrl: string[]; // 포트톨리오 주소 3개
 }
 
-export const UserSchema = SchemaFactory.createForClass(Design);
+export const DesignSchema = SchemaFactory.createForClass(Design);

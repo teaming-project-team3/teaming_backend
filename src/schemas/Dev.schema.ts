@@ -1,30 +1,46 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
+import { Transform } from 'class-transformer';
+import { Document, ObjectId, Types } from 'mongoose';
 
-export type DesignDocument = Design & Document;
+export type DevDocument = Dev & Document;
+const options: SchemaOptions = {
+  collection: 'devs',
+  timestamps: true,
+};
+@Schema(options)
+export class Dev {
+  @Transform(({ value }) => value.toString())
+  _id: ObjectId;
 
-@Schema()
-export class Design {
-  @Prop({ required: true })
+  @Prop({ type: Types.ObjectId, required: true, ref: 'users' })
   userId: object;
 
-  @Prop()
-  gitUrl: string;
+  @Prop({
+    default: null,
+  })
+  gitUrl: string; // 깃허브
 
-  @Prop()
-  bojUrl: string;
+  @Prop({
+    default: null,
+  })
+  bojUrl: string; // 백준
 
-  @Prop([[String, Date, Number]])
-  ability: Array<[string, Date, number]>;
+  @Prop({
+    default: null,
+  })
+  ability: Array<[string, number, number]>; // 프로그램 언어
 
-  @Prop([[String, Date, Number]])
-  skills: Array<[string, Date, number]>;
+  // 프로그램 언어/프레임워크 사용기간 능숙도 상중하
 
-  @Prop([String])
-  portfolioUrl: string[];
+  @Prop({
+    default: null,
+  })
+  skills: Array<[string, number, number]>; // 프레임워크, 라이브러리 등
 
-  @Prop()
-  _id: object;
+  @Prop({
+    default: null,
+  })
+  portfolioUrl: string[]; // 포트폴리오 주소 3개
 }
 
-export const UserSchema = SchemaFactory.createForClass(Design);
+export const DevSchema = SchemaFactory.createForClass(Dev);
