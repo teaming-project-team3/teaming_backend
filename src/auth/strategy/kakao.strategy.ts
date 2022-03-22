@@ -28,6 +28,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     console.log('profile : ', profile);
     console.log('=============================');
     console.log('done : ', done);
+    console.log('소켓 칸반보드 테스트');
 
     const profileJson = profile._json;
     const kakao_account = profileJson.kakao_account;
