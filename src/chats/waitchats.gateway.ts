@@ -19,7 +19,12 @@ import { User } from 'src/schemas/User.schema';
 // 대기방 채팅
 @WebSocketGateway({
   namespace: 'waitroom',
-  cors: { origin: '*' },
+  cors: {
+    origin: [
+      'http://localhost:3000',
+      'http://teamingdeploy.s3-website.ap-northeast-2.amazonaws.com',
+    ],
+  },
   credentials: true,
 })
 export class WaitchatsGateway
