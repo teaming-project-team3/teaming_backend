@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ChatsGateway } from './chats.gateway';
 import { User, UserSchema } from '../schemas/User.schema';
 import { WaitchatsGateway } from './waitchats.gateway';
+import { Chat, ChatSchema } from 'src/schemas/Chat.schema';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { WaitchatsGateway } from './waitchats.gateway';
       { name: DmList.name, schema: DmListSchema },
       { name: DmContent.name, schema: DmContentSchema },
       { name: User.name, schema: UserSchema },
+      { name: Chat.name, schema: ChatSchema },
     ]),
   ],
   providers: [ChatsGateway, WaitchatsGateway],
