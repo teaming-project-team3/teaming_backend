@@ -79,7 +79,7 @@ export class WaitchatsGateway
     // to all clients in room except the sender
     socket.to(data.room).emit('roomData', {
       room: data.room,
-      users: `참가한 방의 유저들 정보`,
+      users: ['유저1', '유저2'],
     });
   }
 
