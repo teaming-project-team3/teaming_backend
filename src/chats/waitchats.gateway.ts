@@ -19,7 +19,7 @@ import { User } from 'src/schemas/User.schema';
 // 대기방 채팅
 @WebSocketGateway({
   namespace: 'waitroom',
-  cors: '*',
+  cors: { origin: '*' },
   credentials: true,
 })
 export class WaitchatsGateway
