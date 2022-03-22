@@ -83,7 +83,7 @@ export class WaitchatsGateway
     });
   }
 
-  @SubscribeMessage('leaveRoom')
+  @SubscribeMessage('disconnecting')
   async handleLeaveRoom(
     @MessageBody() data: any,
     @ConnectedSocket() socket: Socket,
