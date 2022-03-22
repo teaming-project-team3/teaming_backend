@@ -102,6 +102,8 @@ export class WaitchatsGateway
     @MessageBody() data: { sender: string; room: string; message: string },
     @ConnectedSocket() socket: Socket,
   ) {
+    console.log('data : ', data);
+
     socket.broadcast.to(data.room).emit('message', {
       sender: data.sender,
       text: data.message,
