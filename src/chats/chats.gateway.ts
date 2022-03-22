@@ -19,7 +19,10 @@ import { User } from 'src/schemas/User.schema';
 @WebSocketGateway({
   namespace: 'tttt',
   cors: {
-    origin: '*',
+    origin: [
+      'http://localhost:3000',
+      'http://teamingdeploy.s3-website.ap-northeast-2.amazonaws.com',
+    ],
   },
 })
 export class ChatsGateway
