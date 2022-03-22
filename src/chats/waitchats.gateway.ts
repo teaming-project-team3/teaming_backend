@@ -19,21 +19,19 @@ import { User } from 'src/schemas/User.schema';
 // 대기방 채팅
 @WebSocketGateway({
   namespace: 'waitroom',
-  cors: {
-    origin: '*',
-  },
+  cors: '*',
 })
 export class WaitchatsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  private logger = new Logger('chatting');
+  @WebSocketServer()
+  server: Server;
+
+  private logger = new Logger('waitroom chatting');
 
   constructor(
-    @InjectModel(DmList.name) private readonly dmListModel: Model<DmList>,
-    @InjectModel(DmContent.name)
-    private readonly dmContentModel: Model<DmContent>,
     @InjectModel(User.name)
-    private readonly UserModel: Model<User>,
+    private readonly userModel: Model<User>,
   ) {
     this.logger.log('constructor');
   }
@@ -42,38 +40,65 @@ export class WaitchatsGateway
     this.logger.log('init');
   }
 
-  async handleDisconnect(@ConnectedSocket() socket: Socket) {
+  handleDisconnect(@ConnectedSocket() socket: Socket) {
+    console.log('waitroom 접속 해제 ');
     this.logger.log(`disconnected : ${socket.id} ${socket.nsp.name}`);
   }
 
   handleConnection(@ConnectedSocket() socket: Socket) {
+    console.log('waitroom 네임스페이스 접속');
     this.logger.log(`connected : ${socket.id} ${socket.nsp.name}`);
   }
 
-  @SubscribeMessage('message')
-  handleMessage(
-    @MessageBody()
-    message: { sender: string; room: string; message: string },
-    @ConnectedSocket() socket: Socket,
-  ): any {
-    socket.to(message.room).emit('sendMessage', message);
-  }
-
-  @SubscribeMessage('joinRoom')
-  handleJoinMessage(
-    @MessageBody() userInfo,
+  @SubscribeMessage('join')
+  async handleJoinRoom(
+    @MessageBody() data: any,
     @ConnectedSocket() socket: Socket,
   ) {
-    socket.join(userInfo.room);
-    socket.emit('joinedRoom', userInfo.room);
+    socket.join(data.room);
+
+    // 메시지를 전송한 클라이언트에게만 메시지를 전송한다.
+    socket.emit('message', {
+      user: 'admin',
+      text: `${data.name}, ${data.room}에 오신걸 환영합니다.`,
+    });
+
+    // 메시지를 전송한 클라이언트를 제외한 room안의 모든 클라이언트에게 메시지를 전송한다.
+    socket.broadcast.to(data.room).emit('message', {
+      user: 'admin',
+      text: `${data.name} 님이 가입하셨습니다.`,
+    });
+
+    // to all clients in room except the sender
+    socket.to(data.room).emit('roomData', {
+      room: data.room,
+      users: `참가한 방의 유저들 정보`,
+    });
   }
 
   @SubscribeMessage('leaveRoom')
-  handleLeaveMessage(
-    @MessageBody() userInfo,
+  async handleLeaveRoom(
+    @MessageBody() data: any,
     @ConnectedSocket() socket: Socket,
   ) {
-    socket.leave(userInfo.room);
-    socket.emit('leftRoom', userInfo.room);
+    socket.leave(data.room);
+
+    // 메시지를 전송한 클라이언트를 제외한 room안의 모든 클라이언트에게 메시지를 전송한다.
+    socket.broadcast.to(data.room).emit('message', {
+      user: 'admin',
+      text: `${data.name} 님이 방을 나갔습니다.`,
+    });
+  }
+
+  @SubscribeMessage('sendMessage')
+  async handleMessage(
+    @MessageBody() data: { sender: string; room: string; message: string },
+    @ConnectedSocket() socket: Socket,
+  ) {
+    socket.broadcast.to(data.room).emit('message', {
+      sender: data.sender,
+      text: data.message,
+      date: new Date().toTimeString().split('T')[0],
+    });
   }
 }

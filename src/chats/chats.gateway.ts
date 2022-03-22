@@ -17,7 +17,7 @@ import { Socket, Server } from 'socket.io';
 import { User } from 'src/schemas/User.schema';
 
 @WebSocketGateway({
-  namespace: '',
+  namespace: 'tttt',
   cors: {
     origin: '*',
   },

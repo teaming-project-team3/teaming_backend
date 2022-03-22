@@ -14,7 +14,6 @@ export class WaitRoom {
 
   @Prop()
   participantList: [string, string][];
-
 }
 
 export const WaitRoomSchema = SchemaFactory.createForClass(WaitRoom);
