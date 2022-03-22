@@ -24,8 +24,9 @@ import { User } from 'src/schemas/User.schema';
       'http://localhost:3000',
       'http://teamingdeploy.s3-website.ap-northeast-2.amazonaws.com',
     ],
+    allowedHeaders: ['my-custom-header'],
+    credentials: true,
   },
-  credentials: true,
 })
 export class WaitchatsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
