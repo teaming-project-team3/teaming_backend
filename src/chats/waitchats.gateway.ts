@@ -20,6 +20,7 @@ import { User } from 'src/schemas/User.schema';
 @WebSocketGateway({
   namespace: 'waitroom',
   cors: '*',
+  credentials: true,
 })
 export class WaitchatsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
