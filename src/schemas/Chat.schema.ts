@@ -21,12 +21,16 @@ export class Chat {
   @Prop({ type: String, required: true })
   projectId: string;
 
+  // projectId 임시 컬럼
+  @Prop({ type: [String], required: true })
+  participantList: [];
+
   @Prop({
     default: [],
     type: {
-      senderNickname: { type: String },
-      contents: { type: String },
-      createdAt: { type: Date },
+      sender: { type: String, required: true },
+      text: { type: String, required: true },
+      date: { type: Date, required: true },
     },
   })
   messageData: [];
