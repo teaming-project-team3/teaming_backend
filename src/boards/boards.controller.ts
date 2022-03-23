@@ -21,10 +21,8 @@ export class BoardsController {
   }
   // 메인
   @Get()
-  @UseGuards(AuthGuard())
-  getAllBoard(@Req() req) {
-    console.log(req.user);
-    return this.boardsService.getAllBoards(req.user);
+  getAllBoard() {
+    return this.boardsService.getAllBoards();
   }
 
   // 프로젝트 등록
@@ -36,10 +34,24 @@ export class BoardsController {
   }
 
   // 더보기
-  @Get(':category')
-  getBoard(@Param('category') category: string) {
-    return this.boardsService.getAllCategory(category);
+  @Get(':category/:page')
+  getBoard(@Param('category') category: string, @Param('page') page: number) {
+    if (page === 1) {
+      page = 0;
+    }
+    return this.boardsService.getAllCategory(category, page);
   }
+
+  // 보드 상세보기 모달
+  @Get(':boardId')
+  getModelBoard(@Param('boardId') id: string) {
+    return this.boardsService.getModelBoard(id);
+  }
+
+  // @Get('mates/:boardId')
+  // getModelUser(@Param('boardId') id: string) {
+  //   return this.boardsService.getModelUser(id);
+  // }
 
   // 프로젝트 삭제
   @Delete(':boardID')
