@@ -18,6 +18,9 @@ export class UserInfo extends Document {
   @IsNotEmpty()
   userId: object;
 
+  @Prop()
+  position: string;
+
   @Prop({
     default: {},
     type: {
@@ -49,8 +52,18 @@ export class UserInfo extends Document {
 
   @Prop({
     default: null,
+    type: {
+      title: String,
+      image: String,
+      description: String,
+      url: String,
+      period: String,
+    },
   })
-  portfolioUrl: Array<string>; // 포트폴리오 주소 3개
+  portfolioUrl: Array<object>; // 포트폴리오 주소 3개
+
+  @Prop()
+  url: string;
 }
 
 export const UserInfoSchema = SchemaFactory.createForClass(UserInfo);

@@ -37,11 +37,6 @@ export class User extends Document {
   profileUrl: string;
 
   @Prop({
-    default: null,
-  })
-  position: string;
-
-  @Prop({
     default: [],
   })
   dmRooms: [];
@@ -50,6 +45,12 @@ export class User extends Document {
     default: null,
   })
   kakaoId: number;
+
+  @Prop({ type: Boolean })
+  suveryCheck: boolean;
+
+  @Prop({ type: Date })
+  createdAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
