@@ -15,9 +15,9 @@ import { Socket, Server } from 'socket.io';
   namespace: 'webrtc',
   cors: {
     origin: [
-      'https://localhost:3000',
-      'https://d1zc5f9ndqmvzc.cloudfront.net',
-      'https://teamingdeploy.s3-website.ap-northeast-2.amazonaws.com',
+      // 'https://localhost:3000',
+      'https://d1zc5f9ndqmvzc.cloudfront.net/',
+      // 'https://teamingdeploy.s3-website.ap-northeast-2.amazonaws.com',
     ],
     allowedHeaders: ['my-custom-header'],
     credentials: true,
