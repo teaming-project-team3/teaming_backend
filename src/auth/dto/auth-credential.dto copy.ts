@@ -1,7 +1,6 @@
 import {
   IsEmail,
   IsNotEmpty,
-  IsOptional,
   IsString,
   MaxLength,
   MinLength,
@@ -13,6 +12,7 @@ export class AuthCredentialsDto {
 
   @IsNotEmpty()
   @IsString()
+  // @Matches(/^[a-zA-Zㄱ-힣0-9]*$/g)
   @MinLength(3)
   @MaxLength(20)
   nickname: string;
@@ -28,32 +28,7 @@ export class AuthCredentialsDto {
   @MinLength(3)
   @MaxLength(20)
   passwordCheck: string;
-}
-
-export class AuthSignUpDto {
-  @IsEmail()
-  email: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(3)
-  @MaxLength(20)
-  password: string;
-}
-
-export class UserKakaoDto {
-  @IsString()
-  @IsNotEmpty()
-  name: string;
-
-  @IsEmail()
-  email: string | null;
 
   @IsString()
-  @IsNotEmpty()
-  kakaoId: string;
-
-  @IsString()
-  @IsNotEmpty()
-  accessToken: string;
+  profileUrl: string;
 }

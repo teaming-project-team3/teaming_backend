@@ -1,22 +1,22 @@
 import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
-import { Document, ObjectId } from 'mongoose';
+import { Matches } from 'class-validator';
+import { Document, ObjectId, Types } from 'mongoose';
 
 export type UserDocument = User & Document;
+
 const options: SchemaOptions = {
-  toJSON: {
-    getters: true,
-    virtuals: true,
-  },
+  collection: 'users',
+  timestamps: true,
 };
 @Schema(options)
-export class User {
+export class User extends Document {
   @Transform(({ value }) => value.toString())
   _id: ObjectId;
 
   @Prop({
+    default: null,
     index: { unique: true, dropDups: true },
-    required: true,
     type: String,
   })
   email: string;
@@ -37,18 +37,19 @@ export class User {
   profileUrl: string;
 
   @Prop({
-    default: null,
+    default: [],
   })
-  position: string;
+  dmRooms: [];
 
   @Prop({
     default: null,
   })
-  createdAt: Date;
+  kakaoId: number;
+
   @Prop({
-    default: null,
+    default: false,
   })
-  updatedAt: Date;
+  suveyCheck: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
