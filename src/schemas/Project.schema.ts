@@ -1,23 +1,33 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, ObjectId } from 'mongoose';
+import { Document, Types, SchemaTypes } from 'mongoose';
 
 export type ProjectDocument = Project & Document;
 
 @Schema()
 export class Project {
-  @Prop({ type: Object, required: false })
-  _id: ObjectId;
+  @Prop({ type: SchemaTypes.ObjectId })
+  _id: Types.ObjectId;
 
-  @Prop({ type: Object, required: true })
-  userId: object;
+  @Prop({ type: SchemaTypes.ObjectId, required: true })
+  userId: Types.ObjectId;
 
-  @Prop({ type: Object, required: true })
-  chatId: object;
+  @Prop({ type: SchemaTypes.ObjectId, required: true })
+  boardId: Types.ObjectId;
 
-  @Prop()
-  participantList: string[];
+  @Prop({ type: SchemaTypes.ObjectId, required: true })
+  chatId: Types.ObjectId;
 
-  @Prop({ type: Date, required: true })
+  @Prop({
+    default: {},
+    type: {
+      _id: false,
+      userId: { type: Array },
+      position: { type: Array },
+    },
+  })
+  participantList: object;
+
+  @Prop({ type: Date, required: false })
   createdAt: Date;
 
   @Prop()

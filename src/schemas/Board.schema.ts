@@ -1,16 +1,19 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
-import { Document, ObjectId } from 'mongoose';
+import { SchemaTypes, Types, Document } from 'mongoose';
 
 export type BoardDocument = Board & Document;
 
-@Schema()
+const options: SchemaOptions = {
+  timestamps: true,
+};
+@Schema(options)
 export class Board {
   @Transform(({ value }) => value.toString())
-  _id: ObjectId;
+  _id: Types.ObjectId;
 
-  @Prop({ type: Object, required: true })
-  userId: object;
+  @Prop({ type: SchemaTypes.ObjectId, required: true })
+  userId: Types.ObjectId;
 
   @Prop({ type: String, required: true })
   title: string;
@@ -21,11 +24,20 @@ export class Board {
   @Prop({ type: String, required: true })
   contents: string;
 
+  @Prop({ type: String, required: true })
+  subContents: string;
+
   @Prop({ required: true })
-  stack: [string, number][];
+  stack: [string, string, number][];
 
   @Prop({ type: Date, required: true })
   period: Date;
+
+  @Prop({ type: Number, default: 0 })
+  likeCount: number;
+
+  @Prop({ type: [String], default: null })
+  referURL: string[];
 
   @Prop({ type: Date, required: true })
   createdAt: Date;
