@@ -6,6 +6,7 @@ import { ChatsGateway } from './chats.gateway';
 import { User, UserSchema } from '../schemas/User.schema';
 import { WaitchatsGateway } from './waitchats.gateway';
 import { Chat, ChatSchema } from 'src/schemas/Chat.schema';
+import { WebrtcGateway } from './webrtc.gateway';
 
 @Module({
   imports: [
@@ -16,6 +17,6 @@ import { Chat, ChatSchema } from 'src/schemas/Chat.schema';
       { name: Chat.name, schema: ChatSchema },
     ]),
   ],
-  providers: [ChatsGateway, WaitchatsGateway],
+  providers: [ChatsGateway, WaitchatsGateway, WebrtcGateway],
 })
 export class ChatsModule {}
