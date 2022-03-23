@@ -1,8 +1,10 @@
 import { IsDate, IsString } from 'class-validator';
+import { Types } from 'mongoose';
 
 export class createBoardDto {
-  _id: object;
-  userId: object;
+  _id: Types.ObjectId;
+
+  userId: Types.ObjectId;
 
   @IsString()
   title: string;
@@ -13,13 +15,13 @@ export class createBoardDto {
   @IsString()
   contents: string;
 
-  stack: [string, number][];
+  @IsString()
+  subContents: string;
+
+  stack: [string, string, number][];
 
   @IsDate()
   period: Date;
 
-  @IsDate()
-  createdAt: Date;
-
-  updateAt: Date;
+  referURL: string[] | null;
 }
