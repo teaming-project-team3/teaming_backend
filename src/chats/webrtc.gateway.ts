@@ -17,6 +17,7 @@ import { Socket, Server } from 'socket.io';
     origin: [
       // 'https://localhost:3000',
       'https://d1zc5f9ndqmvzc.cloudfront.net/',
+      'https://wonjinlee.shop',
       // 'https://teamingdeploy.s3-website.ap-northeast-2.amazonaws.com',
     ],
     allowedHeaders: ['my-custom-header'],

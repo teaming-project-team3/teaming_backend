@@ -22,6 +22,7 @@ import { Chat } from 'src/schemas/Chat.schema';
     origin: [
       'http://localhost:3000',
       'http://teamingdeploy.s3-website.ap-northeast-2.amazonaws.com',
+      'https://wonjinlee.shop',
     ],
     allowedHeaders: ['my-custom-header'],
     credentials: true,
