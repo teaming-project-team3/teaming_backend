@@ -62,8 +62,11 @@ export class WebrtcGateway
     @MessageBody() data: { roomName: string; nickName: string },
     @ConnectedSocket() socket: Socket,
   ) {
+    console.log('✅=========join_room==============✅');
+
     console.log('join_room data!!' + data);
     console.log('join_room socket', socket);
+    console.log('✅======join_room=============✅');
 
     this.myRoomName = data.roomName;
     this.myNickname = data.nickName;
@@ -113,15 +116,23 @@ export class WebrtcGateway
 
   @SubscribeMessage('ice')
   handleIce(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
+    console.log('✅=======ice===============✅');
+
     console.log('ice data!!' + data);
     console.log('ice socket', socket);
+    console.log('✅========ice===============✅');
+
     socket.to(data.remoteSocketId).emit('ice', data.ice, socket.id);
   }
 
   @SubscribeMessage('offer')
   handleOffer(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
+    console.log('✅==========offer===========✅');
+
     console.log('offer data!!' + data);
     console.log('offer socket', socket);
+    console.log('✅=========offer=============✅');
+
     socket
       .to(data.remoteSocketId)
       .emit('offer', data.offer, socket.id, data.localNickname);
@@ -132,5 +143,36 @@ export class WebrtcGateway
     console.log('answer data!!' + data);
     console.log('answer socket', socket);
     socket.to(data.remoteSocketId).emit('answer', data.answer, socket.id);
+  }
+
+  @SubscribeMessage('disconneting')
+  handleLeaveRoom(@ConnectedSocket() socket: Socket) {
+    console.log('✅==========disconneting==========✅');
+
+    console.log('disconnecting');
+
+    socket.to(this.myRoomName).emit('leave_room', socket.id, this.myNickname);
+    let isRoomEmpty = false;
+    for (let i = 0; i < this.roomObjArr.length; ++i) {
+      if (this.roomObjArr[i].roomName === this.myRoomName) {
+        const newUsers = this.roomObjArr[i].users.filter(
+          (user) => user.socketId != socket.id,
+        );
+        this.roomObjArr[i].users = newUsers;
+        --this.roomObjArr[i].currentNum;
+
+        if (this.roomObjArr[i].currentNum == 0) {
+          isRoomEmpty = true;
+        }
+      }
+    }
+
+    // Delete room
+    if (isRoomEmpty) {
+      const newRoomObjArr = this.roomObjArr.filter(
+        (roomObj) => roomObj.currentNum != 0,
+      );
+      this.roomObjArr = newRoomObjArr;
+    }
   }
 }
