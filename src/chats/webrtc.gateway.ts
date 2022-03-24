@@ -15,10 +15,10 @@ import { Socket, Server } from 'socket.io';
   namespace: 'webrtc',
   cors: {
     origin: [
-      // 'https://localhost:3000',
+      'https://localhost:3000',
       'https://d1zc5f9ndqmvzc.cloudfront.net/',
       'https://wonjinlee.shop',
-      // 'https://teamingdeploy.s3-website.ap-northeast-2.amazonaws.com',
+      'http://teamingdeploy.s3-website.ap-northeast-2.amazonaws.com',
     ],
     allowedHeaders: ['my-custom-header'],
     credentials: true,
@@ -62,6 +62,9 @@ export class WebrtcGateway
     @MessageBody() data: { roomName: string; nickName: string },
     @ConnectedSocket() socket: Socket,
   ) {
+    console.log('data!!' + data);
+    console.log('socket', socket);
+
     this.myRoomName = data.roomName;
     this.myNickname = data.nickName;
 
@@ -103,6 +106,7 @@ export class WebrtcGateway
 
     socket.join(data.roomName);
     console.log("after join, emit 'accept_join'", targetRoomObj.users);
+
     socket.emit('accept_join', targetRoomObj.users);
     //join_room end
   }
