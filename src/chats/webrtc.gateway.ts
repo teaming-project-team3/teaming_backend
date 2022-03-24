@@ -15,10 +15,10 @@ import { Socket, Server } from 'socket.io';
   namespace: 'webrtc',
   cors: {
     origin: [
-      'https://localhost:3000',
       'https://d1zc5f9ndqmvzc.cloudfront.net/',
       'https://wonjinlee.shop',
       'http://teamingdeploy.s3-website.ap-northeast-2.amazonaws.com',
+      'http://localhost:3000',
     ],
     allowedHeaders: ['my-custom-header'],
     credentials: true,
@@ -30,7 +30,7 @@ export class WebrtcGateway
   @WebSocketServer()
   server: Server;
 
-  private logger = new Logger('waitroom chatting');
+  private logger = new Logger('webrtc');
   private roomObjArr: any;
   private MAXIMUM: number;
   private myRoomName;
@@ -112,25 +112,19 @@ export class WebrtcGateway
   }
 
   @SubscribeMessage('ice')
-  async handleIce(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
+  handleIce(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
     socket.to(data.remoteSocketId).emit('ice', data.ice, socket.id);
   }
 
   @SubscribeMessage('offer')
-  async handleOffer(
-    @MessageBody() data: any,
-    @ConnectedSocket() socket: Socket,
-  ) {
+  handleOffer(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
     socket
       .to(data.remoteSocketId)
       .emit('offer', data.offer, socket.id, data.localNickname);
   }
 
   @SubscribeMessage('answer')
-  async handleAnswer(
-    @MessageBody() data: any,
-    @ConnectedSocket() socket: Socket,
-  ) {
+  handleAnswer(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
     socket.to(data.remoteSocketId).emit('answer', data.answer, socket.id);
   }
 }
