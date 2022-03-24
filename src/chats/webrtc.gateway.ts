@@ -65,7 +65,7 @@ export class WebrtcGateway
     console.log('✅=========join_room==============✅');
 
     console.log('join_room data!!' + data);
-    console.log('join_room socket', socket);
+    // console.log('join_room socket', socket);
     console.log('✅======join_room=============✅');
 
     this.myRoomName = data.roomName;
@@ -119,7 +119,7 @@ export class WebrtcGateway
     console.log('✅=======ice===============✅');
 
     console.log('ice data!!' + data);
-    console.log('ice socket', socket);
+    // console.log('ice socket', socket);
     console.log('✅========ice===============✅');
 
     socket.to(data.remoteSocketId).emit('ice', data.ice, socket.id);
@@ -130,7 +130,7 @@ export class WebrtcGateway
     console.log('✅==========offer===========✅');
 
     console.log('offer data!!' + data);
-    console.log('offer socket', socket);
+    // console.log('offer socket', socket);
     console.log('✅=========offer=============✅');
 
     socket
@@ -141,7 +141,7 @@ export class WebrtcGateway
   @SubscribeMessage('answer')
   handleAnswer(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
     console.log('answer data!!' + data);
-    console.log('answer socket', socket);
+    // console.log('answer socket', socket);
     socket.to(data.remoteSocketId).emit('answer', data.answer, socket.id);
   }
 
