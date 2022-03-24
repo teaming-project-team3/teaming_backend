@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
-import { Matches } from 'class-validator';
 import { Document, ObjectId, Types } from 'mongoose';
 
 export type UserDocument = User & Document;
@@ -17,6 +16,7 @@ export class User extends Document {
   @Prop({
     default: null,
     index: { unique: true, dropDups: true },
+    required: true,
     type: String,
   })
   email: string;
@@ -46,10 +46,11 @@ export class User extends Document {
   })
   kakaoId: number;
 
-  @Prop({
-    default: false,
-  })
-  suveyCheck: boolean;
+  @Prop({ type: Boolean })
+  suveryCheck: boolean;
+
+  @Prop({ type: Date })
+  createdAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
