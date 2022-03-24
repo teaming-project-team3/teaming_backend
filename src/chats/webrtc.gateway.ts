@@ -62,8 +62,8 @@ export class WebrtcGateway
     @MessageBody() data: { roomName: string; nickName: string },
     @ConnectedSocket() socket: Socket,
   ) {
-    console.log('data!!' + data);
-    console.log('socket', socket);
+    console.log('join_room data!!' + data);
+    console.log('join_room socket', socket);
 
     this.myRoomName = data.roomName;
     this.myNickname = data.nickName;
@@ -113,11 +113,15 @@ export class WebrtcGateway
 
   @SubscribeMessage('ice')
   handleIce(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
+    console.log('ice data!!' + data);
+    console.log('ice socket', socket);
     socket.to(data.remoteSocketId).emit('ice', data.ice, socket.id);
   }
 
   @SubscribeMessage('offer')
   handleOffer(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
+    console.log('offer data!!' + data);
+    console.log('offer socket', socket);
     socket
       .to(data.remoteSocketId)
       .emit('offer', data.offer, socket.id, data.localNickname);
@@ -125,6 +129,8 @@ export class WebrtcGateway
 
   @SubscribeMessage('answer')
   handleAnswer(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
+    console.log('answer data!!' + data);
+    console.log('answer socket', socket);
     socket.to(data.remoteSocketId).emit('answer', data.answer, socket.id);
   }
 }
