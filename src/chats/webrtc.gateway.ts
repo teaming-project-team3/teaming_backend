@@ -154,7 +154,7 @@ export class WebrtcGateway
     console.log('✅==========leaveRoom==========✅');
     console.log('leaveRoom');
 
-    socket.to(this.myRoomName).emit('leave_room', socket.id, this.myNickname);
+    socket.to(this.myRoomName).emit('leaveRoom', socket.id, this.myNickname);
     let isRoomEmpty = false;
     for (let i = 0; i < this.roomObjArr.length; ++i) {
       if (this.roomObjArr[i].roomName === this.myRoomName) {
