@@ -28,9 +28,9 @@ export class Chat {
   @Prop({
     default: [],
     type: {
-      sender: { type: String, required: true },
-      text: { type: String, required: true },
-      date: { type: Date, required: true },
+      sender: { type: String },
+      text: { type: String },
+      date: { type: Date },
     },
   })
   messageData: [];
