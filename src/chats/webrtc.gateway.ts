@@ -47,9 +47,9 @@ export class WebrtcGateway
   handleDisconnect(@ConnectedSocket() socket: Socket) {
     console.log('this.myRoomName', this.myRoomName);
     console.log('this.myNickname', this.myNickname);
-
+    console.log('socket.client', socket.client);
     socket.leave(this.myRoomName);
-    socket.to(this.myRoomName).emit('leaveRoom', socket.id, this.myNickname);
+    socket.to(this.myRoomName).emit('leaveRoom', socket.id);
 
     let isRoomEmpty = false;
     for (let i = 0; i < this.roomObjArr.length; ++i) {
@@ -176,39 +176,6 @@ export class WebrtcGateway
     console.log('answer data!!', data);
     // console.log('answer socket', socket);
     socket.to(data.remoteSocketId).emit('answer', data.answer, socket.id);
-  }
-
-  @SubscribeMessage('leaveRoom')
-  handleLeaveRoom(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
-    console.log('✅==========leaveRoom==========✅');
-    console.log('leaveRoom');
-
-    socket.to(this.myRoomName).emit('leaveRoom', socket.id, this.myNickname);
-    // let isRoomEmpty = false;
-    // for (let i = 0; i < this.roomObjArr.length; ++i) {
-    //   if (this.roomObjArr[i].roomName === this.myRoomName) {
-    //     const newUsers = this.roomObjArr[i].users.filter(
-    //       (user) => user.socketId != socket.id,
-    //     );
-    //     this.roomObjArr[i].users = newUsers;
-    //     this.roomObjArr[i].currentNum -= 1;
-
-    //     if (this.roomObjArr[i].currentNum == 0) {
-    //       isRoomEmpty = true;
-    //     }
-    //   }
-    // }
-
-    // // Delete room
-    // if (isRoomEmpty) {
-    //   const newRoomObjArr = this.roomObjArr.filter(
-    //     (roomObj) => roomObj.currentNum != 0,
-    //   );
-    //   this.roomObjArr = newRoomObjArr;
-    // }
-
-    console.log('✅========== socket.leave(data.roomName);==========✅');
-    socket.leave(data.roomName);
   }
 
   @SubscribeMessage('videoON')
