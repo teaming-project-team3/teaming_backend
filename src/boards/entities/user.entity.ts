@@ -1,8 +1,9 @@
-export interface userInfo {
-  _id: object;
+import { Types } from 'mongoose';
+
+export class userInfo {
+  _id: Types.ObjectId;
   email: string;
   nickname: string;
-  password: string;
   profileUrl: string;
   position: string;
   createdAt: Date;

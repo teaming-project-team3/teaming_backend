@@ -14,9 +14,12 @@ export class UserInfo extends Document {
   @Transform(({ value }) => value.toString())
   _id: ObjectId;
 
-  @Prop({ type: Types.ObjectId, required: true, ref: 'User' })
+  @Prop({ type: Types.ObjectId, required: true, ref: 'users' })
   @IsNotEmpty()
-  userId: ObjectId;
+  userId: object;
+
+  @Prop()
+  position: string;
 
   @Prop({
     default: {},
@@ -48,18 +51,18 @@ export class UserInfo extends Document {
   design: object;
 
   @Prop({
-    default: [],
-  })
-  portfolioUrl: [];
-
-  @Prop({
     default: null,
+    type: {
+      title: String,
+      image: String,
+      description: String,
+      url: String,
+      period: String,
+    },
   })
-  position: string;
+  portfolioUrl: Array<object>; // 포트폴리오 주소 3개
 
-  @Prop({
-    default: null,
-  })
+  @Prop()
   url: string;
 }
 

@@ -1,4 +1,4 @@
-export interface userToken {
+export class userToken {
   email: string;
   nickname: string;
   profileUrl: string;

@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { ChatsModule } from './chats/chats.module';
 import { UsersModule } from './users/users.module';
+import { AppController } from './app.controller';
 import mongoose from 'mongoose';
 
 @Module({
@@ -30,7 +31,7 @@ import mongoose from 'mongoose';
     ChatsModule,
     UsersModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule implements NestModule {
