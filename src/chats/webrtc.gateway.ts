@@ -50,6 +50,30 @@ export class WebrtcGateway
 
     socket.leave(this.myRoomName);
     socket.to(this.myRoomName).emit('leaveRoom', socket.id, this.myNickname);
+
+    let isRoomEmpty = false;
+    for (let i = 0; i < this.roomObjArr.length; ++i) {
+      if (this.roomObjArr[i].roomName === this.myRoomName) {
+        const newUsers = this.roomObjArr[i].users.filter(
+          (user) => user.socketId != socket.id,
+        );
+        this.roomObjArr[i].users = newUsers;
+        this.roomObjArr[i].currentNum -= 1;
+
+        if (this.roomObjArr[i].currentNum == 0) {
+          isRoomEmpty = true;
+        }
+      }
+    }
+
+    // Delete room
+    if (isRoomEmpty) {
+      const newRoomObjArr = this.roomObjArr.filter(
+        (roomObj) => roomObj.currentNum != 0,
+      );
+      this.roomObjArr = newRoomObjArr;
+    }
+
     console.log('webrtc 접속 해제 ');
     this.logger.log(`disconnected : ${socket.id} ${socket.nsp.name}`);
   }
@@ -160,28 +184,28 @@ export class WebrtcGateway
     console.log('leaveRoom');
 
     socket.to(this.myRoomName).emit('leaveRoom', socket.id, this.myNickname);
-    let isRoomEmpty = false;
-    for (let i = 0; i < this.roomObjArr.length; ++i) {
-      if (this.roomObjArr[i].roomName === this.myRoomName) {
-        const newUsers = this.roomObjArr[i].users.filter(
-          (user) => user.socketId != socket.id,
-        );
-        this.roomObjArr[i].users = newUsers;
-        this.roomObjArr[i].currentNum -= 1;
+    // let isRoomEmpty = false;
+    // for (let i = 0; i < this.roomObjArr.length; ++i) {
+    //   if (this.roomObjArr[i].roomName === this.myRoomName) {
+    //     const newUsers = this.roomObjArr[i].users.filter(
+    //       (user) => user.socketId != socket.id,
+    //     );
+    //     this.roomObjArr[i].users = newUsers;
+    //     this.roomObjArr[i].currentNum -= 1;
 
-        if (this.roomObjArr[i].currentNum == 0) {
-          isRoomEmpty = true;
-        }
-      }
-    }
+    //     if (this.roomObjArr[i].currentNum == 0) {
+    //       isRoomEmpty = true;
+    //     }
+    //   }
+    // }
 
-    // Delete room
-    if (isRoomEmpty) {
-      const newRoomObjArr = this.roomObjArr.filter(
-        (roomObj) => roomObj.currentNum != 0,
-      );
-      this.roomObjArr = newRoomObjArr;
-    }
+    // // Delete room
+    // if (isRoomEmpty) {
+    //   const newRoomObjArr = this.roomObjArr.filter(
+    //     (roomObj) => roomObj.currentNum != 0,
+    //   );
+    //   this.roomObjArr = newRoomObjArr;
+    // }
 
     console.log('✅========== socket.leave(data.roomName);==========✅');
     socket.leave(data.roomName);
