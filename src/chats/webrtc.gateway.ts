@@ -39,7 +39,7 @@ export class WebrtcGateway
   constructor() {
     this.logger.log('constructor');
     this.roomObjArr = [];
-    this.MAXIMUM = 5;
+    this.MAXIMUM = 10;
     this.myRoomName = null;
     this.myNickname = null;
   }
