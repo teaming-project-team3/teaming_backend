@@ -53,6 +53,7 @@ export class WebrtcGateway
     console.log('webrtc 네임스페이스 접속');
     this.logger.log(`connected : ${socket.id} ${socket.nsp.name}`);
   }
+
   afterInit() {
     this.logger.log('init');
   }
@@ -64,8 +65,7 @@ export class WebrtcGateway
   ) {
     console.log('✅=========join_room==============✅');
 
-    console.log('join_room data!!' + data);
-    // console.log('join_room socket', socket);
+    console.log('join_room data!!', data); // console.log('join_room socket', socket);
     console.log('✅======join_room=============✅');
 
     this.myRoomName = data.roomName;
@@ -145,7 +145,7 @@ export class WebrtcGateway
     socket.to(data.remoteSocketId).emit('answer', data.answer, socket.id);
   }
 
-  @SubscribeMessage('disconneting')
+  @SubscribeMessage('leaveRoom')
   handleLeaveRoom(@ConnectedSocket() socket: Socket) {
     console.log('✅==========disconneting==========✅');
 
@@ -159,7 +159,7 @@ export class WebrtcGateway
           (user) => user.socketId != socket.id,
         );
         this.roomObjArr[i].users = newUsers;
-        --this.roomObjArr[i].currentNum;
+        this.roomObjArr[i].currentNum -= 1;
 
         if (this.roomObjArr[i].currentNum == 0) {
           isRoomEmpty = true;
