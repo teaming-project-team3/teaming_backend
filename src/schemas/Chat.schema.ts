@@ -26,12 +26,14 @@ export class Chat {
   participantList: [];
 
   @Prop({
-    default: '',
-    type: {
-      sender: { type: String },
-      text: { type: String },
-      date: { type: Date },
-    },
+    default: [],
+    type: [
+      {
+        sender: { type: String },
+        text: { type: String },
+        date: { type: Date },
+      },
+    ],
   })
   messageData: [];
 }
