@@ -185,6 +185,8 @@ export class WebrtcGateway
     @MessageBody() data: any,
     @ConnectedSocket() socket: Socket,
   ): any {
+    console.log('✅========== videoON==========✅');
+
     const videoStatus = true;
     socket.to(data.roomName).emit('videoON', data.nickName, videoStatus);
   }
@@ -193,6 +195,8 @@ export class WebrtcGateway
     @MessageBody() data: any,
     @ConnectedSocket() socket: Socket,
   ): any {
+    console.log('✅========== videoOFF==========✅');
+
     const videoStatus = false;
     socket.to(data.roomName).emit('videoOFF', data.nickName, videoStatus);
   }
@@ -201,6 +205,7 @@ export class WebrtcGateway
     @MessageBody() data: any,
     @ConnectedSocket() socket: Socket,
   ): any {
+    console.log('✅========== audioON==========✅');
     const audioStatus = true;
     socket.to(data.roomName).emit('audioON', data.nickName, audioStatus);
   }
@@ -209,6 +214,7 @@ export class WebrtcGateway
     @MessageBody() data: any,
     @ConnectedSocket() socket: Socket,
   ): any {
+    console.log('✅========== audioOFF==========✅');
     const audioStatus = false;
     socket.to(data.roomName).emit('audioOFF', data.nickName, audioStatus);
   }
