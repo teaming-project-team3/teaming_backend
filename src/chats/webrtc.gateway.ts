@@ -45,6 +45,11 @@ export class WebrtcGateway
   }
 
   handleDisconnect(@ConnectedSocket() socket: Socket) {
+    console.log('this.myRoomName', this.myRoomName);
+    console.log('this.myNickname', this.myNickname);
+
+    socket.leave(this.myRoomName);
+    socket.to(this.myRoomName).emit('leaveRoom', socket.id, this.myNickname);
     console.log('webrtc 접속 해제 ');
     this.logger.log(`disconnected : ${socket.id} ${socket.nsp.name}`);
   }
