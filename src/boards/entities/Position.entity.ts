@@ -1,4 +1,4 @@
-export interface Design {
+export class Design {
   userId: object;
   behanceUrl: string | null;
   skills: Array<[string, number, number]> | null;
@@ -6,7 +6,7 @@ export interface Design {
   _id: object;
 }
 
-export interface Dev {
+export class Dev {
   userId: object;
   gitUrl: string;
   bojUrl: string;
