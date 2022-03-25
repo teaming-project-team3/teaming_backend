@@ -1,10 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
 import { Document, Types, SchemaTypes } from 'mongoose';
 
 export type ProjectDocument = Project & Document;
 
 @Schema()
 export class Project {
+
   @Prop({ type: SchemaTypes.ObjectId })
   _id: Types.ObjectId;
 
@@ -16,6 +18,7 @@ export class Project {
 
   @Prop({ type: SchemaTypes.ObjectId, required: true })
   chatId: Types.ObjectId;
+
 
   @Prop({
     default: {},

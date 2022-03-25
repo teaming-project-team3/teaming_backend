@@ -1,5 +1,0 @@
-server:
-  port: 3000
-
-jwt:
-  expiresIn: 99999999
