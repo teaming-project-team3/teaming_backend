@@ -26,7 +26,7 @@ export class Chat {
   participantList: [];
 
   @Prop({
-    default: [],
+    default: '',
     type: {
       sender: { type: String },
       text: { type: String },

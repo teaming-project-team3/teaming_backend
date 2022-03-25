@@ -64,7 +64,8 @@ export class WaitchatsGateway
     @ConnectedSocket() socket: Socket,
   ) {
     // 임시 DB연산 ====================================
-
+    console.log('✅========== waitroom join==========✅');
+    console.log(data);
     const roomExists = await this.chatModel.findOne({
       projectId: data.room,
     });
@@ -116,6 +117,8 @@ export class WaitchatsGateway
     @MessageBody() data: { name: string; room: string; message: string },
     @ConnectedSocket() socket: Socket,
   ) {
+    console.log('✅==========disconnecting==========✅');
+
     const { participantList } = await this.chatModel.findOne({
       projectId: data.room,
     });
@@ -143,6 +146,8 @@ export class WaitchatsGateway
     @MessageBody() data: { sender: string; room: string; message: string },
     @ConnectedSocket() socket: Socket,
   ) {
+    console.log('✅==========sendMessage==========✅');
+
     console.log('data : ', data);
 
     const payload = {
