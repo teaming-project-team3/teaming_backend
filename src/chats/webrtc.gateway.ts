@@ -47,8 +47,7 @@ export class WebrtcGateway
   handleDisconnect(@ConnectedSocket() socket: Socket) {
     console.log('this.myRoomName', this.myRoomName);
     console.log('this.myNickname', this.myNickname);
-    console.log('socket.client', socket.client);
-    socket.leave(this.myRoomName);
+    console.log('this.myNickname', this.roomObjArr);
     socket.to(this.myRoomName).emit('leaveRoom', socket.id);
 
     let isRoomEmpty = false;
@@ -59,6 +58,15 @@ export class WebrtcGateway
         );
         this.roomObjArr[i].users = newUsers;
         this.roomObjArr[i].currentNum -= 1;
+
+        console.log(
+          '✅=========console.log(this.roomObjArr[i]);==============✅',
+        );
+
+        console.log(this.roomObjArr[i]);
+        console.log(
+          '✅=========console.log(this.roomObjArr[i]);==============✅',
+        );
 
         if (this.roomObjArr[i].currentNum == 0) {
           isRoomEmpty = true;
@@ -151,7 +159,7 @@ export class WebrtcGateway
   handleIce(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
     console.log('✅=======ice===============✅');
 
-    console.log('ice data!!', data);
+    // console.log('ice data!!', data);
     // console.log('ice socket', socket);
     console.log('✅========ice===============✅');
 
@@ -162,7 +170,7 @@ export class WebrtcGateway
   handleOffer(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
     console.log('✅==========offer===========✅');
 
-    console.log('offer data!!', data);
+    // console.log('offer data!!', data);
     // console.log('offer socket', socket);
     console.log('✅=========offer=============✅');
 
@@ -173,7 +181,7 @@ export class WebrtcGateway
 
   @SubscribeMessage('answer')
   handleAnswer(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
-    console.log('answer data!!', data);
+    // console.log('answer data!!', data);
     // console.log('answer socket', socket);
     socket.to(data.remoteSocketId).emit('answer', data.answer, socket.id);
   }
