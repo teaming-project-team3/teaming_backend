@@ -112,7 +112,7 @@ export class WebrtcGateway
     socket.join(data.roomName);
     console.log("after join, emit 'accept_join'", targetRoomObj.users);
 
-    // this.server.to(data.roomName).emit('accept_join', targetRoomObj.users);
+    // this.server.sockets.to(data.roomName).emit('accept_join', targetRoomObj.users);
     socket.emit('accept_join', targetRoomObj.users);
     // socket.broadcast.to(data.roomName).emit('accept_join', targetRoomObj.users);
     //join_room end
