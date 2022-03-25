@@ -13,7 +13,6 @@ export class Board {
   @Transform(({ value }) => value.toString())
   _id: Types.ObjectId;
 
-
   @Prop({ type: SchemaTypes.ObjectId, required: true })
   userId: Types.ObjectId;
 
@@ -34,7 +33,6 @@ export class Board {
 
   @Prop({ type: Date, required: true })
   period: Date;
-
 
   @Prop({ type: Number, default: 0 })
   likeCount: number;

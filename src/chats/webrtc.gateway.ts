@@ -120,7 +120,7 @@ export class WebrtcGateway
   handleIce(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
     console.log('✅=======ice===============✅');
 
-    console.log('ice data!!' + data);
+    console.log('ice data!!', data);
     // console.log('ice socket', socket);
     console.log('✅========ice===============✅');
 
@@ -131,18 +131,18 @@ export class WebrtcGateway
   handleOffer(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
     console.log('✅==========offer===========✅');
 
-    console.log('offer data!!' + data);
+    console.log('offer data!!', data);
     // console.log('offer socket', socket);
     console.log('✅=========offer=============✅');
 
     socket
       .to(data.remoteSocketId)
-      .emit('offer', data.offer, socket.id, data.localNickname);
+      .emit('offer', data.offer, socket.id, data.localNickName);
   }
 
   @SubscribeMessage('answer')
   handleAnswer(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
-    console.log('answer data!!' + data);
+    console.log('answer data!!', data);
     // console.log('answer socket', socket);
     socket.to(data.remoteSocketId).emit('answer', data.answer, socket.id);
   }
