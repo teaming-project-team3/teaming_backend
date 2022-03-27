@@ -1,24 +1,39 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
+import { Transform } from 'class-transformer';
+import { IsNotEmpty } from 'class-validator';
+import { Document, ObjectId, Types } from 'mongoose';
 
 export type ChatDocument = Chat & Document;
-
-@Schema()
+const options: SchemaOptions = {
+  collection: 'chats',
+  timestamps: true,
+};
+@Schema(options)
 export class Chat {
-  @Prop({ type: Object, required: false })
-  _id: object;
+  @Transform(({ value }) => value.toString())
+  _id: ObjectId;
 
-  @Prop({ type: Object })
-  fromUserId: object;
+  // @Prop({ type: Types.ObjectId, required: true, ref: 'Project' })
+  // @IsNotEmpty()
+  // projectId: ObjectId;
 
-  @Prop({ type: [String] })
-  toUserId: string[];
+  // projectId 임시 컬럼
+  @Prop({ type: String, required: true })
+  projectId: string;
 
-  @Prop({ type: Object, required: true })
-  userId: object;
+  // projectId 임시 컬럼
+  @Prop({ type: [String], required: true })
+  participantList: [];
 
-  @Prop({ type: Date, required: true })
-  createdAt: Date;
+  @Prop({
+    default: [],
+    type: {
+      sender: { type: String, required: true },
+      text: { type: String, required: true },
+      date: { type: Date, required: true },
+    },
+  })
+  messageData: [];
 }
 
 export const ChatSchema = SchemaFactory.createForClass(Chat);

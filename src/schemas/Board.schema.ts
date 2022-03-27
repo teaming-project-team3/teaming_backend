@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
+
 import { SchemaTypes, Types, Document } from 'mongoose';
 
 export type BoardDocument = Board & Document;
@@ -11,6 +12,7 @@ const options: SchemaOptions = {
 export class Board {
   @Transform(({ value }) => value.toString())
   _id: Types.ObjectId;
+
 
   @Prop({ type: SchemaTypes.ObjectId, required: true })
   userId: Types.ObjectId;
@@ -32,6 +34,7 @@ export class Board {
 
   @Prop({ type: Date, required: true })
   period: Date;
+
 
   @Prop({ type: Number, default: 0 })
   likeCount: number;

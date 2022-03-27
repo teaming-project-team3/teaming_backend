@@ -17,9 +17,14 @@ import { Socket, Server } from 'socket.io';
 import { User } from 'src/schemas/User.schema';
 
 @WebSocketGateway({
-  namespace: '',
+  namespace: 'tttt',
   cors: {
-    origin: '*',
+    origin: [
+      'http://localhost:3000',
+      'http://teamingdeploy.s3-website.ap-northeast-2.amazonaws.com',
+    ],
+    allowedHeaders: ['my-custom-header'],
+    credentials: true,
   },
 })
 export class ChatsGateway
