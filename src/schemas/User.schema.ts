@@ -45,8 +45,11 @@ export class User extends Document {
   })
   kakaoId: number;
 
-  @Prop({ type: Boolean })
-  suveryCheck: boolean;
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  suveyCheck: boolean;
 
   @Prop({ type: Date })
   createdAt: Date;

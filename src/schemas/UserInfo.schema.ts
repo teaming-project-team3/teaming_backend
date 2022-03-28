@@ -25,8 +25,26 @@ export class UserInfo extends Document {
     default: {},
     type: {
       _id: false,
-      ability: { type: Array },
-      skills: { type: Array },
+      ability: {
+        type: [
+          {
+            _id: false,
+            name: String,
+            time: String || Number,
+            rate: String || Number,
+          },
+        ],
+      },
+      skills: {
+        type: [
+          {
+            _id: false,
+            name: String,
+            time: String || Number,
+            rate: String || Number,
+          },
+        ],
+      },
     },
   })
   front: object;
@@ -35,8 +53,26 @@ export class UserInfo extends Document {
     default: {},
     type: {
       _id: false,
-      ability: { type: Array },
-      skills: { type: Array },
+      ability: {
+        type: [
+          {
+            _id: false,
+            name: String,
+            time: String || Number,
+            rate: String || Number,
+          },
+        ],
+      },
+      skills: {
+        type: [
+          {
+            _id: false,
+            name: String,
+            time: String || Number,
+            rate: String || Number,
+          },
+        ],
+      },
     },
   })
   back: object;
@@ -45,7 +81,16 @@ export class UserInfo extends Document {
     default: {},
     type: {
       _id: false,
-      skills: { type: Array },
+      skills: {
+        type: [
+          {
+            _id: false,
+            name: String,
+            time: String || Number,
+            rate: String || Number,
+          },
+        ],
+      },
     },
   })
   design: object;
@@ -54,6 +99,7 @@ export class UserInfo extends Document {
     default: [],
     type: [
       {
+        _id: false,
         title: String || null,
         image: String || null,
         description: String || null,
@@ -64,7 +110,9 @@ export class UserInfo extends Document {
   })
   portfolioUrl: [];
 
-  @Prop()
+  @Prop({
+    default: null,
+  })
   url: string;
 }
 
