@@ -1,24 +1,23 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { Document, Types, SchemaTypes } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export type ProjectDocument = Project & Document;
 
 @Schema()
 export class Project {
 
-  @Prop({ type: SchemaTypes.ObjectId })
+  @Prop({ type: Types.ObjectId })
   _id: Types.ObjectId;
 
-  @Prop({ type: SchemaTypes.ObjectId, required: true })
+  @Prop({ type: Types.ObjectId })
   userId: Types.ObjectId;
 
-  @Prop({ type: SchemaTypes.ObjectId, required: true })
+  @Prop({ type: Types.ObjectId })
   boardId: Types.ObjectId;
 
-  @Prop({ type: SchemaTypes.ObjectId, required: true })
+  @Prop({ type: Types.ObjectId })
   chatId: Types.ObjectId;
-
 
   @Prop({
     default: {},

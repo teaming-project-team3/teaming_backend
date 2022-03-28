@@ -63,7 +63,7 @@ export class ChatsGateway
     await this.userModel.findOneAndUpdate(
       { nickname: data.name },
       {
-        $push: { dmRooms: data.room },
+        $push: { dmRooms: 'data.room' },
       },
     );
     await this.userModel.findOneAndUpdate(
@@ -105,6 +105,7 @@ export class ChatsGateway
     socket.broadcast.to(data.room).emit('message', {
       sender: data.sender,
       text: data.message,
+      createdAt: new Date(),
     });
   }
 }
