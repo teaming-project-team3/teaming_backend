@@ -15,10 +15,6 @@ import { createBoardDto } from './dto/createBoard.dto';
 @Controller('boards')
 export class BoardsController {
   constructor(private readonly boardsService: BoardsService) {}
-  @Get('test')
-  i() {
-    return this.boardsService.findUser();
-  }
   // 메인
   @Get()
   getAllBoard() {
@@ -29,23 +25,23 @@ export class BoardsController {
   @Post()
   @UseGuards(AuthGuard())
   createBoard(@Req() req, @Body() board: createBoardDto) {
-    // console.log('createBoard:', req);
-    return this.boardsService.createBoard(board, req.user);
-  }
-
-  // 더보기
-  @Get(':category/:page')
-  getBoard(@Param('category') category: string, @Param('page') page: number) {
-    if (page === 1) {
-      page = 0;
-    }
-    return this.boardsService.getAllCategory(category, page);
+    console.log('createBoard:', req.user.user);
+    return this.boardsService.createBoard(board, req.user.user);
   }
 
   // 보드 상세보기 모달
   @Get(':boardId')
   getModelBoard(@Param('boardId') id: string) {
     return this.boardsService.getModelBoard(id);
+  }
+
+  // 더보기
+  @Get('category/:category/:page')
+  getBoard(@Param('category') category: string, @Param('page') page: number) {
+    if (page === 1) {
+      page = 0;
+    }
+    return this.boardsService.getAllCategory(category, page);
   }
 
   // @Get('mates/:boardId')
@@ -58,11 +54,5 @@ export class BoardsController {
   @UseGuards(AuthGuard())
   deleteBoard(@Req() req, @Param('boardId') boardId: string) {
     return this.boardsService.deleteBoard(boardId, req.user);
-  }
-
-  // 임시 회원가입 구현 실사용 x
-  @Post('users')
-  test(@Body() u: any) {
-    return this.boardsService.user(u);
   }
 }

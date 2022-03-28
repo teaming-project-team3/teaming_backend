@@ -18,7 +18,7 @@ export class createBoardDto {
   @IsString()
   subContents: string;
 
-  stack: [string, string, number][];
+  stack: [string, string, number][] | null;
 
   @IsDate()
   period: Date;

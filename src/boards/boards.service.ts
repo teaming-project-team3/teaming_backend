@@ -5,11 +5,8 @@ import { Model, ObjectId } from 'mongoose';
 import { createBoardDto } from './dto/createBoard.dto';
 import { getAllBoard } from './entities/Board.entity';
 import { Board as b, Mate as m, getOneBoard } from './entities/Board.entity';
-import { Design as ds, Dev as dv } from './entities/Position.entity';
 import { User, UserDocument } from 'src/schemas/User.schema';
 import { Project, ProjectDocument } from 'src/schemas/Project.schema';
-import { userDto } from './dto/user.dto';
-import { JwtService } from '@nestjs/jwt';
 import { Like, LikeDocument } from 'src/schemas/Like.schema';
 import { userInfo } from './entities/user.entity';
 import { projectEntity } from './entities/Project.entity';
@@ -25,7 +22,6 @@ export class BoardsService {
     @InjectModel(Project.name) private projectModel: Model<ProjectDocument>,
     @InjectModel(UserInfo.name) private UserInfoModel: Model<UserInfoDocument>,
     @InjectModel(Like.name) private LikeModel: Model<LikeDocument>,
-    private jwtService: JwtService,
   ) {}
 
   // ====================================================================
@@ -64,11 +60,13 @@ export class BoardsService {
     );
     let num = 0;
 
-    for (const users of participantList.userId) {
-      if (users.indexOf(user)) {
-        num += 1;
+    try {
+      for (const users of participantList.userId) {
+        if (users.indexOf(user)) {
+          num += 1;
+        }
       }
-    }
+    } catch (error) {}
 
     return num;
   }
@@ -236,34 +234,43 @@ export class BoardsService {
 
   // Promise<Board>
   // ====================================================================
-  // 프로젝트 카드 만들기 => 동시에 대기 방 생성
+  // 프로젝트 카드 만들기 => 동시에 프로젝트 룸 생성
   async createBoard(board: createBoardDto, user: userInfo) {
-    // console.log(user._id);
+    console.log('user', user._id);
     board.userId = user._id;
-
+    board.period = new Date(board.period);
     const newBoard = new this.boardModel(board);
-    newBoard.save();
-    const findUserInfo = await this.UserInfoModel.findById({ _id: user._id });
 
-    const participantList = [
-      {
-        position: findUserInfo.position,
+    try {
+      const findUserInfo = await this.UserInfoModel.findById({
         userId: user._id,
-      },
-    ];
+      });
+      newBoard.save();
 
-    const project: projectEntity = {
-      boardId: newBoard._id,
-      userId: user._id,
-      participantList,
-    };
+      const participantList = {
+        position: [findUserInfo.position],
+        userId: [user._id],
+      };
 
-    const newProjectRoom = new this.projectModel(project);
-    newProjectRoom.save();
+      const project: projectEntity = {
+        boardId: newBoard._id,
+        userId: user._id,
+        participantList,
+      };
 
-    return '글쓰기 (완)';
+      const newProjectRoom = new this.projectModel(project);
+      newProjectRoom.save();
+
+      return '프로젝트가 등록되었습니다.';
+    } catch (error) {
+      return {
+        status: 401,
+        message: '마이페이지에서 직군을 적어주세요.',
+      };
+    }
   }
 
+  // ====================================================================
   // 프로젝트 카드 삭제 (현재 카드가 없을 때 다른 카드를 삭제하는 버그 있음)
   async deleteBoard(id: string, user: User) {
     const _id = new mongoose.Types.ObjectId(id);
@@ -277,14 +284,6 @@ export class BoardsService {
     }
 
     return `${user.nickname}님 지울게 없습니다.`;
-  }
-
-  async user(u: userDto) {
-    u.createdAt = new Date();
-    u.updatedAt = u.createdAt;
-    const newUser = new this.userModel(u);
-    newUser.save();
-    return;
   }
 
   // ====================================================================
@@ -356,61 +355,19 @@ export class BoardsService {
     return board;
   }
 
-  async mateMakeOne(nickname: string, user: any | null): Promise<m> {
-    const findUser = await this.userModel.findOne({ nickname });
-    return;
-  }
+  // async mateMakeOne(nickname: string, user: any | null): Promise<m> {
+  //   const findUser = await this.userModel.findOne({ nickname });
+  //   return;
+  // }
   // ====================================================================
 
   // 모달 보드 가져오기
-  async getModelBoard(boardId) {
-    return this.boardMakeOne(boardId, '');
-  }
-
-  // ====================================================================
-  // ====================================================================
-
-  // 테스트 용
-  async findUser() {
-    const time = new Date('2022-03-11');
-    console.log('쿼리 날짜 필터', time);
-    const user = await this.userModel
-      .updateOne({ _id: '622b6e37e5206f7e5b5bee97' }, { position: 'back' })
-      .exec();
-    const user1 = await this.userModel
-      .findOne({ _id: '622b6e37e5206f7e5b5bee97' })
-      .exec();
-    const dev = {
-      userId: user1._id,
-      gitUrl: '',
-      bojUrl: '',
-      ability: [['javascript', 1, 2]],
-      skills: [
-        ['express', 1, 2],
-        ['nest.js', 1, 1],
-      ],
-      portfolioUrl: ['https://github.com/jeongmisnu/node.jsStudy'],
-    };
-
-    const user2 = await new this.UserInfoModel(dev);
-
-    // console.log(String(user[0]._id));
-    return user2.save();
+  async getModelBoard(boardId): Promise<getOneBoard | string> {
+    try {
+      const board = await this.boardMakeOne(boardId, '');
+      return board;
+    } catch (error) {
+      return '없는 보드입니다.';
+    }
   }
 }
-
-// {
-//   "title":"test2",
-//   "imgUrl":"url",
-//   "contents":"test-test",
-//   "stack": [["design", 2],["front", 2], ["back", 2]],
-//   "period":"2022-04-25"
-// }
-
-// {
-//   "title":"test4",
-//   "imgUrl":"url",
-//   "contents":"test-test",
-//   "stack": [["node.js", 2],["react.js", 2]],
-//   "period":"ss"
-// }
