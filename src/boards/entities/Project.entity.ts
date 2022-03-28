@@ -4,7 +4,7 @@ export class projectEntity {
   boardId: object;
   userId: object;
   participantList: {
-    userId: Types.ObjectId;
-    position: string;
-  }[];
+    userId: Types.ObjectId[];
+    position: string[];
+  };
 }

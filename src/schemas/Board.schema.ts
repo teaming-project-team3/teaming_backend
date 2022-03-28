@@ -13,8 +13,7 @@ export class Board {
   @Transform(({ value }) => value.toString())
   _id: Types.ObjectId;
 
-
-  @Prop({ type: SchemaTypes.ObjectId, required: true })
+  @Prop({ type: Types.ObjectId })
   userId: Types.ObjectId;
 
   @Prop({ type: String, required: true })
@@ -35,14 +34,13 @@ export class Board {
   @Prop({ type: Date, required: true })
   period: Date;
 
-
   @Prop({ type: Number, default: 0 })
   likeCount: number;
 
   @Prop({ type: [String], default: null })
   referURL: string[];
 
-  @Prop({ type: Date, required: true })
+  @Prop()
   createdAt: Date;
 
   @Prop()
