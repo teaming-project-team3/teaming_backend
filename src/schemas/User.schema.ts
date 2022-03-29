@@ -16,7 +16,6 @@ export class User extends Document {
   @Prop({
     default: null,
     index: { unique: true, dropDups: true },
-    required: true,
     type: String,
   })
   email: string;
@@ -46,8 +45,11 @@ export class User extends Document {
   })
   kakaoId: number;
 
-  @Prop({ type: Boolean })
-  suveryCheck: boolean;
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  suveyCheck: boolean;
 
   @Prop({ type: Date })
   createdAt: Date;

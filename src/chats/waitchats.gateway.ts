@@ -1,3 +1,4 @@
+import { participantList } from './../boards/entities/schemaValue.entity';
 import { Logger } from '@nestjs/common';
 import { Model } from 'mongoose';
 import {
@@ -49,11 +50,15 @@ export class WaitchatsGateway
   }
 
   handleDisconnect(@ConnectedSocket() socket: Socket) {
+    console.log('✅========== waitroom 접속 해제==========✅');
+
     console.log('waitroom 접속 해제 ');
     this.logger.log(`disconnected : ${socket.id} ${socket.nsp.name}`);
   }
 
   handleConnection(@ConnectedSocket() socket: Socket) {
+    console.log('✅========== waitroom 네임스페이스 접속==========✅');
+
     console.log('waitroom 네임스페이스 접속');
     this.logger.log(`connected : ${socket.id} ${socket.nsp.name}`);
   }
@@ -64,19 +69,22 @@ export class WaitchatsGateway
     @ConnectedSocket() socket: Socket,
   ) {
     // 임시 DB연산 ====================================
-
+    console.log('✅========== waitroom join==========✅');
+    console.log(data);
     const roomExists = await this.chatModel.findOne({
       projectId: data.room,
     });
-
+    console.log(roomExists);
     if (!roomExists) {
       // room DB에 저장
       await this.chatModel.create({
         projectId: data.room,
+        participantList: [],
+        messageData: [],
       });
     }
     //db에 참가한 유저 추가
-    await this.userModel.findOneAndUpdate(
+    await this.chatModel.findOneAndUpdate(
       { projectId: data.room },
       {
         $push: { participantList: data.name },
@@ -106,8 +114,8 @@ export class WaitchatsGateway
       users: roomData.participantList,
     });
 
-    console.log('✅===============================✅');
-    console.log('socket : ', socket);
+    console.log('✅=============this.server.sockets==================✅');
+    console.log(this.server.sockets);
     console.log('✅===============================✅');
   }
 
@@ -116,13 +124,15 @@ export class WaitchatsGateway
     @MessageBody() data: { name: string; room: string; message: string },
     @ConnectedSocket() socket: Socket,
   ) {
+    console.log('✅==========disconnecting==========✅');
+
     const { participantList } = await this.chatModel.findOne({
       projectId: data.room,
     });
 
     //떠난 유저 제거한 배열로 DB에 Update
     const deleteUser = participantList.filter((user) => user !== data.name);
-    await this.userModel.findOneAndUpdate(
+    await this.chatModel.findOneAndUpdate(
       { projectId: data.room },
       {
         $set: { participantList: deleteUser },
@@ -143,6 +153,8 @@ export class WaitchatsGateway
     @MessageBody() data: { sender: string; room: string; message: string },
     @ConnectedSocket() socket: Socket,
   ) {
+    console.log('✅==========sendMessage==========✅');
+
     console.log('data : ', data);
 
     const payload = {
@@ -150,8 +162,8 @@ export class WaitchatsGateway
       text: data.message,
       date: new Date().toTimeString(),
     };
-
-    await this.userModel.findOneAndUpdate(
+    console.log('data : ', payload);
+    await this.chatModel.findOneAndUpdate(
       { projectId: data.room },
       {
         $push: { messageData: payload },
