@@ -14,9 +14,9 @@ export class UserInfo extends Document {
   @Transform(({ value }) => value.toString())
   _id: ObjectId;
 
-  @Prop({ type: Types.ObjectId, required: true, ref: 'users' })
+  @Prop({ type: Types.ObjectId, required: true, ref: 'User' })
   @IsNotEmpty()
-  userId: object;
+  userId: ObjectId;
 
   @Prop()
   position: string;
@@ -25,8 +25,26 @@ export class UserInfo extends Document {
     default: {},
     type: {
       _id: false,
-      ability: { type: Array },
-      skills: { type: Array },
+      ability: {
+        type: [
+          {
+            _id: false,
+            name: String,
+            time: String || Number,
+            rate: String || Number,
+          },
+        ],
+      },
+      skills: {
+        type: [
+          {
+            _id: false,
+            name: String,
+            time: String || Number,
+            rate: String || Number,
+          },
+        ],
+      },
     },
   })
   front: object;
@@ -35,8 +53,26 @@ export class UserInfo extends Document {
     default: {},
     type: {
       _id: false,
-      ability: { type: Array },
-      skills: { type: Array },
+      ability: {
+        type: [
+          {
+            _id: false,
+            name: String,
+            time: String || Number,
+            rate: String || Number,
+          },
+        ],
+      },
+      skills: {
+        type: [
+          {
+            _id: false,
+            name: String,
+            time: String || Number,
+            rate: String || Number,
+          },
+        ],
+      },
     },
   })
   back: object;
@@ -45,24 +81,38 @@ export class UserInfo extends Document {
     default: {},
     type: {
       _id: false,
-      skills: { type: Array },
+      skills: {
+        type: [
+          {
+            _id: false,
+            name: String,
+            time: String || Number,
+            rate: String || Number,
+          },
+        ],
+      },
     },
   })
   design: object;
 
   @Prop({
-    default: null,
-    type: {
-      title: String,
-      image: String,
-      description: String,
-      url: String,
-      period: String,
-    },
+    default: [],
+    type: [
+      {
+        _id: false,
+        title: String || null,
+        image: String || null,
+        description: String || null,
+        url: String || null,
+        period: String || null,
+      },
+    ],
   })
-  portfolioUrl: Array<object>; // 포트폴리오 주소 3개
+  portfolioUrl: [];
 
-  @Prop()
+  @Prop({
+    default: null,
+  })
   url: string;
 }
 

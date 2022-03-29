@@ -7,19 +7,19 @@ export class SuveyInfoDto {
 
   @IsObject()
   front: {
-    ability: [[name: string, time: string, rate: string]];
-    skills: [[name: string, time: string, rate: string]];
+    ability: [{ name: string; time: string | number; rate: string | number }];
+    skills: [{ name: string; time: string | number; rate: string | number }];
   };
 
   @IsObject()
   back: {
-    ability: [[name: string, time: string, rate: string]];
-    skills: [[name: string, time: string, rate: string]];
+    ability: [{ name: string; time: string | number; rate: string | number }];
+    skills: [{ name: string; time: string | number; rate: string | number }];
   };
 
   @IsObject()
   design: {
-    skills: [[name: string, time: string, rate: string]];
+    skills: [{ name: string; time: string | number; rate: string | number }];
   };
 
   @IsArray()
