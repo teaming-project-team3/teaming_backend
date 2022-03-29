@@ -1,4 +1,6 @@
-export class participantList {
-  userId: string[];
-  position: string[];
+export class participant {
+  participantList: {
+    userId: string[];
+    position: string[];
+  };
 }

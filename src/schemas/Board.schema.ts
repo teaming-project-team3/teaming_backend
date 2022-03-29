@@ -5,10 +5,7 @@ import { SchemaTypes, Types, Document } from 'mongoose';
 
 export type BoardDocument = Board & Document;
 
-const options: SchemaOptions = {
-  timestamps: true,
-};
-@Schema(options)
+@Schema()
 export class Board {
   @Transform(({ value }) => value.toString())
   _id: Types.ObjectId;
@@ -19,8 +16,8 @@ export class Board {
   @Prop({ type: String, required: true })
   title: string;
 
-  @Prop({ type: String, required: true })
-  imgUrl: string;
+  @Prop({ type: [String], required: true })
+  imgUrl: string[];
 
   @Prop({ type: String, required: true })
   contents: string;
@@ -40,7 +37,7 @@ export class Board {
   @Prop({ type: [String], default: null })
   referURL: string[];
 
-  @Prop()
+  @Prop({ type: Date })
   createdAt: Date;
 
   @Prop()

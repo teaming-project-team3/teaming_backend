@@ -1,7 +1,7 @@
 export class Board {
   _id: string;
   title: string;
-  imgUrl: string;
+  imgUrl: string[];
   subContents: string;
   stack: [string, string, number][]; // 디자인,프론트,백 / 총인원 / 인원
   nickname: string;
@@ -35,7 +35,7 @@ export class getOneBoard {
   nickname: string; // 작성자
   contents: string; // 콘텐츠
   subContents: string; // 한줄소개
-  imgUrl: string; // 이미지
+  imgUrl: string[]; // 이미지
   stack: [string, string, number][]; // 직무, 스킬, 인원
   left: number[]; // 들어온 인원 / 디자인, 프론트, 백 순서
   period: Date; // 모집기간
