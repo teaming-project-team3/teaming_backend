@@ -1,11 +1,24 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: true,
   });
+  const config = new DocumentBuilder()
+    .setTitle('Teaming API DOCS')
+    .setDescription('API 문서입니다.')
+    .setVersion('0.0.1')
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'Token' },
+      'access-token',
+    )
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
   // app.enableCors(); //Cors 설정
   // app.useGlobalPipes(new ValidationPipe()); //validation 전역* 설정
   const port = process.env.PORT;

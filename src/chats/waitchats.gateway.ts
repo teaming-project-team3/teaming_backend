@@ -1,4 +1,3 @@
-import { participantList } from './../boards/entities/schemaValue.entity';
 import { Logger } from '@nestjs/common';
 import { Model } from 'mongoose';
 import {

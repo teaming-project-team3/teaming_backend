@@ -125,6 +125,7 @@ export class BoardsService {
     return board;
   }
 
+  // 메이트 찾기 만들기
   async mateMake(num: number, skip: number, position: string): Promise<m[]> {
     const findUser = await this.userModel
       .find()
@@ -166,7 +167,26 @@ export class BoardsService {
   }
 
   // ====================================================================
-
+  //dev, design 유무 stack true, false
+  async stacktf(stacks: [string, string, number][], job: string) {
+    for (const stack of stacks) {
+      if (job === 'design' && stack[0] === 'design') {
+        if (stack[2] > 0) {
+          return true;
+        }
+        return false;
+      } else if (job === 'dev' && stack[0] === 'dev') {
+        {
+          if (stack[2] > 0) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+  // ====================================================================
+  // 카테고리 페이지 가져오기
   async getAllCategory(
     category: string,
     page: number,
@@ -193,7 +213,7 @@ export class BoardsService {
       case 'dev':
         return newBoard
           .filter((item) => {
-            return item.stack[1][2] > 0;
+            return this.stacktf(item.stack, 'dev');
           })
           .sort((a, b) => {
             return b.stack[1][2] - a.stack[1][2];
@@ -318,16 +338,13 @@ export class BoardsService {
   // 프로젝트 카드 삭제 (현재 카드가 없을 때 다른 카드를 삭제하는 버그 있음)
   async deleteBoard(id: string, user: User) {
     const _id = new mongoose.Types.ObjectId(id);
-    const find = await this.boardModel.findOne({ _id });
-    if (find._id === id) {
-      const del = await this.boardModel.findOneAndDelete({ _id });
-      // console.log('del:', del);
-      // if (del.deletedCount > 0) {
-      //   return '삭제완료';
-      // }
+    try {
+      await this.boardModel.findOne({ _id });
+      await this.boardModel.findOneAndDelete({ _id });
+      return '삭제완료';
+    } catch (error) {
+      return `${user.nickname}님 지울게 없습니다.`;
     }
-
-    return `${user.nickname}님 지울게 없습니다.`;
   }
 
   // ====================================================================
@@ -337,20 +354,20 @@ export class BoardsService {
     user: any | null,
   ): Promise<getOneBoard | string> {
     const board_id = new mongoose.Types.ObjectId(boardId);
-    const findBoard = await this.boardModel.findById(
-      { _id: board_id },
-      { _id: 0 },
-    );
+    const findBoard = await this.boardModel.findById({ _id: board_id });
+    console.log('보드 넘어감');
     const nickname: string = await this.userModel.findById(
       {
         _id: new mongoose.Types.ObjectId(findBoard.userId),
       },
       { _id: 0, nickname: 1 },
     );
-    const participantList: [string, string][] = await this.projectModel.findOne(
+    console.log('닉네임 찾기 넘어감');
+    const participant: participant = await this.projectModel.findOne(
       { boardId: board_id, userId: findBoard.userId },
       { participantList: 1, _id: 0 },
     );
+    console.log('리스트 찾기 넘어감');
 
     const _id = findBoard._id.toString();
 
@@ -359,7 +376,7 @@ export class BoardsService {
     let designCount = 0;
     let frontCount = 0;
     let backCount = 0;
-    for (const list of participantList) {
+    for (const list of participant.participantList.position) {
       switch (list[1]) {
         case 'design':
           designCount += 1;
@@ -406,12 +423,15 @@ export class BoardsService {
   // ====================================================================
 
   // 모달 보드 가져오기
-  async getModelBoard(boardId): Promise<getOneBoard | string> {
+  async getModelBoard(boardId): Promise<getOneBoard | any> {
     try {
       const board = await this.boardMakeOne(boardId, '');
       return board;
     } catch (error) {
-      return '없는 보드입니다.';
+      return {
+        Status: 401,
+        message: '없는 보드 입니다.',
+      };
     }
   }
 }
