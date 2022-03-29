@@ -8,12 +8,10 @@ import { User, UserSchema } from 'src/schemas/User.schema';
 import { BoardsController } from './boards.controller';
 import { BoardsService } from './boards.service';
 import { AuthModule } from 'src/auth/auth.module';
-import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
     AuthModule,
-    HttpModule,
     MongooseModule.forFeature([
       { name: Board.name, schema: BoardSchema },
       { name: User.name, schema: UserSchema },
@@ -23,7 +21,6 @@ import { HttpModule } from '@nestjs/axios';
       { name: Like.name, schema: LikeSchema },
     ]),
   ],
-  exports: [MongooseModule],
   controllers: [BoardsController],
   providers: [BoardsService],
 })

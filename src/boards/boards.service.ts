@@ -12,7 +12,7 @@ import { userInfo } from './entities/user.entity';
 import { projectEntity } from './entities/Project.entity';
 import mongoose from 'mongoose';
 import { UserInfo, UserInfoDocument } from 'src/schemas/UserInfo.schema';
-import { participantList } from './entities/schemaValue.entity';
+import { participant } from './entities/schemaValue.entity';
 
 @Injectable()
 export class BoardsService {
@@ -32,12 +32,33 @@ export class BoardsService {
   }
   // 스택 자리 체크
   async getStackCheck(boardId: ObjectId, stack: [string, string, number][]) {
-    const participantList: participantList = await this.projectModel.findOne(
+    const participant: participant = await this.projectModel.findOne(
       { boardId },
       { _id: 0, participantList: 1 },
     );
-    for (const list of participantList.position) {
-      switch (list) {
+
+    console.log(stack);
+    console.log(boardId);
+    // console.log(participant);
+    // console.log(participant.participantList.position);
+    const position = participant.participantList.position;
+
+    if (position.length > 1) {
+      for (const list of position) {
+        switch (list) {
+          case 'design':
+            --stack[0][2];
+            break;
+          case 'front':
+            --stack[1][2];
+            break;
+          case 'back':
+            --stack[2][2];
+            break;
+        }
+      }
+    } else {
+      switch (position[0]) {
         case 'design':
           --stack[0][2];
           break;
@@ -49,6 +70,7 @@ export class BoardsService {
           break;
       }
     }
+
     return stack;
   }
 
@@ -150,10 +172,12 @@ export class BoardsService {
     page: number,
   ): Promise<b[] | m[] | string> {
     const newBoard = await this.boardMake(12, page, '');
+    // console.log(newBoard);
 
     switch (category) {
       case 'rank':
-        return newBoard.sort((a, b) => b.likeCount - a.likeCount);
+        const boards = newBoard.sort((a, b) => b.likeCount - a.likeCount);
+        return boards;
       case 'deadline':
         return newBoard.sort(
           (a, b) => +new Date(b.period) - +new Date(a.period),
@@ -235,37 +259,57 @@ export class BoardsService {
   // Promise<Board>
   // ====================================================================
   // 프로젝트 카드 만들기 => 동시에 프로젝트 룸 생성
+  async createProjectRoom() {}
+
   async createBoard(board: createBoardDto, user: userInfo) {
-    console.log('user', user._id);
-    board.userId = user._id;
+    // console.log('user', user._id);
+    const userId = new mongoose.Types.ObjectId(user._id);
+    const createdAt = new Date();
+    board.userId = userId;
     board.period = new Date(board.period);
-    const newBoard = new this.boardModel(board);
+    board.createdAt = createdAt;
+    board.updateAt = createdAt;
 
     try {
-      const findUserInfo = await this.UserInfoModel.findById({
-        userId: user._id,
+      const findUserInfo = await this.UserInfoModel.findOne({
+        userId,
       });
-      newBoard.save();
+      console.log('유저 정보: ', findUserInfo);
+      console.log('오늘 날짜: ', createdAt);
+      await this.boardModel.create(board);
+
+      // const findBoard = await this.boardModel
+      //   .find({ userId })
+      //   .sort({ createdAt: -1 });
+      const findBoard = await this.boardModel
+        .find()
+        .sort({ createdAt: -1 })
+        .limit(1);
+
+      console.log('보드 찾기', findBoard);
 
       const participantList = {
         position: [findUserInfo.position],
-        userId: [user._id],
+        userId: [userId],
       };
 
       const project: projectEntity = {
-        boardId: newBoard._id,
-        userId: user._id,
+        boardId: findBoard[0]._id,
+        userId: userId,
         participantList,
       };
 
-      const newProjectRoom = new this.projectModel(project);
-      newProjectRoom.save();
+      await this.projectModel.create(project);
 
-      return '프로젝트가 등록되었습니다.';
-    } catch (error) {
       return {
-        status: 401,
-        message: '마이페이지에서 직군을 적어주세요.',
+        Status: 201,
+        message: '프로젝트가 등록되었습니다.',
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        Status: 401,
+        message: error,
       };
     }
   }

@@ -1,13 +1,16 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
+import { Transform } from 'class-transformer';
 
 import { Document, Types } from 'mongoose';
 
 export type ProjectDocument = Project & Document;
 
-@Schema()
+const options: SchemaOptions = {
+  timestamps: true,
+};
+@Schema(options)
 export class Project {
-
-  @Prop({ type: Types.ObjectId })
+  @Transform(({ value }) => value.toString())
   _id: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId })
@@ -29,7 +32,7 @@ export class Project {
   })
   participantList: object;
 
-  @Prop({ type: Date, required: false })
+  @Prop({ type: Date })
   createdAt: Date;
 
   @Prop()
