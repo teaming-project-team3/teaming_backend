@@ -27,7 +27,7 @@ import { User } from 'src/schemas/User.schema';
     credentials: true,
   },
 })
-export class ChatsGateway
+export class DmChatsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   @WebSocketServer()
