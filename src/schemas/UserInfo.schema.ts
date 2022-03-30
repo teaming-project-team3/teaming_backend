@@ -21,6 +21,9 @@ export class UserInfo extends Document {
   @Prop()
   position: string;
 
+  @Prop({ default: '' })
+  introduction: string;
+
   @Prop({
     default: {},
     type: {
@@ -100,18 +103,18 @@ export class UserInfo extends Document {
     type: [
       {
         _id: false,
-        title: String || null,
-        image: String || null,
-        description: String || null,
-        url: String || null,
-        period: String || null,
+        title: String,
+        image: String,
+        description: String,
+        url: String,
+        period: String,
       },
     ],
   })
   portfolioUrl: [];
 
   @Prop({
-    default: null,
+    default: '',
   })
   url: string;
 }

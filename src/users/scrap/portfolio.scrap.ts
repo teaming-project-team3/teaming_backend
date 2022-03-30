@@ -13,10 +13,10 @@ export class PortfolioScrap {
       if (!urlList[i]) continue;
 
       const ogDate = {
-        title: null,
-        description: null,
-        imageUrl: null,
-        period: null,
+        title: '',
+        description: '',
+        imageUrl: '',
+        period: '',
         url: urlList[i],
       };
 

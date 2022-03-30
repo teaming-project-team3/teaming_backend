@@ -5,6 +5,12 @@ export class UpdateUserInfoDto {
   @IsString()
   nickname: string;
 
+  @IsString()
+  introduction: string;
+
+  @IsString()
+  profileUrl: string;
+
   @IsNotEmpty()
   @IsString()
   position: string;
