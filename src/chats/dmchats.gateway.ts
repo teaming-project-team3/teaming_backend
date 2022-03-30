@@ -1,6 +1,4 @@
 import { Logger } from '@nestjs/common';
-import { DmContent } from '../schemas/DmContent.schema';
-import { DmList } from '../schemas/DmList.schema';
 import { Model } from 'mongoose';
 import {
   ConnectedSocket,
@@ -15,9 +13,10 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Socket, Server } from 'socket.io';
 import { User } from 'src/schemas/User.schema';
+import { DmChat } from 'src/schemas/DmChat.schema';
 
 @WebSocketGateway({
-  namespace: 'tttt',
+  namespace: '',
   cors: {
     origin: [
       'http://localhost:3000',
@@ -33,12 +32,11 @@ export class DmChatsGateway
   @WebSocketServer()
   server: Server;
 
-  private logger = new Logger('chatting');
+  private logger = new Logger('dmchatting');
 
   constructor(
-    @InjectModel(DmList.name) private readonly dmListModel: Model<DmList>,
-    @InjectModel(DmContent.name)
-    private readonly dmContentModel: Model<DmContent>,
+    @InjectModel(DmChat.name)
+    private readonly dmChatModel: Model<DmChat>,
     @InjectModel(User.name)
     private readonly userModel: Model<User>,
   ) {
@@ -50,44 +48,84 @@ export class DmChatsGateway
   }
 
   async handleDisconnect(@ConnectedSocket() socket: Socket) {
+    console.log('✅========== dmchatting 접속 해제==========✅');
     this.logger.log(`disconnected : ${socket.id} ${socket.nsp.name}`);
+
+    const { participantList } = await this.dmChatModel.findOne({
+      projectId: socket['myRoomName'],
+    });
+
+    //떠난 유저 제거한 배열로 DB에 Update
+    const deleteUser = participantList.filter(
+      (user) => user !== socket['myNickname'],
+    );
+    await this.dmChatModel.findOneAndUpdate(
+      { projectId: socket['myRoomName'] },
+      {
+        $set: { participantList: deleteUser },
+      },
+    );
+
+    socket.leave(socket['myRoomName']);
+
+    // 메시지를 전송한 클라이언트를 제외한 room안의 모든 클라이언트에게 메시지를 전송한다.
+    socket.broadcast.to(socket['myRoomName']).emit('message', {
+      user: socket['myNickname'],
+      text: `${socket['myNickname']} 님이 방을 나갔습니다.`,
+    });
+
+    // 인원이 0이 대화내용 삭제 ?
   }
 
   handleConnection(@ConnectedSocket() socket: Socket) {
+    console.log('✅========== dmchatting 접속==========✅');
+
     this.logger.log(`connected : ${socket.id} ${socket.nsp.name}`);
   }
 
   @SubscribeMessage('join')
   async handleMessage(@MessageBody() data, @ConnectedSocket() socket: Socket) {
-    await this.dmListModel.create({ roomName: data.room });
-    await this.userModel.findOneAndUpdate(
-      { nickname: data.name },
-      {
-        $push: { dmRooms: 'data.room' },
-      },
-    );
-    await this.userModel.findOneAndUpdate(
-      { nickname: data.name },
-      {
-        $push: { dmRooms: data.room },
-      },
-    );
+    // 연결된 클라이언트 이름과 방 정보를 소켓 객체에 저장
+    socket['myNickname'] = data.name;
+    socket['myRoomName'] = data.room;
 
-    socket.join(data.room);
-    socket.emit('message', {
-      user: 'admin',
-      text: `${data.name}, ${data.room}에 오신걸 환영합니다.`,
+    // 임시 DB연산 ====================================
+    const roomExists = await this.dmChatModel.findOne({
+      projectId: socket['myRoomName'],
+    });
+    if (!roomExists) {
+      // room DB에 저장
+      await this.dmChatModel.create({
+        room: socket['myRoomName'],
+        participantList: [],
+        messageData: [],
+      });
+    } else {
+      //db에 참가한 유저 추가
+      await this.dmChatModel.findOneAndUpdate(
+        { projectId: socket['myRoomName'] },
+        {
+          // $push: { participantList: { name: data.name, socketId: socket.id } },
+          $push: { participantList: socket['myNickname'] },
+        },
+      );
+    }
+    // ====================================
+    const roomData = await this.dmChatModel.findOne({
+      projectId: socket['myRoomName'],
+    });
+    socket.join(socket['myRoomName']);
+
+    // to all clients in room except the sender
+    socket.to(socket['myRoomName']).emit('roomData', {
+      room: socket['myRoomName'],
+      users: roomData.participantList,
     });
 
-    socket.broadcast.to(data.room).emit('message', {
-      user: 'admin',
-      text: `${data.name} 님이 가입하셨습니다.`,
-    });
+    console.log('✅=========roomData==============✅');
 
-    socket.to(data.room).emit('roomData', {
-      room: 'data.room',
-      users: `참가한 방의 유저들 정보`,
-    });
+    console.log(roomData);
+    console.log('✅=========roomData==============✅');
   }
 
   @SubscribeMessage('sendMessage')
@@ -95,17 +133,21 @@ export class DmChatsGateway
     @MessageBody() data: { sender: string; room: string; message: string },
     @ConnectedSocket() socket: Socket,
   ) {
-    const dmRoom = await this.dmListModel.findOne({ roomName: data.room });
-    await this.dmContentModel.create({
-      dmList: dmRoom,
-      senderNickname: data.sender,
-      contents: data.message,
-    });
+    console.log('✅==========sendMessage==========✅');
 
-    socket.broadcast.to(data.room).emit('message', {
-      sender: data.sender,
+    const payload = {
+      sender: socket['myNickname'],
       text: data.message,
-      createdAt: new Date(),
-    });
+      date: new Date().toTimeString(),
+    };
+    console.log('data : ', payload);
+    await this.dmChatModel.findOneAndUpdate(
+      { projectId: socket['myRoomName'] },
+      {
+        $push: { messageData: payload },
+      },
+    );
+
+    socket.broadcast.to(socket['myRoomName']).emit('message', payload);
   }
 }

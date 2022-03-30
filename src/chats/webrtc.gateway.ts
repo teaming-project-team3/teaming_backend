@@ -41,11 +41,13 @@ export class WebrtcGateway
   }
 
   handleDisconnect(@ConnectedSocket() socket: Socket) {
+    console.log(`✅=========webrtc Disconnect==============✅`);
     console.log(`✅=========socket['myNickname']==============✅`);
     console.log('this.myRoomName', socket['myRoomName']);
     console.log('this.myNickname', socket['myNickname']);
     console.log(`✅=========socket['myNickname']==============✅`);
     socket.to(socket['myRoomName']).emit('leaveRoom', socket.id);
+    socket.leave(socket['myRoomName']);
 
     let isRoomEmpty = false;
     for (let i = 0; i < this.roomObjArr.length; ++i) {

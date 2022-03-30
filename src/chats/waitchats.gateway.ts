@@ -133,10 +133,10 @@ export class WaitchatsGateway
       users: roomData.participantList,
     });
 
-    console.log('✅=========console.log(this.roomObjArr[i]);==============✅');
+    console.log('✅=========roomData==============✅');
 
     console.log(roomData);
-    console.log('✅=========console.log(this.roomObjArr[i]);==============✅');
+    console.log('✅=========roomData==============✅');
   }
 
   @SubscribeMessage('sendMessage')
