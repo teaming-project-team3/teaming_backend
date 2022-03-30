@@ -46,12 +46,36 @@ export class WaitchatsGateway
   async handleDisconnect(@ConnectedSocket() socket: Socket) {
     console.log('✅========== waitroom 접속 해제==========✅');
     this.logger.log(`disconnected : ${socket.id} ${socket.nsp.name}`);
+
+    const { participantList } = await this.chatModel.findOne({
+      projectId: socket['myRoomName'],
+    });
+
+    //떠난 유저 제거한 배열로 DB에 Update
+    const deleteUser = participantList.filter(
+      (user) => user !== socket['myNickname'],
+    );
+    await this.chatModel.findOneAndUpdate(
+      { projectId: socket['myRoomName'] },
+      {
+        $set: { participantList: deleteUser },
+      },
+    );
+
+    socket.leave(socket['myRoomName']);
+
+    // 메시지를 전송한 클라이언트를 제외한 room안의 모든 클라이언트에게 메시지를 전송한다.
+    socket.broadcast.to(socket['myRoomName']).emit('message', {
+      user: socket['myNickname'],
+      text: `${socket['myNickname']} 님이 방을 나갔습니다.`,
+    });
+
+    // 인원이 0이 대화내용 삭제 ?
   }
 
   handleConnection(@ConnectedSocket() socket: Socket) {
     console.log('✅========== waitroom 네임스페이스 접속==========✅');
 
-    console.log('waitroom 네임스페이스 접속');
     this.logger.log(`connected : ${socket.id} ${socket.nsp.name}`);
   }
 
@@ -65,12 +89,9 @@ export class WaitchatsGateway
     socket['myRoomName'] = data.room;
 
     // 임시 DB연산 ====================================
-    console.log('✅========== waitroom join==========✅');
-    console.log(data);
     const roomExists = await this.chatModel.findOne({
       projectId: socket['myRoomName'],
     });
-    console.log(roomExists);
     if (!roomExists) {
       // room DB에 저장
       await this.chatModel.create({
@@ -97,13 +118,13 @@ export class WaitchatsGateway
     // 메시지를 전송한 클라이언트에게만 메시지를 전송한다.
     socket.emit('message', {
       user: socket['myNickname'],
-      text: `${data.name}, ${socket['myRoomName']}에 오신걸 환영합니다.`,
+      text: `${socket['myNickname']}, ${socket['myRoomName']}에 오신걸 환영합니다.`,
     });
 
     // 메시지를 전송한 클라이언트를 제외한 room안의 모든 클라이언트에게 메시지를 전송한다.
     socket.broadcast.to(socket['myRoomName']).emit('message', {
       user: socket['myNickname'],
-      text: `${data.name} 님이 가입하셨습니다.`,
+      text: `${socket['myNickname']} 님이 가입하셨습니다.`,
     });
 
     // to all clients in room except the sender
@@ -112,39 +133,10 @@ export class WaitchatsGateway
       users: roomData.participantList,
     });
 
-    console.log('✅=============this.server.sockets==================✅');
-    console.log('✅===============================✅');
-  }
+    console.log('✅=========console.log(this.roomObjArr[i]);==============✅');
 
-  @SubscribeMessage('leaveRoom')
-  async handleLeaveRoom(
-    @MessageBody() data: { name: string; room: string },
-    @ConnectedSocket() socket: Socket,
-  ) {
-    console.log('✅==========leaveRoom==========✅');
-    console.log(data);
-    const { participantList } = await this.chatModel.findOne({
-      projectId: socket['myRoomName'],
-    });
-
-    //떠난 유저 제거한 배열로 DB에 Update
-    const deleteUser = participantList.filter(
-      (user) => user !== socket['myNickname'],
-    );
-    await this.chatModel.findOneAndUpdate(
-      { projectId: socket['myRoomName'] },
-      {
-        $set: { participantList: deleteUser },
-      },
-    );
-
-    socket.leave(socket['myRoomName']);
-
-    // 메시지를 전송한 클라이언트를 제외한 room안의 모든 클라이언트에게 메시지를 전송한다.
-    socket.broadcast.to(socket['myRoomName']).emit('message', {
-      user: socket['myNickname'],
-      text: `${socket['myNickname']} 님이 방을 나갔습니다.`,
-    });
+    console.log(roomData);
+    console.log('✅=========console.log(this.roomObjArr[i]);==============✅');
   }
 
   @SubscribeMessage('sendMessage')
@@ -153,8 +145,6 @@ export class WaitchatsGateway
     @ConnectedSocket() socket: Socket,
   ) {
     console.log('✅==========sendMessage==========✅');
-
-    console.log('data : ', data);
 
     const payload = {
       sender: socket['myNickname'],
