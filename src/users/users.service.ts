@@ -113,9 +113,8 @@ export class UsersService {
       .find()
       .where('participantList.userId')
       .in([_id])
-      .populate('boardId', { userId: 0 })
-      .select({ userId: 0 });
-
+      .populate('boardId', { updateAt: 0, createdAt: 0 })
+      .select({ updatedAt: 0, createdAt: 0 });
 
     return {
       msg: ` 회원정보 조회 완료`,
