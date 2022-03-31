@@ -33,7 +33,7 @@ export class UpdateUserInfoDto {
   };
 
   @IsArray()
-  portfolioUrl: [string];
+  portfolioUrl: [];
 
   url: any;
 }

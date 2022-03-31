@@ -15,7 +15,7 @@ export class PortfolioScrap {
       const ogDate = {
         title: '',
         description: '',
-        imageUrl: '',
+        imageUrl: [],
         period: '',
         url: urlList[i],
       };
@@ -35,7 +35,7 @@ export class PortfolioScrap {
           ogDate['description'] = $(element).attr('content');
         }
         if ($(element).attr('property') === 'og:image') {
-          ogDate['imageUrl'] = $(element).attr('content');
+          ogDate['imageUrl'].push($(element).attr('content'));
         }
       });
       list.push(ogDate);

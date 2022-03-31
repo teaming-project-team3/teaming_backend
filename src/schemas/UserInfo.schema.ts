@@ -99,19 +99,18 @@ export class UserInfo extends Document {
   design: object;
 
   @Prop({
-    default: [],
     type: [
       {
         _id: false,
         title: String,
-        image: String,
+        imageUrl: [String],
         description: String,
         url: String,
         period: String,
       },
     ],
   })
-  portfolioUrl: [];
+  portfolioUrl: object[];
 
   @Prop({
     default: '',

@@ -18,10 +18,11 @@ export class UsersService {
   async insertInfo(suveyInfoDto: SuveyInfoDto, req: any): Promise<any> {
     const { _id, nickname } = req.user.user;
     const { position, front, back, design, url, portfolioUrl } = suveyInfoDto;
-    let ProtfolioOgData: Array<string>;
+    let protfolioOgData: string[];
     if (portfolioUrl) {
-      ProtfolioOgData = await this.portfolioScrap.ogdataScrap(portfolioUrl);
+      protfolioOgData = await this.portfolioScrap.ogdataScrap(portfolioUrl);
     }
+
     await this.userModel.findOneAndUpdate(
       { _id },
       {
@@ -35,7 +36,7 @@ export class UsersService {
       back,
       design,
       position,
-      portfolioUrl: ProtfolioOgData,
+      portfolioUrl: protfolioOgData,
       url,
     });
 
