@@ -6,12 +6,16 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { SuveyInfoDto } from './dto/suveyInfo.dto';
 import { UpdateUserInfoDto } from './dto/updateUserInfo.dto';
+import { Board } from 'src/schemas/Board.schema';
+import { Project } from 'src/schemas/Project.schema';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(UserInfo.name) private userInfoModel: Model<UserInfo>,
+    @InjectModel(Board.name) private boardModel: Model<Board>,
+    @InjectModel(Project.name) private projectModel: Model<Project>,
     private portfolioScrap: PortfolioScrap,
   ) {}
 
@@ -104,9 +108,20 @@ export class UsersService {
     const userInfo = await this.userInfoModel
       .findOne({ userId: _id })
       .populate('userId', { password: false });
+
+    const projectData = await this.projectModel
+      .find()
+      .where('participantList.userId')
+      .in([_id])
+      .populate('boardId', { userId: 0 })
+      .select({ userId: 0 });
+
+
     return {
       msg: ` 회원정보 조회 완료`,
       userInfo,
+      projectData,
+      totalProject: projectData.length,
     };
   }
 }
