@@ -14,8 +14,8 @@ async function bootstrap() {
     // httpsOptions,
     cors: true,
   });
-  
-    const config = new DocumentBuilder()
+
+  const config = new DocumentBuilder()
     .setTitle('Teaming API DOCS')
     .setDescription('API 문서입니다.')
     .setVersion('0.0.1')
@@ -25,7 +25,7 @@ async function bootstrap() {
     )
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  
+
   app.enableCors(); //Cors 설정
   app.useGlobalPipes(new ValidationPipe()); //validation 전역* 설정
 

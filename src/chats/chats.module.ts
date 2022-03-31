@@ -15,6 +15,6 @@ import { DmChat, DmChatSchema } from 'src/schemas/DmChat.schema';
       { name: Chat.name, schema: ChatSchema },
     ]),
   ],
-  providers: [DmChatsGateway, WaitchatsGateway /*,WebrtcGateway*/],
+  providers: [DmChatsGateway, WaitchatsGateway, WebrtcGateway],
 })
 export class ChatsModule {}
