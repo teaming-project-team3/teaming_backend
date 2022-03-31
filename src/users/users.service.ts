@@ -18,10 +18,10 @@ export class UsersService {
   async insertInfo(suveyInfoDto: SuveyInfoDto, req: any): Promise<any> {
     const { _id, nickname } = req.user.user;
     const { position, front, back, design, url, portfolioUrl } = suveyInfoDto;
-
-    const ProtfolioOgData: Array<string> =
-      await this.portfolioScrap.ogdataScrap(portfolioUrl);
-
+    let ProtfolioOgData: Array<string>;
+    if (portfolioUrl) {
+      ProtfolioOgData = await this.portfolioScrap.ogdataScrap(portfolioUrl);
+    }
     await this.userModel.findOneAndUpdate(
       { _id },
       {
@@ -58,13 +58,22 @@ export class UsersService {
     req: any,
   ): Promise<any> {
     const { _id } = req.user.user;
-    const { nickname, position, front, back, design, portfolioUrl, url } =
-      updateUserInfoDto;
+    const {
+      nickname,
+      introduction,
+      profileUrl,
+      position,
+      front,
+      back,
+      design,
+      portfolioUrl,
+      url,
+    } = updateUserInfoDto;
 
     await this.userModel.findOneAndUpdate(
       { _id },
       {
-        $set: { nickname },
+        $set: { nickname, profileUrl },
       },
     );
 
@@ -73,7 +82,15 @@ export class UsersService {
         userId: _id,
       },
       {
-        $set: { position, front, back, design, portfolioUrl, url },
+        $set: {
+          position,
+          introduction,
+          front,
+          back,
+          design,
+          portfolioUrl,
+          url,
+        },
       },
     );
     return {
