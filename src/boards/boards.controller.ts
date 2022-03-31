@@ -25,7 +25,7 @@ export class BoardsController {
   @Post()
   @UseGuards(AuthGuard())
   createBoard(@Req() req, @Body() board: createBoardDto) {
-    console.log('createBoard:', req.user.user);
+    console.log('유저 정보:', req.user.user);
     return this.boardsService.createBoard(board, req.user.user);
   }
 
@@ -38,10 +38,8 @@ export class BoardsController {
   // 더보기
   @Get('category/:category/:page')
   getBoard(@Param('category') category: string, @Param('page') page: number) {
-    if (page === 1) {
-      page = 0;
-    }
-    return this.boardsService.getAllCategory(category, page);
+    let newPage = --page;
+    return this.boardsService.getAllCategory(category, newPage);
   }
 
   // @Get('mates/:boardId')
