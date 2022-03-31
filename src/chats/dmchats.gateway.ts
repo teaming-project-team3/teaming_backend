@@ -31,7 +31,7 @@ export class DmChatsGateway
 {
   @WebSocketServer()
   server: Server;
-
+  private connectedUserList: any;
   private logger = new Logger('dmchatting');
 
   constructor(
@@ -41,6 +41,7 @@ export class DmChatsGateway
     private readonly userModel: Model<User>,
   ) {
     this.logger.log('constructor');
+    this.connectedUserList = [];
   }
 
   afterInit() {
@@ -77,17 +78,23 @@ export class DmChatsGateway
     // 인원이 0이 대화내용 삭제 ?
   }
 
-  handleConnection(@ConnectedSocket() socket: Socket) {
+  handleConnection(@MessageBody() data, @ConnectedSocket() socket: Socket) {
     console.log('✅========== dmchatting 접속==========✅');
 
     this.logger.log(`connected : ${socket.id} ${socket.nsp.name}`);
   }
 
   @SubscribeMessage('join')
-  async handleMessage(@MessageBody() data, @ConnectedSocket() socket: Socket) {
+  async handleMessage(
+    @MessageBody() data: { sendUser: string; receiveUser: string },
+    @ConnectedSocket() socket: Socket,
+  ) {
     // 연결된 클라이언트 이름과 방 정보를 소켓 객체에 저장
-    socket['myNickname'] = data.name;
-    socket['myRoomName'] = data.room;
+    socket['myNickname'] = data.sendUser;
+    socket['myRoomName'] =
+      data.sendUser < data.receiveUser
+        ? data.sendUser + '&' + data.receiveUser
+        : data.receiveUser + '&' + data.sendUser;
 
     // 임시 DB연산 ====================================
     const roomExists = await this.dmChatModel.findOne({

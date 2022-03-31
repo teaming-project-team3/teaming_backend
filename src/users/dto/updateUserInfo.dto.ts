@@ -17,19 +17,19 @@ export class UpdateUserInfoDto {
 
   @IsObject()
   front: {
-    ability: [[name: string, time: string, rate: string]];
-    skills: [[name: string, time: string, rate: string]];
+    ability: [{ name: string; time: string; rate: string }];
+    skills: [{ name: string; time: string; rate: string }];
   };
 
   @IsObject()
   back: {
-    ability: [[name: string, time: string, rate: string]];
-    skills: [[name: string, time: string, rate: string]];
+    ability: [{ name: string; time: string; rate: string }];
+    skills: [{ name: string; time: string; rate: string }];
   };
 
   @IsObject()
   design: {
-    skills: [[name: string, time: string, rate: string]];
+    skills: [{ name: string; time: string; rate: string }];
   };
 
   @IsArray()
