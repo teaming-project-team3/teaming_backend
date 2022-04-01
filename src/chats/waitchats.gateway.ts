@@ -47,13 +47,13 @@ export class WaitchatsGateway
     console.log('✅========== waitroom 접속 해제==========✅');
     this.logger.log(`disconnected : ${socket.id} ${socket.nsp.name}`);
 
-    const { participantList } = await this.chatModel.findOne({
+    const room = await this.chatModel.findOne({
       projectId: socket['myRoomName'],
     });
 
     //떠난 유저 제거한 배열로 DB에 Update
-    const deleteUser = participantList.filter(
-      (user) => user !== socket['myNickname'],
+    const deleteUser = room.participantList.filter(
+      (user) => user['name'] !== socket['myNickname'],
     );
     await this.chatModel.findOneAndUpdate(
       { projectId: socket['myRoomName'] },
@@ -71,14 +71,19 @@ export class WaitchatsGateway
     });
 
     // 인원이 0이 대화내용 삭제 ?
+    const roomData = await this.chatModel.findOne({
+      projectId: socket['myRoomName'],
+    });
+
+    // console.log('✅=========roomData==============✅');
+    console.log(roomData);
+    // console.log('✅=========roomData==============✅');
   }
 
   handleConnection(@ConnectedSocket() socket: Socket) {
     console.log('✅========== waitroom 네임스페이스 접속==========✅');
-
     this.logger.log(`connected : ${socket.id} ${socket.nsp.name}`);
   }
-
   @SubscribeMessage('join')
   async handleJoinRoom(
     @MessageBody() data: { name: string; room: string; message: string },
@@ -96,16 +101,28 @@ export class WaitchatsGateway
       // room DB에 저장
       await this.chatModel.create({
         projectId: socket['myRoomName'],
-        participantList: [],
+        participantList: [
+          {
+            name: socket['myNickname'],
+            socketId: socket.id,
+          },
+        ],
         messageData: [],
       });
     } else {
+      const tempObj = {
+        name: socket['myNickname'],
+        socketId: socket.id,
+      };
+
       //db에 참가한 유저 추가
       await this.chatModel.findOneAndUpdate(
         { projectId: socket['myRoomName'] },
         {
-          // $push: { participantList: { name: data.name, socketId: socket.id } },
-          $push: { participantList: socket['myNickname'] },
+          $push: {
+            participantList: tempObj,
+          },
+          // $push: { participantList: socket['myNickname'] },
         },
       );
     }
@@ -113,6 +130,7 @@ export class WaitchatsGateway
     const roomData = await this.chatModel.findOne({
       projectId: socket['myRoomName'],
     });
+
     socket.join(socket['myRoomName']);
 
     // 메시지를 전송한 클라이언트에게만 메시지를 전송한다.

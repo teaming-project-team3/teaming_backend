@@ -16,7 +16,7 @@ export class Project {
   @Prop({ type: Types.ObjectId })
   userId: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId })
+  @Prop({ type: Types.ObjectId, required: true, ref: 'Board' })
   boardId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId })

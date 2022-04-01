@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
 import { Document, ObjectId, Types } from 'mongoose';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { kStringMaxLength } from 'buffer';
 
 export type UserInfoDocument = UserInfo & Document;
 
@@ -18,7 +19,7 @@ export class UserInfo extends Document {
   @IsNotEmpty()
   userId: ObjectId;
 
-  @Prop()
+  @Prop({ default: '' })
   position: string;
 
   @Prop({ default: '' })
@@ -99,24 +100,101 @@ export class UserInfo extends Document {
   design: object;
 
   @Prop({
-    default: [],
     type: [
       {
         _id: false,
         title: String,
-        image: String,
+        imageUrl: [String],
         description: String,
         url: String,
         period: String,
       },
     ],
   })
-  portfolioUrl: [];
+  portfolioUrl: object[];
 
   @Prop({
     default: '',
   })
   url: string;
+
+  @Prop({
+    default: {
+      front: {
+        ability: {
+          name: '',
+          score: -1,
+        },
+        skills: {
+          name: '',
+          score: -1,
+        },
+      },
+      back: {
+        ability: {
+          name: '',
+          score: -1,
+        },
+        skills: {
+          name: '',
+          score: -1,
+        },
+      },
+      design: {
+        skills: {
+          name: '',
+          score: -1,
+        },
+      },
+      reliability: 50,
+      cooperation: 50,
+    },
+    type: {
+      _id: false,
+      front: {
+        _id: false,
+        type: {
+          ability: {
+            _id: false,
+            type: { name: String, score: Number },
+          },
+          skills: {
+            _id: false,
+            type: { name: String, score: Number },
+          },
+        },
+      },
+      back: {
+        _id: false,
+        type: {
+          ability: {
+            _id: false,
+            type: { name: String, score: Number },
+          },
+          skills: {
+            _id: false,
+            type: { name: String, score: Number },
+          },
+        },
+      },
+      design: {
+        _id: false,
+        type: {
+          _id: false,
+          skills: {
+            _id: false,
+            type: {
+              name: { type: String },
+              score: { type: Number },
+            },
+          },
+        },
+      },
+      reliability: { type: Number },
+      cooperation: { type: Number },
+    },
+  })
+  stack: object;
 }
 
 export const UserInfoSchema = SchemaFactory.createForClass(UserInfo);
