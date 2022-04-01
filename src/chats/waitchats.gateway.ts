@@ -13,7 +13,6 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Socket, Server } from 'socket.io';
 import { Chat } from 'src/schemas/Chat.schema';
-import { ChatsService } from './chats.service';
 
 // 대기방 채팅
 @WebSocketGateway({
@@ -48,12 +47,12 @@ export class WaitchatsGateway
     console.log('✅========== waitroom 접속 해제==========✅');
     this.logger.log(`disconnected : ${socket.id} ${socket.nsp.name}`);
 
-    const { participantList } = await this.chatModel.findOne({
+    const room = await this.chatModel.findOne({
       projectId: socket['myRoomName'],
     });
 
     //떠난 유저 제거한 배열로 DB에 Update
-    const deleteUser = participantList.filter(
+    const deleteUser = room.participantList.filter(
       (user) => user['name'] !== socket['myNickname'],
     );
     await this.chatModel.findOneAndUpdate(
@@ -77,7 +76,7 @@ export class WaitchatsGateway
     });
 
     // console.log('✅=========roomData==============✅');
-    // console.log(roomData);
+    console.log(roomData);
     // console.log('✅=========roomData==============✅');
   }
 

@@ -160,9 +160,6 @@ export class WebrtcGateway
         ),
       );
     }
-    console.log('✅=========temp==============✅');
-    console.log(usersStack);
-    console.log('✅========temp==============✅');
 
     socket.emit('accept_join', targetRoomObj.users, usersStack);
 
