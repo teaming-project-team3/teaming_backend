@@ -9,6 +9,7 @@ import { PortfolioScrap } from './scrap/portfolio.scrap';
 import { HttpModule } from '@nestjs/axios';
 import { Board, BoardSchema } from 'src/schemas/Board.schema';
 import { Project, ProjectSchema } from 'src/schemas/Project.schema';
+import { UsersRepository } from './repository/users.repository';
 
 @Module({
   imports: [
@@ -22,6 +23,6 @@ import { Project, ProjectSchema } from 'src/schemas/Project.schema';
     ]),
   ],
   controllers: [UsersController],
-  providers: [UsersService, PortfolioScrap],
+  providers: [UsersService, PortfolioScrap, UsersRepository],
 })
 export class UsersModule {}

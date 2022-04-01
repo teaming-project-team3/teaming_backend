@@ -22,7 +22,7 @@ export class Chat {
   projectId: string;
 
   // projectId 임시 컬럼
-  @Prop({ type: [String] })
+  @Prop({ type: [Object] })
   participantList: [];
 
   @Prop({

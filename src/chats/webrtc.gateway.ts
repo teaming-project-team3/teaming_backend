@@ -10,6 +10,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
+import { ChatsService } from './chats.service';
 
 @WebSocketGateway({
   namespace: 'webrtc',
@@ -34,7 +35,7 @@ export class WebrtcGateway
   private roomObjArr: any;
   private MAXIMUM: number;
 
-  constructor() {
+  constructor(private chatService: ChatsService) {
     this.logger.log('constructor');
     this.roomObjArr = [];
     this.MAXIMUM = 10;
@@ -151,13 +152,20 @@ export class WebrtcGateway
 
     targetRoomObj.currentNum += 1;
 
-    socket.join(socket['myRoomName']);
-    socket.emit('accept_join', targetRoomObj.users);
+    const usersStack = targetRoomObj.users.map(async (user) => {
+      return await this.chatService.getStackJoinUser(user.nickName);
+    });
+    console.log('✅=========usersStack==============✅');
+    console.log(usersStack);
+    console.log('✅=========usersStack==============✅');
 
-    console.log('✅=========console.log(this.roomObjArr[i]);==============✅');
+    socket.emit('accept_join', targetRoomObj.users, usersStack);
 
+    console.log('✅=========targetRoomObj.users==============✅');
     console.log(targetRoomObj.users);
-    console.log('✅=========console.log(this.roomObjArr[i]);==============✅');
+    console.log('✅=========targetRoomObj.users==============✅');
+
+    socket.join(socket['myRoomName']);
   }
 
   @SubscribeMessage('ice')
@@ -168,14 +176,27 @@ export class WebrtcGateway
   }
 
   @SubscribeMessage('offer')
-  handleOffer(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
+  async handleOffer(
+    @MessageBody() data: any,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    console.log('✅=========offer============✅');
+    const newUserStack = await this.chatService.getStackJoinUser(
+      socket['myNickname'],
+    );
+
+    console.log('✅=========newUserStack==============✅');
+    console.log(newUserStack);
+    console.log('✅=========newUserStack==============✅');
+
     socket
       .to(data.remoteSocketId)
-      .emit('offer', data.offer, socket.id, data.localNickName);
+      .emit('offer', data.offer, socket.id, data.localNickName, newUserStack);
   }
 
   @SubscribeMessage('answer')
   handleAnswer(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
+    console.log('✅=========answer============✅');
     socket.to(data.remoteSocketId).emit('answer', data.answer, socket.id);
   }
 
