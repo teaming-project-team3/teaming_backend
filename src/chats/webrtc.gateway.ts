@@ -154,13 +154,15 @@ export class WebrtcGateway
 
     const usersStack = [];
     for (let i = 0; i < targetRoomObj.currentNum; i++) {
-      usersStack.push(
-        await this.chatService.getStackJoinUser(
-          targetRoomObj.users[i].nickName,
-        ),
+      const usersStackObj = await this.chatService.getStackJoinUser(
+        targetRoomObj.users[i].nickName,
       );
+      usersStackObj['socketId'] = targetRoomObj.users[i].socketId;
+      usersStack.push(usersStackObj);
     }
-
+    console.log('✅=========usersStack==============✅');
+    console.log(usersStack);
+    console.log('✅=========usersStack==============✅');
     socket.emit('accept_join', targetRoomObj.users, usersStack);
 
     console.log('✅=========targetRoomObj.users==============✅');
@@ -186,7 +188,7 @@ export class WebrtcGateway
     const newUserStack = await this.chatService.getStackJoinUser(
       socket['myNickname'],
     );
-
+    newUserStack['socketId'] = socket.id;
     console.log('✅=========newUserStack==============✅');
     console.log(newUserStack);
     console.log('✅=========newUserStack==============✅');
