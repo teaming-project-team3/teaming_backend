@@ -96,7 +96,7 @@ export class WebrtcGateway
   }
 
   @SubscribeMessage('join_room')
-  handleJoinRoom(
+  async handleJoinRoom(
     @MessageBody() data: { roomName: string; nickName: string },
     @ConnectedSocket() socket: Socket,
   ) {
@@ -151,13 +151,18 @@ export class WebrtcGateway
     // }
 
     targetRoomObj.currentNum += 1;
-
-    const usersStack = targetRoomObj.users.map(async (user) => {
-      return await this.chatService.getStackJoinUser(user.nickName);
-    });
-    console.log('✅=========usersStack==============✅');
+    
+    const usersStack = [];
+    for (let i = 0; i < targetRoomObj.currentNum; i++) {
+      usersStack.push(
+        await this.chatService.getStackJoinUser(
+          targetRoomObj.users[i].nickName,
+        ),
+      );
+    }
+    console.log('✅=========temp==============✅');
     console.log(usersStack);
-    console.log('✅=========usersStack==============✅');
+    console.log('✅========temp==============✅');
 
     socket.emit('accept_join', targetRoomObj.users, usersStack);
 
