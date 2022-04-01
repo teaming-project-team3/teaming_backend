@@ -14,7 +14,7 @@ export class ChatsRepository {
   async getUserStack(nickname): Promise<any> {
     const user = await this.userModel
       .findOne()
-      .select({ _id: true, nickname: true, profileUrl: true })
+      .select({ _id: true, nickname: true, profileUrl: true, suveyCheck: true })
       .where('nickname')
       .equals(nickname);
 

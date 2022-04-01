@@ -151,7 +151,7 @@ export class WebrtcGateway
     // }
 
     targetRoomObj.currentNum += 1;
-    
+
     const usersStack = [];
     for (let i = 0; i < targetRoomObj.currentNum; i++) {
       usersStack.push(

@@ -120,16 +120,19 @@ export class UsersService {
     console.log(suveyScore);
     console.log('✅==========suveyScore==========✅');
 
-    await this.userInfoModel.create({
-      userId: _id,
-      front,
-      back,
-      design,
-      position,
-      portfolioUrl: protfolioOgData,
-      url,
-      stack: suveyScore,
-    });
+    await this.userInfoModel
+      .findOneAndUpdate()
+      .where('userId')
+      .equals(_id)
+      .set({
+        front,
+        back,
+        design,
+        position,
+        portfolioUrl: protfolioOgData,
+        url,
+        stack: suveyScore,
+      });
 
     return {
       msg: `${position} 설문조사 완료`,

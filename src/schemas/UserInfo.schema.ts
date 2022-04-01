@@ -19,7 +19,7 @@ export class UserInfo extends Document {
   @IsNotEmpty()
   userId: ObjectId;
 
-  @Prop()
+  @Prop({ default: '' })
   position: string;
 
   @Prop({ default: '' })
@@ -119,7 +119,36 @@ export class UserInfo extends Document {
   url: string;
 
   @Prop({
-    default: {},
+    default: {
+      front: {
+        ability: {
+          name: '',
+          score: -1,
+        },
+        skills: {
+          name: '',
+          score: -1,
+        },
+      },
+      back: {
+        ability: {
+          name: '',
+          score: -1,
+        },
+        skills: {
+          name: '',
+          score: -1,
+        },
+      },
+      design: {
+        skills: {
+          name: '',
+          score: -1,
+        },
+      },
+      reliability: 50,
+      cooperation: 50,
+    },
     type: {
       _id: false,
       front: {
@@ -154,12 +183,15 @@ export class UserInfo extends Document {
           _id: false,
           skills: {
             _id: false,
-            type: { name: String, score: Number },
+            type: {
+              name: { type: String },
+              score: { type: Number },
+            },
           },
         },
       },
-      reliability: { type: Number, default: 50 },
-      cooperation: { type: Number, default: 50 },
+      reliability: { type: Number },
+      cooperation: { type: Number },
     },
   })
   stack: object;

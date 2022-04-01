@@ -12,10 +12,14 @@ import * as bcrypt from 'bcryptjs';
 import { AuthSignInDto } from '../dto/auth-signin.dto';
 import { UserKakaoDto } from '../dto/auth-userkakao.dto';
 import { AuthCredentialsDto } from '../dto/auth-credential.dto copy';
+import { UserInfo } from 'src/schemas/UserInfo.schema';
 
 @Injectable()
 export class UsersRepository {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(UserInfo.name) private userInfoModel: Model<UserInfo>,
+  ) {}
 
   async create(authCredentialsDto: AuthCredentialsDto): Promise<any> {
     const { email, nickname, password, passwordCheck, profileUrl } =
@@ -89,5 +93,13 @@ export class UsersRepository {
 
   async find(): Promise<any> {
     return await this.userModel.find().exec();
+  }
+
+  async createUserTempInfo(userObjectId): Promise<any> {
+    await this.userInfoModel.create({
+      userId: userObjectId,
+      portfolioUrl: [],
+    });
+    return;
   }
 }
