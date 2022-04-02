@@ -84,6 +84,7 @@ export class WaitchatsGateway
     console.log('✅========== waitroom 네임스페이스 접속==========✅');
     this.logger.log(`connected : ${socket.id} ${socket.nsp.name}`);
   }
+
   @SubscribeMessage('join')
   async handleJoinRoom(
     @MessageBody() data: { name: string; room: string; message: string },
@@ -97,10 +98,9 @@ export class WaitchatsGateway
     const roomExists = await this.chatModel.findOne({
       projectId: socket['myRoomName'],
     });
-    console.log('✅=========roomData==============✅');
-    console.log(roomExists);
 
     if (!roomExists) {
+      console.log('✅=========await this.chatModel.create==============✅');
       // room DB에 저장
       await this.chatModel.create({
         projectId: socket['myRoomName'],
