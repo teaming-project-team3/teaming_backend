@@ -9,7 +9,6 @@ import { UpdateUserInfoDto } from './dto/updateUserInfo.dto';
 import { Board } from 'src/schemas/Board.schema';
 import { Project } from 'src/schemas/Project.schema';
 import { UsersRepository } from './repository/users.repository';
-
 @Injectable()
 export class UsersService {
   private dataSort;
@@ -192,6 +191,9 @@ export class UsersService {
 
   async getUserInfo(req: any) {
     const { _id } = req.user.user;
+    console.log('✅================getUserInfo=================✅');
+    console.log(_id);
+
     const userInfo = await this.userInfoModel
       .findOne({ userId: _id })
       .populate('userId', { password: false });
@@ -200,6 +202,29 @@ export class UsersService {
       .find()
       .where('participantList.userId')
       .in([_id])
+      .populate('boardId', { updateAt: 0, createdAt: 0 })
+      .select({ updatedAt: 0, createdAt: 0 });
+
+    return {
+      msg: ` 회원정보 조회 완료`,
+      userInfo,
+      projectData,
+      totalProject: projectData.length,
+    };
+  }
+
+  async getUserInfoByUserId(userId) {
+    console.log('✅================getUserInfoByUserId=================✅');
+    console.log(userId);
+
+    const userInfo = await this.userInfoModel
+      .findOne({ userId: userId })
+      .populate('userId', { password: false });
+
+    const projectData = await this.projectModel
+      .find()
+      .where('participantList.userId')
+      .in([userId])
       .populate('boardId', { updateAt: 0, createdAt: 0 })
       .select({ updatedAt: 0, createdAt: 0 });
 
