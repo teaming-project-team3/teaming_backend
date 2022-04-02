@@ -10,6 +10,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
+import { ChatsService } from './chats.service';
 
 @WebSocketGateway({
   namespace: 'webrtc',
@@ -33,26 +34,25 @@ export class WebrtcGateway
   private logger = new Logger('webrtc');
   private roomObjArr: any;
   private MAXIMUM: number;
-  private myRoomName;
-  private myNickname;
 
-  constructor() {
+  constructor(private chatService: ChatsService) {
     this.logger.log('constructor');
     this.roomObjArr = [];
     this.MAXIMUM = 10;
-    this.myRoomName = null;
-    this.myNickname = null;
   }
 
   handleDisconnect(@ConnectedSocket() socket: Socket) {
-    console.log('this.myRoomName', this.myRoomName);
-    console.log('this.myNickname', this.myNickname);
-    console.log('this.myNickname', this.roomObjArr);
-    socket.to(this.myRoomName).emit('leaveRoom', socket.id);
+    console.log(`✅=========webrtc Disconnect==============✅`);
+    console.log(`✅=========socket['myNickname']==============✅`);
+    console.log('this.myRoomName', socket['myRoomName']);
+    console.log('this.myNickname', socket['myNickname']);
+    console.log(`✅=========socket['myNickname']==============✅`);
+    socket.to(socket['myRoomName']).emit('leaveRoom', socket.id);
+    socket.leave(socket['myRoomName']);
 
     let isRoomEmpty = false;
     for (let i = 0; i < this.roomObjArr.length; ++i) {
-      if (this.roomObjArr[i].roomName === this.myRoomName) {
+      if (this.roomObjArr[i].roomName === socket['myRoomName']) {
         const newUsers = this.roomObjArr[i].users.filter(
           (user) => user.socketId != socket.id,
         );
@@ -96,23 +96,18 @@ export class WebrtcGateway
   }
 
   @SubscribeMessage('join_room')
-  handleJoinRoom(
+  async handleJoinRoom(
     @MessageBody() data: { roomName: string; nickName: string },
     @ConnectedSocket() socket: Socket,
   ) {
-    console.log('✅=========join_room==============✅');
-
-    console.log('join_room data!!', data); // console.log('join_room socket', socket);
-    console.log('✅======join_room=============✅');
-
-    this.myRoomName = data.roomName;
-    this.myNickname = data.nickName;
+    socket['myNickname'] = data.nickName;
+    socket['myRoomName'] = data.roomName;
 
     let isRoomExist = false;
     let targetRoomObj: any;
 
     for (let i = 0; i < this.roomObjArr.length; ++i) {
-      if (this.roomObjArr[i].roomName === data.roomName) {
+      if (this.roomObjArr[i].roomName === socket['myRoomName']) {
         // Reject join the room
         if (this.roomObjArr[i].currentNum >= this.MAXIMUM) {
           socket.emit('reject_join');
@@ -129,60 +124,81 @@ export class WebrtcGateway
     if (!isRoomExist) {
       console.log('createRoom!!');
       targetRoomObj = {
-        roomName: data.roomName,
+        roomName: socket['myRoomName'],
         currentNum: 0,
         users: [],
       };
       this.roomObjArr.push(targetRoomObj);
     }
 
+    // let existsUser : boolean = false;
+    // for (let i = 0; i < targetRoomObj.users.length; i++){
+    //   if (targetRoomObj.users[i].nickName === socket['myNickname']) {
+    //     existsUser = true;
+    //     targetRoomObj.users[i].socketId = socket.id;
+    //     break;
+    //   }
+    // }
+
+    // if (!existsUser) {
     //Join the room
     targetRoomObj.users.push({
       socketId: socket.id,
-      nickName: data.nickName,
+      nickName: socket['myNickname'],
       video: true,
       audio: false,
     });
+    // }
 
     targetRoomObj.currentNum += 1;
 
-    socket.join(data.roomName);
-    console.log("after join, emit 'accept_join'", targetRoomObj.users);
+    const usersStack = [];
+    for (let i = 0; i < targetRoomObj.currentNum; i++) {
+      usersStack.push(
+        await this.chatService.getStackJoinUser(
+          targetRoomObj.users[i].nickName,
+        ),
+      );
+    }
 
-    // this.server.sockets.to(data.roomName).emit('accept_join', targetRoomObj.users);
-    socket.emit('accept_join', targetRoomObj.users);
-    // socket.broadcast.to(data.roomName).emit('accept_join', targetRoomObj.users);
-    //join_room end
+    socket.emit('accept_join', targetRoomObj.users, usersStack);
+
+    console.log('✅=========targetRoomObj.users==============✅');
+    console.log(targetRoomObj.users);
+    console.log('✅=========targetRoomObj.users==============✅');
+
+    socket.join(socket['myRoomName']);
   }
 
   @SubscribeMessage('ice')
   handleIce(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
-    console.log('✅=======ice===============✅');
-
-    // console.log('ice data!!', data);
-    // console.log('ice socket', socket);
-    console.log('✅========ice===============✅');
+    console.log('✅=========ice==============✅');
 
     socket.to(data.remoteSocketId).emit('ice', data.ice, socket.id);
   }
 
   @SubscribeMessage('offer')
-  handleOffer(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
-    console.log('✅==========offer===========✅');
+  async handleOffer(
+    @MessageBody() data: any,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    console.log('✅=========offer============✅');
+    const newUserStack = await this.chatService.getStackJoinUser(
+      socket['myNickname'],
+    );
 
-    // console.log('offer data!!', data);
-    // console.log('offer socket', socket);
-    console.log('✅=========offer=============✅');
+    console.log('✅=========newUserStack==============✅');
+    console.log(newUserStack);
+    console.log('✅=========newUserStack==============✅');
 
     socket
       .to(data.remoteSocketId)
-      .emit('offer', data.offer, socket.id, data.localNickName);
+      .emit('offer', data.offer, socket.id, data.localNickName, newUserStack);
   }
 
   @SubscribeMessage('answer')
   handleAnswer(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
-    // console.log('answer data!!', data);
-    // console.log('answer socket', socket);
+    console.log('✅=========answer============✅');
     socket.to(data.remoteSocketId).emit('answer', data.answer, socket.id);
   }
 

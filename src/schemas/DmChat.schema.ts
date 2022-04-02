@@ -3,26 +3,22 @@ import { Transform } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
 import { Document, ObjectId, Types } from 'mongoose';
 
-export type ChatDocument = Chat & Document;
+export type DmChatDocument = DmChat & Document;
 const options: SchemaOptions = {
-  collection: 'chats',
+  collection: 'dmchats',
   timestamps: true,
 };
 @Schema(options)
-export class Chat {
+export class DmChat {
   @Transform(({ value }) => value.toString())
   _id: ObjectId;
 
-  // @Prop({ type: Types.ObjectId, required: true, ref: 'Project' })
-  // @IsNotEmpty()
-  // projectId: ObjectId;
-
   // projectId 임시 컬럼
   @Prop({ type: String })
-  projectId: string;
+  room: string;
 
   // projectId 임시 컬럼
-  @Prop({ type: [Object] })
+  @Prop({ type: [String] })
   participantList: [];
 
   @Prop({
@@ -39,4 +35,4 @@ export class Chat {
   messageData: [];
 }
 
-export const ChatSchema = SchemaFactory.createForClass(Chat);
+export const DmChatSchema = SchemaFactory.createForClass(DmChat);

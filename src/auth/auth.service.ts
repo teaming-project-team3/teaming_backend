@@ -23,7 +23,8 @@ export class AuthService {
   }
 
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<any> {
-    await this.usersRepository.create(authCredentialsDto);
+    const user = await this.usersRepository.create(authCredentialsDto);
+    await this.usersRepository.createUserTempInfo(user._id);
 
     return {
       msg: '회원가입 성공',
@@ -59,6 +60,7 @@ export class AuthService {
       let user = await this.usersRepository.findOneByName(name);
       if (!user) {
         user = await this.usersRepository.createKakao(userKakaoDto);
+        await this.usersRepository.createUserTempInfo(user._id);
       }
       const payload = { _id: user._id, kakaoAccessToken };
       const accessToken = this.jwtService.sign(payload);
