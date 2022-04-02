@@ -12,6 +12,7 @@ const options: SchemaOptions = {
 };
 @Schema(options)
 export class UserInfo extends Document {
+  @Prop({ type: Types.ObjectId })
   @Transform(({ value }) => value.toString())
   _id: ObjectId;
 
