@@ -9,10 +9,10 @@ import { User, UserDocument } from 'src/schemas/User.schema';
 import { Project, ProjectDocument } from 'src/schemas/Project.schema';
 import { Like, LikeDocument } from 'src/schemas/Like.schema';
 import { userInfo } from './entities/user.entity';
-import { projectEntity } from './entities/Project.entity';
 import mongoose from 'mongoose';
 import { UserInfo, UserInfoDocument } from 'src/schemas/UserInfo.schema';
 import { participant } from './entities/schemaValue.entity';
+import { projectDto } from './dto/project.dto';
 
 @Injectable()
 export class BoardsService {
@@ -43,7 +43,7 @@ export class BoardsService {
     // console.log(participant.participantList.position);
     const position = participant.participantList.position;
 
-    if (position.length > 1) {
+    if (position.length > 0) {
       for (const list of position) {
         switch (list) {
           case 'design':
@@ -298,22 +298,19 @@ export class BoardsService {
       console.log('오늘 날짜: ', createdAt);
       await this.boardModel.create(board);
 
-      // const findBoard = await this.boardModel
-      //   .find({ userId })
-      //   .sort({ createdAt: -1 });
       const findBoard = await this.boardModel
         .find()
         .sort({ createdAt: -1 })
         .limit(1);
 
       console.log('보드 찾기', findBoard);
-
+      console.log('findUserInfo', findUserInfo);
       const participantList = {
         position: [findUserInfo.position],
         userId: [userId],
       };
 
-      const project: projectEntity = {
+      const project: projectDto = {
         boardId: findBoard[0]._id,
         userId: userId,
         participantList,
@@ -341,6 +338,7 @@ export class BoardsService {
     try {
       await this.boardModel.findOne({ _id });
       await this.boardModel.findOneAndDelete({ _id });
+      await this.projectModel.findOneAndDelete({ boardId: _id });
       return '삭제완료';
     } catch (error) {
       return `${user.nickname}님 지울게 없습니다.`;
