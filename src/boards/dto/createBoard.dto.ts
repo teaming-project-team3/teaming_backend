@@ -1,4 +1,4 @@
-import { IsDate, IsString } from 'class-validator';
+import { IsArray, IsDate, IsString } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class createBoardDto {
@@ -9,19 +9,23 @@ export class createBoardDto {
   @IsString()
   title: string;
 
-  @IsString()
-  imgUrl: string;
+  @IsArray()
+  imgUrl: string[] | null;
 
   @IsString()
   contents: string;
 
   @IsString()
-  subContents: string;
+  subContents: string | null;
 
-  stack: [string, string, number][] | null;
+  @IsArray()
+  stack: [string, string, number][];
 
-  @IsDate()
   period: Date;
 
   referURL: string[] | null;
+
+  createdAt: Date;
+
+  updateAt: Date;
 }

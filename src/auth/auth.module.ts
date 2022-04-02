@@ -9,8 +9,8 @@ import { User, UserSchema } from '../schemas/User.schema';
 import { UsersRepository } from './repository/auth.repository';
 import { HttpModule } from '@nestjs/axios';
 import { KakaoStrategy } from './strategy/kakao.strategy';
-// import * as dotenv from 'dotenv';
-// dotenv.config();
+import { UserInfo, UserInfoSchema } from 'src/schemas/UserInfo.schema';
+
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
@@ -20,7 +20,10 @@ import { KakaoStrategy } from './strategy/kakao.strategy';
         expiresIn: process.env.JWT_EXPIRESIN, //유효 시간
       },
     }),
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      { name: UserInfo.name, schema: UserInfoSchema },
+    ]),
     HttpModule,
   ],
   controllers: [AuthController],

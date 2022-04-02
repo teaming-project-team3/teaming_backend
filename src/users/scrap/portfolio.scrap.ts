@@ -9,11 +9,14 @@ export class PortfolioScrap {
     const list = [];
     const len = urlList.length;
     for (let i = 0; i < len; i++) {
+      // 빈문자열 건너뛰기
+      if (!urlList[i]) continue;
+
       const ogDate = {
-        title: null,
-        description: null,
-        imageUrl: null,
-        period: null,
+        title: '',
+        description: '',
+        imageUrl: [],
+        period: '',
         url: urlList[i],
       };
 
@@ -32,7 +35,7 @@ export class PortfolioScrap {
           ogDate['description'] = $(element).attr('content');
         }
         if ($(element).attr('property') === 'og:image') {
-          ogDate['imageUrl'] = $(element).attr('content');
+          ogDate['imageUrl'].push($(element).attr('content'));
         }
       });
       list.push(ogDate);
