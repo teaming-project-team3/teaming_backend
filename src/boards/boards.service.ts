@@ -45,29 +45,19 @@ export class BoardsService {
 
     if (position.length > 0) {
       for (const list of position) {
-        switch (list) {
-          case 'design':
-            --stack[0][2];
-            break;
-          case 'front':
-            --stack[1][2];
-            break;
-          case 'back':
-            --stack[2][2];
-            break;
+        for (const i in stack) {
+          switch (list) {
+            case 'design':
+              --stack[i][2];
+              break;
+            case 'front':
+              --stack[i][2];
+              break;
+            case 'back':
+              --stack[i][2];
+              break;
+          }
         }
-      }
-    } else {
-      switch (position[0]) {
-        case 'design':
-          --stack[0][2];
-          break;
-        case 'front':
-          --stack[1][2];
-          break;
-        case 'back':
-          --stack[2][2];
-          break;
       }
     }
 
