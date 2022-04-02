@@ -97,6 +97,9 @@ export class WaitchatsGateway
     const roomExists = await this.chatModel.findOne({
       projectId: socket['myRoomName'],
     });
+    console.log('✅=========roomData==============✅');
+    console.log(roomExists);
+
     if (!roomExists) {
       // room DB에 저장
       await this.chatModel.create({
