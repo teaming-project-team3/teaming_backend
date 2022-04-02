@@ -9,7 +9,7 @@ export class createBoardDto {
   @IsString()
   title: string;
 
-  @IsString()
+  @IsArray()
   imgUrl: string[] | null;
 
   @IsString()
@@ -21,12 +21,10 @@ export class createBoardDto {
   @IsArray()
   stack: [string, string, number][];
 
-  @IsDate()
   period: Date;
 
   referURL: string[] | null;
 
-  @IsDate()
   createdAt: Date;
 
   updateAt: Date;
