@@ -98,7 +98,7 @@ export class WebrtcGateway
 
   @SubscribeMessage('join_room')
   async handleJoinRoom(
-    @MessageBody() data: any,
+    @MessageBody() data: { roomName: string; nickName: string },
     @ConnectedSocket() socket: Socket,
   ) {
     socket['myNickname'] = data.nickName;
@@ -132,25 +132,32 @@ export class WebrtcGateway
       this.roomObjArr.push(targetRoomObj);
     }
 
+    //Join the room
+    targetRoomObj.users.push({
+      socketId: socket.id,
+      nickName: socket['myNickname'],
+      video: true,
+      audio: false,
+    });
+
     const usersStack = [];
     for (let i = 0; i < targetRoomObj.currentNum; i++) {
       const usersStackObj = await this.chatService.getStackJoinUser(
         targetRoomObj.users[i].nickName,
       );
       usersStackObj['socketId'] = targetRoomObj.users[i].socketId;
-      //Join the room
-      targetRoomObj.users.push({
-        socketId: socket.id,
-        nickName: socket['myNickname'],
-        video: true,
-        audio: false,
+      const obj = {
+        targetRoomObjUsers: targetRoomObj.users[i],
         usersStackObj,
-      });
+      };
+      usersStack.push(usersStackObj);
     }
-
     targetRoomObj.currentNum += 1;
 
-    socket.emit('accept_join', targetRoomObj.users);
+    console.log('✅=========usersStack==============✅');
+    console.log(usersStack);
+    console.log('✅=========usersStack==============✅');
+    socket.emit('accept_join', targetRoomObj.users, usersStack);
 
     console.log('✅=========targetRoomObj.users==============✅');
     console.log(targetRoomObj.users);
