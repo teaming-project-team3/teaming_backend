@@ -98,7 +98,7 @@ export class BoardsController {
   }
 
   // 프로젝트 삭제
-  @Delete(':boardID')
+  @Delete(':boardId')
   @UseGuards(AuthGuard())
   @ApiOperation({
     summary: '프로젝트 삭제',
