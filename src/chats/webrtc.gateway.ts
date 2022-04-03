@@ -136,7 +136,7 @@ export class WebrtcGateway
     targetRoomObj.users.push({
       socketId: socket.id,
       nickName: socket['myNickname'],
-      video: true,
+      video: false,
       audio: false,
     });
 
