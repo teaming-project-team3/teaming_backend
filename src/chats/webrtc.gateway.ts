@@ -140,6 +140,8 @@ export class WebrtcGateway
       audio: false,
     });
 
+    targetRoomObj.currentNum += 1;
+
     const usersStack = [];
     for (let i = 0; i < targetRoomObj.currentNum; i++) {
       const usersStackObj = await this.chatService.getStackJoinUser(
@@ -152,7 +154,6 @@ export class WebrtcGateway
       };
       usersStack.push(obj);
     }
-    targetRoomObj.currentNum += 1;
 
     console.log('✅=========usersStack==============✅');
     console.log(usersStack);
