@@ -8,6 +8,8 @@ import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { ChatsModule } from './chats/chats.module';
 import { UsersModule } from './users/users.module';
 import { AppController } from './app.controller';
+import { LikeModule } from './like/like.module';
+import { ProjectsModule } from './projects/projects.module';
 import mongoose from 'mongoose';
 
 @Module({
@@ -30,6 +32,8 @@ import mongoose from 'mongoose';
     AuthModule,
     ChatsModule,
     UsersModule,
+    LikeModule,
+    ProjectsModule,
   ],
   controllers: [AppController],
   providers: [],

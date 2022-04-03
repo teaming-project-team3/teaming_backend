@@ -1,4 +1,5 @@
-import { IsArray, IsDate, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsArray, IsString } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class createBoardDto {
@@ -6,23 +7,61 @@ export class createBoardDto {
 
   userId: Types.ObjectId;
 
+  @ApiProperty({
+    example: 'Swagger 테스트 글 입니다.',
+    description: 'title',
+    required: true,
+  })
   @IsString()
   title: string;
 
+  @ApiProperty({
+    example: ['url1', 'url2'],
+    description: 'imgUrl',
+    required: true,
+  })
   @IsArray()
   imgUrl: string[] | null;
 
+  @ApiProperty({
+    example: 'Swagger 테스트 글 입니다.',
+    description: 'contents',
+    required: true,
+  })
   @IsString()
   contents: string;
 
+  @ApiProperty({
+    example: 'Swagger 테스트 글 입니다.',
+    description: 'subContents',
+    required: true,
+  })
   @IsString()
   subContents: string | null;
 
+  @ApiProperty({
+    example: [
+      ['dev', 'back', 2],
+      ['dev', 'front', 3],
+    ],
+    description: 'stack',
+    required: true,
+  })
   @IsArray()
   stack: [string, string, number][];
 
-  period: Date;
+  @ApiProperty({
+    example: '2022-04-05',
+    description: 'period',
+    required: true,
+  })
+  period: Date | string;
 
+  @ApiProperty({
+    example: ['url1', 'url2'],
+    description: 'referURL',
+    required: true,
+  })
   referURL: string[] | null;
 
   createdAt: Date;

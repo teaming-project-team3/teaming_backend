@@ -13,6 +13,7 @@ import mongoose from 'mongoose';
 import { UserInfo, UserInfoDocument } from 'src/schemas/UserInfo.schema';
 import { participant } from './entities/schemaValue.entity';
 import { projectDto } from './dto/project.dto';
+import { updateBoardDto } from './dto/updateBoard.dto';
 
 @Injectable()
 export class BoardsService {
@@ -182,7 +183,7 @@ export class BoardsService {
     page: number,
   ): Promise<b[] | m[] | string> {
     const newBoard = await this.boardMake(12, page, '');
-    // console.log(newBoard);
+    console.log(newBoard);
 
     switch (category) {
       case 'rank':
@@ -269,7 +270,6 @@ export class BoardsService {
   // Promise<Board>
   // ====================================================================
   // 프로젝트 카드 만들기 => 동시에 프로젝트 룸 생성
-  async createProjectRoom() {}
 
   async createBoard(board: createBoardDto, user: userInfo) {
     // console.log('user', user._id);
@@ -284,8 +284,13 @@ export class BoardsService {
       const findUserInfo = await this.UserInfoModel.findOne({
         userId,
       });
-      console.log('유저 정보: ', findUserInfo);
-      console.log('오늘 날짜: ', createdAt);
+
+      if (!findUserInfo || !findUserInfo.position) {
+        return '포지션이 없어 프로젝트를 생성할 수 없습니다.';
+      }
+
+      // console.log('유저 정보: ', findUserInfo);
+      // console.log('오늘 날짜: ', createdAt);
       await this.boardModel.create(board);
 
       const findBoard = await this.boardModel
@@ -293,8 +298,8 @@ export class BoardsService {
         .sort({ createdAt: -1 })
         .limit(1);
 
-      console.log('보드 찾기', findBoard);
-      console.log('findUserInfo', findUserInfo);
+      // console.log('보드 찾기', findBoard);
+      // console.log('findUserInfo', findUserInfo);
       const participantList = {
         position: [findUserInfo.position],
         userId: [userId],
@@ -421,5 +426,27 @@ export class BoardsService {
         message: '없는 보드 입니다.',
       };
     }
+  }
+
+  async updateBoard(id, board: updateBoardDto) {
+    console.log(board);
+    const _id = new mongoose.Types.ObjectId(id);
+
+    await this.boardModel.findOneAndUpdate(
+      { _id },
+      {
+        $set: {
+          title: board.title,
+          contents: board.contents,
+          subContents: board.subContents,
+          imgUrl: board.imgUrl,
+          stack: board.stack,
+          period: board.period,
+          referURL: board.referURL,
+        },
+      },
+    );
+
+    return { message: '수정이 완료 되었습니다.' };
   }
 }
