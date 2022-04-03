@@ -18,7 +18,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Teaming API DOCS')
     .setDescription('API 문서입니다.')
-    .setVersion('0.0.1')
+    .setVersion('1.0.0')
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'Token' },
       'access-token',

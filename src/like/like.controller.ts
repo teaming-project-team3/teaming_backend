@@ -1,8 +1,10 @@
 import { Controller, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
 import { LikeService } from './like.service';
 
 @Controller('like')
+@ApiTags('Like API')
 export class LikeController {
   constructor(private readonly likeService: LikeService) {}
 
