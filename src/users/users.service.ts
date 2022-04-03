@@ -198,11 +198,13 @@ export class UsersService {
   async getUserInfo(req: any) {
     const { _id } = req.user.user;
     console.log('✅================getUserInfo=================✅');
-    console.log(_id);
 
     const userInfo = await this.userInfoModel
       .findOne({ userId: _id })
       .populate('userId', { password: false });
+
+    const customInfo = JSON.parse(JSON.stringify(userInfo));
+    customInfo['nickname'] = userInfo.userId['nickname'];
 
     const projectData = await this.projectModel
       .find()
@@ -213,7 +215,7 @@ export class UsersService {
 
     return {
       msg: ` 회원정보 조회 완료`,
-      userInfo,
+      userInfo: customInfo,
       projectData,
       totalProject: projectData.length,
     };
@@ -227,6 +229,9 @@ export class UsersService {
       .findOne({ userId: userId })
       .populate('userId', { password: false });
 
+    const customInfo = JSON.parse(JSON.stringify(userInfo));
+    customInfo['nickname'] = userInfo.userId['nickname'];
+
     const projectData = await this.projectModel
       .find()
       .where('participantList.userId')
@@ -236,7 +241,7 @@ export class UsersService {
 
     return {
       msg: ` 회원정보 조회 완료`,
-      userInfo,
+      userInfo: customInfo,
       projectData,
       totalProject: projectData.length,
     };
