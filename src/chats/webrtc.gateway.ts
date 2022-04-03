@@ -150,14 +150,14 @@ export class WebrtcGateway
         targetRoomObjUsers: targetRoomObj.users[i],
         usersStackObj,
       };
-      usersStack.push(usersStackObj);
+      usersStack.push(obj);
     }
     targetRoomObj.currentNum += 1;
 
     console.log('✅=========usersStack==============✅');
     console.log(usersStack);
     console.log('✅=========usersStack==============✅');
-    socket.emit('accept_join', targetRoomObj.users, usersStack);
+    socket.emit('accept_join', usersStack);
 
     console.log('✅=========targetRoomObj.users==============✅');
     console.log(targetRoomObj.users);
