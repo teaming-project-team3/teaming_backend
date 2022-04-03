@@ -47,6 +47,7 @@ export class WebrtcGateway
     console.log('this.myRoomName', socket['myRoomName']);
     console.log('this.myNickname', socket['myNickname']);
     console.log(`✅=========socket['myNickname']==============✅`);
+
     socket.to(socket['myRoomName']).emit('leaveRoom', socket.id);
     socket.leave(socket['myRoomName']);
 
@@ -97,7 +98,7 @@ export class WebrtcGateway
 
   @SubscribeMessage('join_room')
   async handleJoinRoom(
-    @MessageBody() data: { roomName: string; nickName: string },
+    @MessageBody() data: any,
     @ConnectedSocket() socket: Socket,
   ) {
     socket['myNickname'] = data.nickName;
@@ -131,39 +132,25 @@ export class WebrtcGateway
       this.roomObjArr.push(targetRoomObj);
     }
 
-    // let existsUser : boolean = false;
-    // for (let i = 0; i < targetRoomObj.users.length; i++){
-    //   if (targetRoomObj.users[i].nickName === socket['myNickname']) {
-    //     existsUser = true;
-    //     targetRoomObj.users[i].socketId = socket.id;
-    //     break;
-    //   }
-    // }
-
-    // if (!existsUser) {
-    //Join the room
-    targetRoomObj.users.push({
-      socketId: socket.id,
-      nickName: socket['myNickname'],
-      video: true,
-      audio: false,
-    });
-    // }
-
-    targetRoomObj.currentNum += 1;
-
     const usersStack = [];
     for (let i = 0; i < targetRoomObj.currentNum; i++) {
       const usersStackObj = await this.chatService.getStackJoinUser(
         targetRoomObj.users[i].nickName,
       );
       usersStackObj['socketId'] = targetRoomObj.users[i].socketId;
-      usersStack.push(usersStackObj);
+      //Join the room
+      targetRoomObj.users.push({
+        socketId: socket.id,
+        nickName: socket['myNickname'],
+        video: true,
+        audio: false,
+        usersStackObj,
+      });
     }
-    console.log('✅=========usersStack==============✅');
-    console.log(usersStack);
-    console.log('✅=========usersStack==============✅');
-    socket.emit('accept_join', targetRoomObj.users, usersStack);
+
+    targetRoomObj.currentNum += 1;
+
+    socket.emit('accept_join', targetRoomObj.users);
 
     console.log('✅=========targetRoomObj.users==============✅');
     console.log(targetRoomObj.users);
