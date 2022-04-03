@@ -35,6 +35,5 @@ export class SuveyInfoDto {
   })
   portfolioUrl: string[];
 
-  @IsUrl(undefined, { message: ' URL is not valid.' })
   url: string;
 }
