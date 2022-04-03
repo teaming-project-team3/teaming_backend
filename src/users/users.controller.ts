@@ -11,12 +11,14 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { SuveyInfoDto } from './dto/suveyInfo.dto';
 import { UpdateUserInfoDto } from './dto/updateUserInfo.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
+@ApiTags('Users API')
 @UseInterceptors(SuccessInterceptor)
 export class UsersController {
   constructor(private usersService: UsersService) {}

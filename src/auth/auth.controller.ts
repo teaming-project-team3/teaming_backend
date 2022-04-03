@@ -20,8 +20,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AuthCredentialsDto } from './dto/auth-credential.dto copy';
 import { AuthSignInDto } from './dto/auth-signin.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags('Auth API')
 @UseInterceptors(SuccessInterceptor)
 export class AuthController {
   constructor(
