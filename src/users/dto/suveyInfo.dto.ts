@@ -1,4 +1,10 @@
-import { IsArray, IsNotEmpty, IsObject, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsObject,
+  IsString,
+  IsUrl,
+} from 'class-validator';
 
 export class SuveyInfoDto {
   @IsNotEmpty()
@@ -23,7 +29,12 @@ export class SuveyInfoDto {
   };
 
   @IsArray()
-  portfolioUrl: [];
+  @IsUrl(undefined, {
+    each: true,
+    message: ' portfolioUrl is not valid.',
+  })
+  portfolioUrl: string[];
 
+  @IsUrl(undefined, { message: ' URL is not valid.' })
   url: string;
 }
