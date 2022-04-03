@@ -10,20 +10,15 @@ const options: SchemaOptions = {
 };
 @Schema(options)
 export class Chat {
-  @Prop({ type: Types.ObjectId })
   @Transform(({ value }) => value.toString())
   _id: ObjectId;
-
-  // @Prop({ type: Types.ObjectId, required: true, ref: 'Project' })
-  // @IsNotEmpty()
-  // projectId: ObjectId;
 
   // projectId 임시 컬럼
   @Prop({ type: String })
   projectId: string;
 
   // projectId 임시 컬럼
-  @Prop({ type: [Object] })
+  @Prop({ type: [Object], default: [] })
   participantList: [];
 
   @Prop({
