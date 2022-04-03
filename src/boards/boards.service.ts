@@ -458,7 +458,7 @@ export class BoardsService {
     } catch (error) {
       return {
         Status: 401,
-        message: '없는 보드 입니다.',
+        message: '없는 프로젝트 입니다.',
       };
     }
   }

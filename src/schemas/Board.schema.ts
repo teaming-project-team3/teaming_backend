@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
+import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 
 import { SchemaTypes, Types, Document } from 'mongoose';
@@ -34,8 +35,8 @@ export class Board {
   @Prop({ type: Number, default: 0 })
   likeCount: number;
 
-  @Prop({ type: [String], default: null })
-  referURL: string[];
+  @Prop({ type: String, default: null })
+  referURL: string;
 
   @Prop({ type: Date })
   createdAt: Date;
