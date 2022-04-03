@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Post,
   Put,
   Req,
@@ -12,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
+import mongoose from 'mongoose';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { SuveyInfoDto } from './dto/suveyInfo.dto';
 import { UpdateUserInfoDto } from './dto/updateUserInfo.dto';
@@ -48,7 +50,14 @@ export class UsersController {
 
   @Get('/mypage')
   @UseGuards(AuthGuard())
-  getUserInfo(@Req() req): Promise<any> {
+  getMyInfo(@Req() req): Promise<any> {
     return this.usersService.getUserInfo(req);
+  }
+
+  @Get('/:userId')
+  @UseGuards(AuthGuard())
+  getUserInfo(@Param() { userId }): Promise<any> {
+    const _id = new mongoose.Types.ObjectId(userId);
+    return this.usersService.getUserInfoByUserId(_id);
   }
 }
