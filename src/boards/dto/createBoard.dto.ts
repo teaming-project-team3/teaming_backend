@@ -61,11 +61,11 @@ export class createBoardDto {
   period: Date | string;
 
   @ApiProperty({
-    example: ['url1', 'url2'],
+    example: 'url1',
     description: 'referURL',
     required: true,
   })
-  referURL: string[] | null;
+  referURL: string | null;
 
   createdAt: Date;
 

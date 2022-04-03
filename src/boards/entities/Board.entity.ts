@@ -40,7 +40,7 @@ export class getOneBoard {
   left: number[]; // 들어온 인원 / 디자인, 프론트, 백 순서
   period: Date; // 모집기간
   likeCount: number; // 좋아요 수
-  referURL: string[] | null;
+  referURL: string | null;
   createdAt: Date; // 작성일
 }
 
