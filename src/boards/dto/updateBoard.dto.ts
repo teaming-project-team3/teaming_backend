@@ -58,6 +58,5 @@ export class updateBoardDto {
     description: 'referURL',
     required: true,
   })
-  @IsUrl(undefined, { message: 'Company Url is not valid.' })
   referURL: string | null;
 }
