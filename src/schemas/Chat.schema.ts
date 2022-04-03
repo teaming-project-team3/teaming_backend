@@ -10,6 +10,7 @@ const options: SchemaOptions = {
 };
 @Schema(options)
 export class Chat {
+  @Prop({ type: Types.ObjectId })
   @Transform(({ value }) => value.toString())
   _id: ObjectId;
 
