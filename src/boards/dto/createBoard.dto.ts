@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class createBoardDto {
@@ -12,6 +12,7 @@ export class createBoardDto {
     description: 'title',
     required: true,
   })
+  @IsNotEmpty()
   @IsString()
   title: string;
 
@@ -28,6 +29,7 @@ export class createBoardDto {
     description: 'contents',
     required: true,
   })
+  @IsNotEmpty()
   @IsString()
   contents: string;
 
@@ -38,7 +40,7 @@ export class createBoardDto {
   })
   @IsString()
   subContents: string | null;
-
+  @IsNotEmpty()
   @ApiProperty({
     example: [
       ['dev', 'back', 2],
@@ -55,6 +57,7 @@ export class createBoardDto {
     description: 'period',
     required: true,
   })
+  @IsNotEmpty()
   period: Date | string;
 
   @ApiProperty({

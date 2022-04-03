@@ -99,6 +99,11 @@ export class BoardsService {
       const likeCount = await this.getLikeCount(list._id);
       const stack = await this.getStackCheck(list._id, list.stack);
 
+      console.log('user 확인!!!', user);
+      if (!user) {
+        user.nickname = '탈퇴';
+      }
+
       const tempBoard: b = {
         _id: list._id,
         title: list.title,
@@ -370,21 +375,51 @@ export class BoardsService {
     let frontCount = 0;
     let backCount = 0;
     for (const list of participant.participantList.position) {
-      switch (list[1]) {
+      // console.log('left!!!', list);
+      switch (list) {
         case 'design':
-          designCount += 1;
+          ++designCount;
           break;
         case 'front':
-          frontCount += 1;
+          ++frontCount;
           break;
         case 'back':
-          backCount += 1;
+          ++backCount;
           break;
       }
+      console.log('leftCount!!', designCount, frontCount, backCount);
     }
-    left.push(designCount);
-    left.push(frontCount);
-    left.push(backCount);
+
+    let stackDesignCount = 0;
+    let stackFrontCount = 0;
+    let stackBackCount = 0;
+    for (const list of findBoard.stack) {
+      console.log('stack', list, list[2]);
+      switch (list[0].toLowerCase()) {
+        case 'design':
+          stackDesignCount += list[2];
+          break;
+        case 'dev':
+          if (list[1].toLowerCase() === 'front') {
+            stackFrontCount += list[2];
+            break;
+          } else {
+            stackBackCount += list[2];
+            break;
+          }
+      }
+      console.log(
+        'Before left!!!',
+        stackDesignCount,
+        stackFrontCount,
+        stackBackCount,
+      );
+    }
+
+    left.push(stackDesignCount - designCount);
+    left.push(stackFrontCount - frontCount);
+    left.push(stackBackCount - backCount);
+    console.log('After left!!!', left);
 
     // 좋아요 수
     const likeCount = await (
