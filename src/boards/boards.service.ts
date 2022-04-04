@@ -38,16 +38,16 @@ export class BoardsService {
       { _id: 0, participantList: 1 },
     );
 
-    console.log('stack!!!', stack);
-    console.log(boardId);
-    console.log('participant!!!', participant);
+    // console.log('stack!!!', stack);
+    // console.log(boardId);
+    // console.log('participant!!!', participant);
     // console.log(participant.participantList.position);
     const position = participant.participantList.position;
 
     if (position.length > 0) {
       for (const list of position) {
-        console.log('list!!!', list);
-        console.log('stack!!!', stack);
+        // console.log('list!!!', list);
+        // console.log('stack!!!', stack);
 
         for (const i in stack) {
           if (stack[i][0] === list) {
@@ -59,7 +59,7 @@ export class BoardsService {
       }
     }
 
-    console.log('stack2!!!', stack);
+    // console.log('stack2!!!', stack);
     return stack;
   }
 
@@ -197,21 +197,13 @@ export class BoardsService {
           (a, b) => +new Date(b.period) - +new Date(a.period),
         );
       case 'design':
-        return newBoard
-          .filter((item) => {
-            return item.stack[0][2] > 0;
-          })
-          .sort((a, b) => {
-            return b.stack[0][2] - a.stack[0][2];
-          });
+        return newBoard.filter((item) => {
+          return item.stack[0][2] > 0;
+        });
       case 'dev':
-        return newBoard
-          .filter((item) => {
-            return this.stacktf(item.stack, 'dev');
-          })
-          .sort((a, b) => {
-            return b.stack[1][2] - a.stack[1][2];
-          });
+        return newBoard.filter((item) => {
+          return this.stacktf(item.stack, 'dev');
+        });
       case 'design-mate':
         const newMateDesign = await this.mateMake(16, page, 'design');
         return newMateDesign.filter((item) => {
@@ -351,19 +343,19 @@ export class BoardsService {
   ): Promise<getOneBoard | string> {
     const board_id = new mongoose.Types.ObjectId(boardId);
     const findBoard = await this.boardModel.findById({ _id: board_id });
-    console.log('보드 넘어감');
+    // console.log('보드 넘어감');
     const nickname: string = await this.userModel.findById(
       {
         _id: new mongoose.Types.ObjectId(findBoard.userId),
       },
       { _id: 0, nickname: 1 },
     );
-    console.log('닉네임 찾기 넘어감');
+    // console.log('닉네임 찾기 넘어감');
     const participant: participant = await this.projectModel.findOne(
       { boardId: board_id, userId: findBoard.userId },
       { participantList: 1, _id: 0 },
     );
-    console.log('리스트 찾기 넘어감');
+    // console.log('리스트 찾기 넘어감');
 
     const _id = findBoard._id.toString();
 
@@ -385,14 +377,14 @@ export class BoardsService {
           ++backCount;
           break;
       }
-      console.log('leftCount!!', designCount, frontCount, backCount);
+      // console.log('leftCount!!', designCount, frontCount, backCount);
     }
 
     let stackDesignCount = 0;
     let stackFrontCount = 0;
     let stackBackCount = 0;
     for (const list of findBoard.stack) {
-      console.log('stack', list, list[2]);
+      // console.log('stack', list, list[2]);
       switch (list[0].toLowerCase()) {
         case 'design':
           stackDesignCount += list[2];
@@ -406,18 +398,18 @@ export class BoardsService {
             break;
           }
       }
-      console.log(
-        'Before left!!!',
-        stackDesignCount,
-        stackFrontCount,
-        stackBackCount,
-      );
+      // console.log(
+      //   'Before left!!!',
+      //   stackDesignCount,
+      //   stackFrontCount,
+      //   stackBackCount,
+      // );
     }
 
     left.push(stackDesignCount - designCount);
     left.push(stackFrontCount - frontCount);
     left.push(stackBackCount - backCount);
-    console.log('After left!!!', left);
+    // console.log('After left!!!', left);
 
     // 좋아요 수
     const likeCount = await (
@@ -434,6 +426,7 @@ export class BoardsService {
       stack: findBoard.stack, // 직무, 인원
       left, // 남은 인원
       period: findBoard.period, // 모집기간
+      skills: findBoard.skills,
       likeCount, // 좋아요 수
       referURL: findBoard.referURL,
       createdAt: findBoard.createdAt, // 작성일
@@ -462,7 +455,7 @@ export class BoardsService {
   }
 
   async updateBoard(id, board: updateBoardDto) {
-    console.log(board);
+    // console.log(board);
     const _id = new mongoose.Types.ObjectId(id);
 
     await this.boardModel.findOneAndUpdate(
