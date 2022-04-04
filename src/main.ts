@@ -35,7 +35,7 @@ async function bootstrap() {
 
   app.use(helmet()); // xss 보안 설정
   app.enableCors(corsOptions); //Cors 설정
-  app.use(csurf()); //사이트 간 요청 위조 (CSRF) 설정
+  // app.use(csurf()); //사이트 간 요청 위조 (CSRF) 설정
 
   app.useGlobalPipes(new ValidationPipe()); //validation 전역* 설정
 
