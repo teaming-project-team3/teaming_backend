@@ -90,10 +90,10 @@ export class ProjectsService {
     const _id = new Types.ObjectId(id);
     const findProject = await this.projectModel.findOne({ _id });
 
-    const leaderCheck = this.leaderCheck(user, findProject);
+    const leaderCheck = await this.leaderCheck(user, findProject);
 
     if (!leaderCheck) {
-      const projectInCheck = this.inProjectCheck(user, findProject);
+      const projectInCheck = await this.inProjectCheck(user, findProject);
 
       return {
         leaderCheck,

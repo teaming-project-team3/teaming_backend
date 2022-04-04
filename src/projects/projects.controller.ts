@@ -1,4 +1,4 @@
-import { Controller, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
@@ -36,7 +36,7 @@ export class ProjectsController {
     );
   }
 
-  @Post(':projectId')
+  @Get(':projectId')
   @UseGuards(AuthGuard())
   @ApiOperation({
     summary: '프로젝트 방장확인',
