@@ -47,6 +47,7 @@ export class WebrtcGateway
     console.log('this.myRoomName', socket['myRoomName']);
     console.log('this.myNickname', socket['myNickname']);
     console.log(`✅=========socket['myNickname']==============✅`);
+
     socket.to(socket['myRoomName']).emit('leaveRoom', socket.id);
     socket.leave(socket['myRoomName']);
 
@@ -131,24 +132,13 @@ export class WebrtcGateway
       this.roomObjArr.push(targetRoomObj);
     }
 
-    // let existsUser : boolean = false;
-    // for (let i = 0; i < targetRoomObj.users.length; i++){
-    //   if (targetRoomObj.users[i].nickName === socket['myNickname']) {
-    //     existsUser = true;
-    //     targetRoomObj.users[i].socketId = socket.id;
-    //     break;
-    //   }
-    // }
-
-    // if (!existsUser) {
     //Join the room
     targetRoomObj.users.push({
       socketId: socket.id,
       nickName: socket['myNickname'],
-      video: true,
+      video: false,
       audio: false,
     });
-    // }
 
     targetRoomObj.currentNum += 1;
 
@@ -158,12 +148,17 @@ export class WebrtcGateway
         targetRoomObj.users[i].nickName,
       );
       usersStackObj['socketId'] = targetRoomObj.users[i].socketId;
-      usersStack.push(usersStackObj);
+      const obj = {
+        targetRoomObjUsers: targetRoomObj.users[i],
+        usersStackObj,
+      };
+      usersStack.push(obj);
     }
+
     console.log('✅=========usersStack==============✅');
     console.log(usersStack);
     console.log('✅=========usersStack==============✅');
-    socket.emit('accept_join', targetRoomObj.users, usersStack);
+    socket.emit('accept_join', usersStack);
 
     console.log('✅=========targetRoomObj.users==============✅');
     console.log(targetRoomObj.users);

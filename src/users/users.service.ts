@@ -103,39 +103,45 @@ export class UsersService {
     const { _id, nickname } = req.user.user;
     const { position, front, back, design, url, portfolioUrl } = suveyInfoDto;
     let protfolioOgData: string[];
-    if (portfolioUrl) {
-      protfolioOgData = await this.portfolioScrap.ogdataScrap(portfolioUrl);
+    try {
+      if (portfolioUrl) {
+        protfolioOgData = await this.portfolioScrap.ogdataScrap(portfolioUrl);
+      }
+
+      await this.userModel.findOneAndUpdate(
+        { _id },
+        {
+          $set: { suveyCheck: true },
+        },
+      );
+
+      const suveyScore = await this.stackScoring(front, back, design);
+      console.log('✅==========suveyScore==========✅');
+      console.log(suveyScore);
+      console.log('✅==========suveyScore==========✅');
+
+      await this.userInfoModel
+        .findOneAndUpdate()
+        .where('userId')
+        .equals(_id)
+        .set({
+          front,
+          back,
+          design,
+          position,
+          portfolioUrl: protfolioOgData,
+          url,
+          stack: suveyScore,
+        });
+
+      return {
+        msg: `${position} 설문조사 완료`,
+      };
+    } catch (error) {
+      return {
+        msg: `url을 다시 입력해주세요`,
+      };
     }
-
-    await this.userModel.findOneAndUpdate(
-      { _id },
-      {
-        $set: { suveyCheck: true },
-      },
-    );
-
-    const suveyScore = await this.stackScoring(front, back, design);
-    console.log('✅==========suveyScore==========✅');
-    console.log(suveyScore);
-    console.log('✅==========suveyScore==========✅');
-
-    await this.userInfoModel
-      .findOneAndUpdate()
-      .where('userId')
-      .equals(_id)
-      .set({
-        front,
-        back,
-        design,
-        position,
-        portfolioUrl: protfolioOgData,
-        url,
-        stack: suveyScore,
-      });
-
-    return {
-      msg: `${position} 설문조사 완료`,
-    };
   }
 
   async deleteUser(req: any): Promise<any> {
