@@ -4,3 +4,8 @@ export class participant {
     position: string[];
   };
 }
+
+export class participantList {
+  userId: string[];
+  position: string[];
+}

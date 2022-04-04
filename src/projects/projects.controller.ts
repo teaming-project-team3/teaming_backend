@@ -1,9 +1,10 @@
-import { Body, Controller, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Controller, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -15,7 +16,7 @@ export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   // 프로젝트 인원 추가
-  @Post('/:projectId')
+  @Post(':projectId')
   @UseGuards(AuthGuard())
   @ApiOperation({
     summary: '프로젝트 참가 인원 추가',
@@ -33,5 +34,15 @@ export class ProjectsController {
       projectId,
       req.user.user,
     );
+  }
+
+  @Post(':projectId')
+  @UseGuards(AuthGuard())
+  @ApiOperation({
+    summary: '프로젝트 참가 확인',
+    description: '프로젝트에 참가 확인 유무를 한 후 t, f response',
+  })
+  async project(@Req() req, @Param('projectId') id) {
+    return await this.projectsService.project(req.user.user, id);
   }
 }
