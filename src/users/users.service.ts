@@ -6,9 +6,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { SuveyInfoDto } from './dto/suveyInfo.dto';
 import { UpdateUserInfoDto } from './dto/updateUserInfo.dto';
-import { Board } from 'src/schemas/Board.schema';
 import { Project } from 'src/schemas/Project.schema';
-import { UsersRepository } from './repository/users.repository';
 @Injectable()
 export class UsersService {
   private dataSort;
@@ -16,7 +14,6 @@ export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(UserInfo.name) private userInfoModel: Model<UserInfo>,
-    @InjectModel(Board.name) private boardModel: Model<Board>,
     @InjectModel(Project.name) private projectModel: Model<Project>,
     private portfolioScrap: PortfolioScrap,
   ) {

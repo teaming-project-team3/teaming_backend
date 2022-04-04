@@ -6,6 +6,6 @@ import { ApiTags } from '@nestjs/swagger';
 export class AppController {
   @Get()
   findAll(): string {
-    return 'This action returns all cats';
+    return 'Welcome!! This is Teaming server';
   }
 }
