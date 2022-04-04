@@ -25,7 +25,7 @@ import mongoose from 'mongoose';
         useNewUrlParser: true,
         useUnifiedTopology: true,
         ignoreUndefined: true,
-        dbName: 'db_nest',
+        dbName: process.env.TEAMING_DB,
       },
     ),
     BoardsModule,
