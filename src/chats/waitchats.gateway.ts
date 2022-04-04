@@ -18,11 +18,7 @@ import { Chat } from 'src/schemas/Chat.schema';
 @WebSocketGateway({
   namespace: 'waitroom',
   cors: {
-    origin: [
-      'http://localhost:3000',
-      'http://teamingdeploy.s3-website.ap-northeast-2.amazonaws.com',
-      'https://wonjinlee.shop',
-    ],
+    origin: ['https://teaming.link', 'http://localhost:3000'],
     allowedHeaders: ['my-custom-header'],
     credentials: true,
   },
