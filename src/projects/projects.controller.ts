@@ -16,7 +16,7 @@ export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   // 프로젝트 인원 추가
-  @Post(':projectId')
+  @Post('projectIn/:projectId')
   @UseGuards(AuthGuard())
   @ApiOperation({
     summary: '프로젝트 참가 인원 추가',
@@ -39,10 +39,30 @@ export class ProjectsController {
   @Post(':projectId')
   @UseGuards(AuthGuard())
   @ApiOperation({
-    summary: '프로젝트 참가 확인',
-    description: '프로젝트에 참가 확인 유무를 한 후 t, f response',
+    summary: '프로젝트 방장확인',
+    description: '프로젝트에 참가 확인과 방장 확인',
   })
   async project(@Req() req, @Param('projectId') id) {
     return await this.projectsService.project(req.user.user, id);
+  }
+
+  @Post('projectOut/:projectId')
+  @UseGuards(AuthGuard())
+  @ApiOperation({
+    summary: '프로젝트 나가기',
+    description: '프로젝트 나가기',
+  })
+  async outProject(@Req() req, @Param('projectId') id) {
+    return await this.projectsService.outProject(req.user.user, id);
+  }
+
+  @Post('start/:projectId')
+  @UseGuards(AuthGuard())
+  @ApiOperation({
+    summary: '프로젝트 시작',
+    description: 'response: 프로젝트 시작시간, 시작되었습니다.',
+  })
+  async startProject(@Req() req, @Param('projectId') id) {
+    return await this.projectsService.startProject(req.user.user, id);
   }
 }

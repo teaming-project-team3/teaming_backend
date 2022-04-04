@@ -37,27 +37,55 @@ export class ProjectsService {
   }
 
   // 프로젝트 참가
-  async addProjectPerson(user, project) {
+  async addProjectPerson(user, id) {
+    const _id = new Types.ObjectId(id);
     const findUserInfo = await this.UserInfoModel.findOne({
       userId: user._id,
     }).exec();
+    const findProject: any = await this.projectModel.findOne({ _id });
 
-    project.participantList.userId.push(user._id);
-    project.participantList.position.push(findUserInfo.position);
+    findProject.participantList.userId.push(user._id);
+    findProject.participantList.position.push(findUserInfo.position);
 
-    console.log(project.participantList);
+    console.log(findProject.participantList);
 
     await this.projectModel
       .findByIdAndUpdate(
-        { id: project._id },
-        { $set: { participantList: project.participantList } },
+        { _id: findProject._id },
+        { $set: { participantList: findProject.participantList } },
       )
       .exec();
 
-    return { message: '프로젝트에 추가 되었습니다.' };
+    return {
+      message: `${user.nickname}님 새로운 프로젝트에 참가했습니다.`,
+    };
   }
 
-  // 프로젝트 들어갈 때 일어나는 것들
+  async outProject(user, id) {
+    const _id = new Types.ObjectId(id);
+    const findProject: any = await this.projectModel.findOne({ _id });
+    const userList = findProject.participantList.userId;
+
+    for (const idx in userList) {
+      if (user._id === userList[idx]) {
+        findProject.participantList.userId.splice(idx, 1);
+        findProject.participantList.position.splice(idx, 1);
+      }
+    }
+
+    await this.projectModel
+      .findByIdAndUpdate(
+        { _id: findProject._id },
+        { $set: { participantList: findProject.participantList } },
+      )
+      .exec();
+
+    return {
+      message: `${user.nickname}님이 프로젝트에서 나갔습니다.`,
+    };
+  }
+
+  // 프로젝트 들어갈 때
   async project(id, user) {
     const _id = new Types.ObjectId(id);
     const findProject = await this.projectModel.findOne({ _id });
@@ -67,23 +95,40 @@ export class ProjectsService {
     if (!leaderCheck) {
       const projectInCheck = this.inProjectCheck(user, findProject);
 
-      if (!projectInCheck) {
-        this.addProjectPerson(user, findProject);
-        return {
-          leaderCheck,
-          message: `${user.nickname}님 새로운 프로젝트에 참가했습니다.`,
-        };
-      }
-
       return {
         leaderCheck,
+        projectInCheck,
         message: `${user.nickname}님 어서오세요.`,
       };
     }
 
     return {
       leaderCheck,
+      projectInCheck: true,
       message: `🌟${user.nickname}님 어서오세요.`,
     };
+  }
+
+  async startProject(user, id) {
+    const _id = new Types.ObjectId(id);
+    const findProject = await this.projectModel.findById({ _id });
+    const startTime = new Date();
+
+    if (findProject.userId === user._id) {
+      await this.projectModel.updateOne(
+        { _id },
+        {
+          $set: {
+            createdAt: startTime,
+          },
+        },
+      );
+      return {
+        startTime,
+        message: '시작되었습니다.',
+      };
+    }
+
+    return { message: '시작할 수 없습니다.' };
   }
 }
