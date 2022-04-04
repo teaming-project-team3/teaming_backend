@@ -19,7 +19,10 @@ export class ProjectsService {
   // 프로젝트 참가 확인
   async inProjectCheck(user, project) {
     const participantList: participantList = project.participantList;
+    // console.log('inProjectCheck!!!', project);
     const check = participantList.userId.indexOf(user._id);
+    // console.log(check);
+    // console.log(participantList.userId, user._id);
 
     if (check !== -1) {
       return true;
@@ -29,6 +32,8 @@ export class ProjectsService {
 
   // 프로젝트 리더 확인
   async leaderCheck(user, project) {
+    // console.log(`${user._id} / ${project.userId}`, user._id === project.userId);
+
     const leader = project.userId;
     if (user._id === leader) {
       return true;
@@ -47,7 +52,7 @@ export class ProjectsService {
     findProject.participantList.userId.push(user._id);
     findProject.participantList.position.push(findUserInfo.position);
 
-    console.log(findProject.participantList);
+    // console.log(findProject.participantList);
 
     await this.projectModel
       .findByIdAndUpdate(
@@ -86,9 +91,9 @@ export class ProjectsService {
   }
 
   // 프로젝트 들어갈 때
-  async project(id, user) {
+  async project(user, id) {
     const _id = new Types.ObjectId(id);
-    const findProject = await this.projectModel.findOne({ _id });
+    const findProject = await this.projectModel.findOne({ boardId: _id });
 
     const leaderCheck = await this.leaderCheck(user, findProject);
 
