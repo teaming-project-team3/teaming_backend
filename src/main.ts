@@ -1,10 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import * as fs from 'fs';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import * as csurf from 'csurf';
+// import * as fs from 'fs';
+
 async function bootstrap() {
   // const httpsOptions = {
   //   key: fs.readFileSync('./cert/rootca.key'),
