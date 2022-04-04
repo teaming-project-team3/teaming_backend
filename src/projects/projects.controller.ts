@@ -36,13 +36,13 @@ export class ProjectsController {
     );
   }
 
-  @Get(':projectId')
+  @Get(':boardId')
   @UseGuards(AuthGuard())
   @ApiOperation({
     summary: '프로젝트 방장확인',
     description: '프로젝트에 참가 확인과 방장 확인',
   })
-  async project(@Req() req, @Param('projectId') id) {
+  async project(@Req() req, @Param('boardId') id) {
     return await this.projectsService.project(req.user.user, id);
   }
 
