@@ -11,9 +11,15 @@ import { AppController } from './app.controller';
 import { LikeModule } from './like/like.module';
 import { ProjectsModule } from './projects/projects.module';
 import mongoose from 'mongoose';
-
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 @Module({
   imports: [
+    ThrottlerModule.forRoot({
+      // 속도제한 설정
+      ttl: 15 * 60 * 1000,
+      limit: 100,
+    }),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -36,7 +42,12 @@ import mongoose from 'mongoose';
     ProjectsModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   private readonly isDev: boolean = process.env.MODE === 'dev' ? true : false;
