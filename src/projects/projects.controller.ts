@@ -1,5 +1,4 @@
 import { Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -8,6 +7,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { ProjectsService } from './projects.service';
 
 @Controller('projects')
@@ -17,7 +17,7 @@ export class ProjectsController {
 
   // 프로젝트 인원 추가
   @Post('projectIn/:boardId')
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: '프로젝트 참가 인원 추가',
     description: '프로젝트에 인원 추가',
@@ -37,7 +37,7 @@ export class ProjectsController {
   }
 
   @Get(':boardId')
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: '프로젝트 방장확인',
     description: '프로젝트에 참가 확인과 방장 확인',
@@ -47,7 +47,7 @@ export class ProjectsController {
   }
 
   @Post('projectOut/:boardId')
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: '프로젝트 나가기',
     description: '프로젝트 나가기',
@@ -57,7 +57,7 @@ export class ProjectsController {
   }
 
   @Post('start/:boardId')
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: '프로젝트 시작',
     description: 'response: 프로젝트 시작시간, 시작되었습니다.',
