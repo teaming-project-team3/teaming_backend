@@ -16,7 +16,7 @@ export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   // 프로젝트 인원 추가
-  @Post('projectIn/:projectId')
+  @Post('projectIn/:boardId')
   @UseGuards(AuthGuard())
   @ApiOperation({
     summary: '프로젝트 참가 인원 추가',
@@ -29,7 +29,7 @@ export class ProjectsController {
   @ApiUnauthorizedResponse({
     description: '프로젝트에 참여 하실 수 없습니다.',
   })
-  async addProjectPerson(@Param('projectId') projectId, @Req() req) {
+  async addProjectPerson(@Param('boardId') projectId, @Req() req) {
     return await this.projectsService.addProjectPerson(
       projectId,
       req.user.user,
@@ -46,23 +46,23 @@ export class ProjectsController {
     return await this.projectsService.project(req.user.user, id);
   }
 
-  @Post('projectOut/:projectId')
+  @Post('projectOut/:boardId')
   @UseGuards(AuthGuard())
   @ApiOperation({
     summary: '프로젝트 나가기',
     description: '프로젝트 나가기',
   })
-  async outProject(@Req() req, @Param('projectId') id) {
+  async outProject(@Req() req, @Param('boardId') id) {
     return await this.projectsService.outProject(req.user.user, id);
   }
 
-  @Post('start/:projectId')
+  @Post('start/:boardId')
   @UseGuards(AuthGuard())
   @ApiOperation({
     summary: '프로젝트 시작',
     description: 'response: 프로젝트 시작시간, 시작되었습니다.',
   })
-  async startProject(@Req() req, @Param('projectId') id) {
+  async startProject(@Req() req, @Param('boardId') id) {
     return await this.projectsService.startProject(req.user.user, id);
   }
 }
