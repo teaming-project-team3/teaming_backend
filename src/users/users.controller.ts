@@ -12,7 +12,12 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiDefaultResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiDefaultResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import mongoose from 'mongoose';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { SuveyInfoDto } from './dto/suveyInfo.dto';
@@ -27,7 +32,7 @@ export class UsersController {
 
   @ApiOperation({
     summary: '유저 정보 Update API',
-    description: '',
+    description: '유저 infomation을 모두 수정 할 수 있다.',
   })
   @ApiOkResponse({ description: '정보 수정 성공' })
   @ApiDefaultResponse({ description: '정보 수정 실패' })
@@ -42,7 +47,7 @@ export class UsersController {
 
   @ApiOperation({
     summary: '회원탈퇴 API',
-    description: '',
+    description: 'db 유저 데이터 삭제',
   })
   @ApiOkResponse({ description: '회원탈퇴 성공' })
   @ApiDefaultResponse({ description: '회원탈퇴 실패' })
@@ -54,7 +59,7 @@ export class UsersController {
 
   @ApiOperation({
     summary: '설문조사 API',
-    description: '',
+    description: ' 유저의 설문 data를 db에 저장',
   })
   @ApiOkResponse({ description: '설문조사 성공' })
   @ApiDefaultResponse({ description: '설문조사 실패' })
@@ -69,7 +74,7 @@ export class UsersController {
 
   @ApiOperation({
     summary: 'mypage 정보 조회 API',
-    description: '',
+    description: '나의 정보를 가져온다.',
   })
   @ApiOkResponse({ description: 'mypage 정보 조회 성공' })
   @ApiDefaultResponse({ description: 'mypage 정보 조회 실패' })
@@ -81,7 +86,7 @@ export class UsersController {
 
   @ApiOperation({
     summary: '팀원 정보조회 API',
-    description: '',
+    description: '다른 사용자의 정보를 가져온다.',
   })
   @ApiOkResponse({ description: '팀원 정보조회 성공' })
   @ApiDefaultResponse({ description: '팀원 정보조회 실패' })
