@@ -1,6 +1,6 @@
 import { Controller, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { LikeService } from './like.service';
 
 @Controller('like')
@@ -8,6 +8,15 @@ import { LikeService } from './like.service';
 export class LikeController {
   constructor(private readonly likeService: LikeService) {}
 
+  @ApiOperation({
+    summary: '좋아요 API',
+    description: '좋아요',
+  })
+  @ApiParam({
+    name: 'boardId',
+    required: true,
+    description: 'boards의 _id',
+  })
   @Post(':boardId')
   @UseGuards(AuthGuard())
   plusLike(@Req() req, @Param('boardId') boardId) {

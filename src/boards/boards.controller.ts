@@ -31,7 +31,7 @@ export class BoardsController {
   // 메인
   @Get()
   @ApiOperation({
-    summary: '모든 보드 가져오기',
+    summary: '모든 보드 가져오기 API',
     description: '보드 카테고리 별로 가져옵니다.',
   })
   @ApiResponse({
@@ -46,7 +46,7 @@ export class BoardsController {
   // 프로젝트 등록
   @Post()
   @ApiOperation({
-    summary: '프로젝트 등록',
+    summary: '프로젝트 등록 API',
     description: '보드와 프로젝트를 하나 생성한다',
   })
   @ApiBearerAuth('access-token')
@@ -70,7 +70,7 @@ export class BoardsController {
     description: 'boards의 _id',
   })
   @ApiOperation({
-    summary: '보드 상세보기',
+    summary: '보드 상세보기 API',
     description: '프로젝트 상세보기 페이지에 들어갈 데이터들을 response',
   })
   @ApiOkResponse({
@@ -94,7 +94,7 @@ export class BoardsController {
     description: ' 다음 페이지',
   })
   @ApiOperation({
-    summary: '카테고리 가져오기',
+    summary: '카테고리 가져오기 API',
     description: '카테고리에 맞게 board date response',
   })
   @ApiOkResponse({
@@ -115,7 +115,7 @@ export class BoardsController {
     description: 'boards의 _id',
   })
   @ApiOperation({
-    summary: '프로젝트 수정하기',
+    summary: '프로젝트 수정하기 API',
     description: '프로젝트 수정하기',
   })
   @ApiOkResponse({
@@ -141,7 +141,7 @@ export class BoardsController {
     description: 'boards의 _id',
   })
   @ApiOperation({
-    summary: '프로젝트 삭제',
+    summary: '프로젝트 삭제 API',
     description: '보드와 프로젝트를 삭제',
   })
   @ApiOkResponse({

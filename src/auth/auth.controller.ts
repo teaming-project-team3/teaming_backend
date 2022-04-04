@@ -20,7 +20,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AuthCredentialsDto } from './dto/auth-credential.dto copy';
 import { AuthSignInDto } from './dto/auth-signin.dto';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiDefaultResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('auth')
 @ApiTags('Auth API')
@@ -31,6 +36,11 @@ export class AuthController {
     @InjectModel(User.name) private userModel: Model<User>, // 테스트 용
   ) {}
 
+  @ApiOperation({
+    summary: '회원가입 API',
+    description: '회원가입 입니다.',
+  })
+  @ApiOkResponse({ description: '회원가입 성공' })
   @Post('/signup')
   signUp(
     @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
@@ -38,11 +48,21 @@ export class AuthController {
     return this.authService.signUp(authCredentialsDto);
   }
 
+  @ApiOperation({
+    summary: '로그인 API',
+    description: '',
+  })
+  @ApiOkResponse({ description: '로그인 성공' })
+  @ApiDefaultResponse({ description: '로그인 실패' })
   @Post('/signin')
   signIn(@Body(ValidationPipe) authSignInDto: AuthSignInDto): Promise<object> {
     return this.authService.signIn(authSignInDto);
   }
 
+  @ApiOperation({
+    summary: '카카오 아이디 로그인 API',
+    description: '',
+  })
   @Get('/kakao')
   @HttpCode(200)
   @UseGuards(AuthGuard('kakao'))
@@ -50,6 +70,11 @@ export class AuthController {
     return HttpStatus.OK;
   }
 
+  @ApiOperation({
+    summary: '카카오 아이디 로그인 콜백 API',
+    description: '',
+  })
+  @ApiOkResponse({ description: '카카오 로그인 성공' })
   @Get('/kakao/redirect')
   @HttpCode(200)
   @UseGuards(AuthGuard('kakao'))
@@ -57,6 +82,11 @@ export class AuthController {
     return this.authService.kakaoLogin(req.user as UserKakaoDto);
   }
 
+  @ApiOperation({
+    summary: '카카오 아이디 로그아웃 API',
+    description: '',
+  })
+  @ApiOkResponse({ description: '카카오 로그아웃 완료' })
   @Get('/kakao/logout')
   @HttpCode(200)
   @UseGuards(AuthGuard())
@@ -64,6 +94,10 @@ export class AuthController {
     return this.authService.kakaoLogout(req);
   }
 
+  @ApiOperation({
+    summary: 'Test API',
+    description: '',
+  })
   @Post('/test')
   @UseGuards(AuthGuard())
   async test(@GetUser() userObj, @Req() req) {
