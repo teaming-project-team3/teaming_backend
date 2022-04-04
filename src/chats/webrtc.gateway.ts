@@ -15,12 +15,7 @@ import { ChatsService } from './chats.service';
 @WebSocketGateway({
   namespace: 'webrtc',
   cors: {
-    origin: [
-      'https://d1zc5f9ndqmvzc.cloudfront.net/',
-      'https://wonjinlee.shop',
-      'http://teamingdeploy.s3-website.ap-northeast-2.amazonaws.com',
-      'http://localhost:3000',
-    ],
+    origin: ['https://teaming.link', 'http://localhost:3000'],
     allowedHeaders: ['my-custom-header'],
     credentials: true,
   },
