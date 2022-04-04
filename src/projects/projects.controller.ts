@@ -31,8 +31,8 @@ export class ProjectsController {
   })
   async addProjectPerson(@Param('boardId') projectId, @Req() req) {
     return await this.projectsService.addProjectPerson(
-      projectId,
       req.user.user,
+      projectId,
     );
   }
 

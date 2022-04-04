@@ -48,13 +48,13 @@ export class ProjectsService {
       userId: user._id,
     });
     const findProject: any = await this.projectModel.findOne({ boardId: _id });
-
+    console.log(user._id);
     findProject.participantList.userId.push(user._id);
     findProject.participantList.position.push(findUserInfo.position);
 
     // console.log(findProject.participantList);
 
-    await this.projectModel.findByIdAndUpdate(
+    await this.projectModel.updateOne(
       { _id: findProject._id },
       { $set: { participantList: findProject.participantList } },
     );
