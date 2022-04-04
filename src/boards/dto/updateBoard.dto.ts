@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsDate, IsNumber, IsString, IsUrl } from 'class-validator';
+import { IsArray, IsString, IsUrl } from 'class-validator';
 
 export class updateBoardDto {
   @ApiProperty({
@@ -31,9 +31,7 @@ export class updateBoardDto {
     description: 'imgUrl',
     required: true,
   })
-  @IsArray()
-  @IsUrl(undefined, { message: 'Company Url is not valid.' })
-  imgUrl: string[]; // 이미지
+  imgUrl: string[] | null; // 이미지
 
   @ApiProperty({
     example: [
@@ -56,8 +54,7 @@ export class updateBoardDto {
   @ApiProperty({
     example: ['참고자료1', '참고자료2', '참고자료3'],
     description: 'referURL',
-    required: true,
+    required: false,
   })
-  @IsUrl(undefined, { message: 'Company Url is not valid.' })
   referURL: string | null;
 }

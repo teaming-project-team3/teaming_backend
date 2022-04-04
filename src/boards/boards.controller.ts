@@ -107,7 +107,7 @@ export class BoardsController {
   }
 
   // 프로젝트 수정
-  @Put('/:boardId')
+  @Put(':boardId')
   @UseGuards(AuthGuard())
   @ApiParam({
     name: 'boardId',
