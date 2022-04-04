@@ -38,30 +38,28 @@ export class BoardsService {
       { _id: 0, participantList: 1 },
     );
 
-    console.log(stack);
+    console.log('stack!!!', stack);
     console.log(boardId);
-    // console.log(participant);
+    console.log('participant!!!', participant);
     // console.log(participant.participantList.position);
     const position = participant.participantList.position;
 
     if (position.length > 0) {
       for (const list of position) {
+        console.log('list!!!', list);
+        console.log('stack!!!', stack);
+
         for (const i in stack) {
-          switch (list) {
-            case 'design':
-              --stack[i][2];
-              break;
-            case 'front':
-              --stack[i][2];
-              break;
-            case 'back':
-              --stack[i][2];
-              break;
+          if (stack[i][0] === list) {
+            --stack[i][2];
+          } else if (stack[i][1] === list) {
+            --stack[i][2];
           }
         }
       }
     }
 
+    console.log('stack2!!!', stack);
     return stack;
   }
 
@@ -99,9 +97,9 @@ export class BoardsService {
       const likeCount = await this.getLikeCount(list._id);
       const stack = await this.getStackCheck(list._id, list.stack);
 
-      console.log('user 확인!!!', user);
+      // console.log('user 확인!!!', user);
       if (!user) {
-        user.nickname = '탈퇴';
+        user.nickname = 'unknown';
       }
 
       const tempBoard: b = {
@@ -188,7 +186,7 @@ export class BoardsService {
     page: number,
   ): Promise<b[] | m[] | string> {
     const newBoard = await this.boardMake(12, page, '');
-    console.log(newBoard);
+    // console.log(newBoard);
 
     switch (category) {
       case 'rank':
