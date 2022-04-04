@@ -46,20 +46,18 @@ export class ProjectsService {
     const _id = new Types.ObjectId(id);
     const findUserInfo = await this.UserInfoModel.findOne({
       userId: user._id,
-    }).exec();
-    const findProject: any = await this.projectModel.findOne({ _id });
+    });
+    const findProject: any = await this.projectModel.findOne({ boardId: _id });
 
     findProject.participantList.userId.push(user._id);
     findProject.participantList.position.push(findUserInfo.position);
 
     // console.log(findProject.participantList);
 
-    await this.projectModel
-      .findByIdAndUpdate(
-        { _id: findProject._id },
-        { $set: { participantList: findProject.participantList } },
-      )
-      .exec();
+    await this.projectModel.findByIdAndUpdate(
+      { _id: findProject._id },
+      { $set: { participantList: findProject.participantList } },
+    );
 
     return {
       message: `${user.nickname}님 새로운 프로젝트에 참가했습니다.`,
@@ -68,7 +66,7 @@ export class ProjectsService {
 
   async outProject(user, id) {
     const _id = new Types.ObjectId(id);
-    const findProject: any = await this.projectModel.findOne({ _id });
+    const findProject: any = await this.projectModel.findOne({ boardId: _id });
     const userList = findProject.participantList.userId;
 
     for (const idx in userList) {
@@ -116,7 +114,7 @@ export class ProjectsService {
 
   async startProject(user, id) {
     const _id = new Types.ObjectId(id);
-    const findProject = await this.projectModel.findById({ _id });
+    const findProject = await this.projectModel.findOne({ boardId: _id });
     const startTime = new Date();
 
     if (findProject.userId === user._id) {
