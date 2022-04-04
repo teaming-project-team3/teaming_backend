@@ -198,11 +198,21 @@ export class BoardsService {
         );
       case 'design':
         return newBoard.filter((item) => {
-          return item.stack[0][2] > 0;
+          for (const f of item.stack) {
+            if (f[0] === 'design' && f[2] > 0) {
+              return true;
+            }
+          }
+          return false;
         });
       case 'dev':
         return newBoard.filter((item) => {
-          return this.stacktf(item.stack, 'dev');
+          for (const f of item.stack) {
+            if (f[0] === 'dev' && f[2] > 0) {
+              return true;
+            }
+          }
+          return false;
         });
       case 'design-mate':
         const newMateDesign = await this.mateMake(16, page, 'design');
