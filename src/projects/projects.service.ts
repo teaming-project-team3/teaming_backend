@@ -32,10 +32,13 @@ export class ProjectsService {
 
   // 프로젝트 리더 확인
   async leaderCheck(user, project) {
-    // console.log(`${user._id} / ${project.userId}`, user._id === project.userId);
+    // console.log(
+    //   `${user._id} / ${project.userId}`,
+    //   user._id.toString() === project.userId.toString(),
+    // );
 
     const leader = project.userId;
-    if (user._id === leader) {
+    if (user._id.toString() === leader.toString()) {
       return true;
     }
     return false;
@@ -95,6 +98,7 @@ export class ProjectsService {
 
     const leaderCheck = await this.leaderCheck(user, findProject);
 
+    console.log('리더', leaderCheck);
     if (!leaderCheck) {
       const projectInCheck = await this.inProjectCheck(user, findProject);
 
