@@ -422,9 +422,7 @@ export class BoardsService {
     // console.log('After left!!!', left);
 
     // 좋아요 수
-    const likeCount = await (
-      await this.LikeModel.find({ boardId: board_id })
-    ).length;
+    const likeCount = findBoard.likeCount;
 
     const board: getOneBoard = {
       _id, // 아이디
