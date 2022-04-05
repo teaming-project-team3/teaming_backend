@@ -58,7 +58,7 @@ export class BoardsController {
   })
   @UseGuards(JwtAuthGuard)
   createBoard(@Req() req, @Body() board: createBoardDto) {
-    console.log('유저 정보:', req.user.user);
+    // console.log('유저 정보:', req.user.user);
     return this.boardsService.createBoard(board, req.user.user);
   }
 
