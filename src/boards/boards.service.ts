@@ -442,6 +442,8 @@ export class BoardsService {
       createdAt: findBoard.createdAt, // 작성일
     };
 
+    const newLike = likeCount + 1;
+    await this.boardModel.updateOne({ _id }, { likeCount: newLike });
     return board;
   }
 
