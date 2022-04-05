@@ -31,7 +31,8 @@ export class User extends Document {
   password: string;
 
   @Prop({
-    default: null,
+    default:
+      'https://www.dailygaewon.com/news/photo/202105/11330_11828_3159.jpg',
   })
   profileUrl: string;
 

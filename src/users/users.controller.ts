@@ -73,6 +73,10 @@ export class UsersController {
   }
 
   @ApiOperation({
+    summary: '팀원 정보조회 API',
+    description: '다른 사용자의 정보를 가져온다.',
+  })
+  @ApiOperation({
     summary: 'mypage 정보 조회 API',
     description: '나의 정보를 가져온다.',
   })
@@ -84,10 +88,6 @@ export class UsersController {
     return this.usersService.getUserInfo(req);
   }
 
-  @ApiOperation({
-    summary: '팀원 정보조회 API',
-    description: '다른 사용자의 정보를 가져온다.',
-  })
   @ApiOkResponse({ description: '팀원 정보조회 성공' })
   @ApiDefaultResponse({ description: '팀원 정보조회 실패' })
   @Get('/:userId')
