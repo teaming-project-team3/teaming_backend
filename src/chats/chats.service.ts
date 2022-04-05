@@ -11,6 +11,7 @@ export class ChatsService {
     );
 
     const payload = {
+      userId: String(user._id),
       nickname: user.nickname,
       profileUrl: user.profileUrl,
       position: userInfoStack.position,

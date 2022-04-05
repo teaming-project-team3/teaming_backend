@@ -6,10 +6,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { SuveyInfoDto } from './dto/suveyInfo.dto';
 import { UpdateUserInfoDto } from './dto/updateUserInfo.dto';
-import { Board } from 'src/schemas/Board.schema';
 import { Project } from 'src/schemas/Project.schema';
-import { UsersRepository } from './repository/users.repository';
-
 @Injectable()
 export class UsersService {
   private dataSort;
@@ -17,7 +14,6 @@ export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(UserInfo.name) private userInfoModel: Model<UserInfo>,
-    @InjectModel(Board.name) private boardModel: Model<Board>,
     @InjectModel(Project.name) private projectModel: Model<Project>,
     private portfolioScrap: PortfolioScrap,
   ) {
@@ -104,39 +100,45 @@ export class UsersService {
     const { _id, nickname } = req.user.user;
     const { position, front, back, design, url, portfolioUrl } = suveyInfoDto;
     let protfolioOgData: string[];
-    if (portfolioUrl) {
-      protfolioOgData = await this.portfolioScrap.ogdataScrap(portfolioUrl);
+    try {
+      if (portfolioUrl) {
+        protfolioOgData = await this.portfolioScrap.ogdataScrap(portfolioUrl);
+      }
+
+      await this.userModel.findOneAndUpdate(
+        { _id },
+        {
+          $set: { suveyCheck: true },
+        },
+      );
+
+      const suveyScore = await this.stackScoring(front, back, design);
+      console.log('✅==========suveyScore==========✅');
+      console.log(suveyScore);
+      console.log('✅==========suveyScore==========✅');
+
+      await this.userInfoModel
+        .findOneAndUpdate()
+        .where('userId')
+        .equals(_id)
+        .set({
+          front,
+          back,
+          design,
+          position,
+          portfolioUrl: protfolioOgData,
+          url,
+          stack: suveyScore,
+        });
+
+      return {
+        msg: `${position} 설문조사 완료`,
+      };
+    } catch (error) {
+      return {
+        msg: `url을 다시 입력해주세요`,
+      };
     }
-
-    await this.userModel.findOneAndUpdate(
-      { _id },
-      {
-        $set: { suveyCheck: true },
-      },
-    );
-
-    const suveyScore = await this.stackScoring(front, back, design);
-    console.log('✅==========suveyScore==========✅');
-    console.log(suveyScore);
-    console.log('✅==========suveyScore==========✅');
-
-    await this.userInfoModel
-      .findOneAndUpdate()
-      .where('userId')
-      .equals(_id)
-      .set({
-        front,
-        back,
-        design,
-        position,
-        portfolioUrl: protfolioOgData,
-        url,
-        stack: suveyScore,
-      });
-
-    return {
-      msg: `${position} 설문조사 완료`,
-    };
   }
 
   async deleteUser(req: any): Promise<any> {
@@ -192,9 +194,14 @@ export class UsersService {
 
   async getUserInfo(req: any) {
     const { _id } = req.user.user;
+    console.log('✅================getUserInfo=================✅');
+
     const userInfo = await this.userInfoModel
       .findOne({ userId: _id })
       .populate('userId', { password: false });
+
+    const customInfo = JSON.parse(JSON.stringify(userInfo));
+    customInfo['nickname'] = userInfo.userId['nickname'];
 
     const projectData = await this.projectModel
       .find()
@@ -205,7 +212,33 @@ export class UsersService {
 
     return {
       msg: ` 회원정보 조회 완료`,
-      userInfo,
+      userInfo: customInfo,
+      projectData,
+      totalProject: projectData.length,
+    };
+  }
+
+  async getUserInfoByUserId(userId) {
+    console.log('✅================getUserInfoByUserId=================✅');
+    console.log(userId);
+
+    const userInfo = await this.userInfoModel
+      .findOne({ userId: userId })
+      .populate('userId', { password: false });
+
+    const customInfo = JSON.parse(JSON.stringify(userInfo));
+    customInfo['nickname'] = userInfo.userId['nickname'];
+
+    const projectData = await this.projectModel
+      .find()
+      .where('participantList.userId')
+      .in([userId])
+      .populate('boardId', { updateAt: 0, createdAt: 0 })
+      .select({ updatedAt: 0, createdAt: 0 });
+
+    return {
+      msg: ` 회원정보 조회 완료`,
+      userInfo: customInfo,
       projectData,
       totalProject: projectData.length,
     };

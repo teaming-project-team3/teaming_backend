@@ -18,11 +18,7 @@ import { Chat } from 'src/schemas/Chat.schema';
 @WebSocketGateway({
   namespace: 'waitroom',
   cors: {
-    origin: [
-      'http://localhost:3000',
-      'http://teamingdeploy.s3-website.ap-northeast-2.amazonaws.com',
-      'https://wonjinlee.shop',
-    ],
+    origin: ['https://teaming.link', 'http://localhost:3000'],
     allowedHeaders: ['my-custom-header'],
     credentials: true,
   },
@@ -84,20 +80,24 @@ export class WaitchatsGateway
     console.log('✅========== waitroom 네임스페이스 접속==========✅');
     this.logger.log(`connected : ${socket.id} ${socket.nsp.name}`);
   }
+
   @SubscribeMessage('join')
   async handleJoinRoom(
-    @MessageBody() data: { name: string; room: string; message: string },
+    @MessageBody() data: { name: string; room: string; title: string },
     @ConnectedSocket() socket: Socket,
   ) {
     // 연결된 클라이언트 이름과 방 정보를 소켓 객체에 저장
     socket['myNickname'] = data.name;
     socket['myRoomName'] = data.room;
+    socket['myTitle'] = data.title;
 
     // 임시 DB연산 ====================================
     const roomExists = await this.chatModel.findOne({
       projectId: socket['myRoomName'],
     });
+
     if (!roomExists) {
+      console.log('✅=========await this.chatModel.create==============✅');
       // room DB에 저장
       await this.chatModel.create({
         projectId: socket['myRoomName'],
@@ -122,7 +122,6 @@ export class WaitchatsGateway
           $push: {
             participantList: tempObj,
           },
-          // $push: { participantList: socket['myNickname'] },
         },
       );
     }
@@ -136,7 +135,7 @@ export class WaitchatsGateway
     // 메시지를 전송한 클라이언트에게만 메시지를 전송한다.
     socket.emit('message', {
       user: socket['myNickname'],
-      text: `${socket['myNickname']}, ${socket['myRoomName']}에 오신걸 환영합니다.`,
+      text: `${socket['myNickname']}, ${socket['myTitle']}에 오신걸 환영합니다.`,
     });
 
     // 메시지를 전송한 클라이언트를 제외한 room안의 모든 클라이언트에게 메시지를 전송한다.

@@ -9,10 +9,11 @@ import { User, UserDocument } from 'src/schemas/User.schema';
 import { Project, ProjectDocument } from 'src/schemas/Project.schema';
 import { Like, LikeDocument } from 'src/schemas/Like.schema';
 import { userInfo } from './entities/user.entity';
-import { projectEntity } from './entities/Project.entity';
 import mongoose from 'mongoose';
 import { UserInfo, UserInfoDocument } from 'src/schemas/UserInfo.schema';
 import { participant } from './entities/schemaValue.entity';
+import { projectDto } from './dto/project.dto';
+import { updateBoardDto } from './dto/updateBoard.dto';
 
 @Injectable()
 export class BoardsService {
@@ -37,40 +38,28 @@ export class BoardsService {
       { _id: 0, participantList: 1 },
     );
 
-    console.log(stack);
-    console.log(boardId);
-    // console.log(participant);
+    // console.log('stack!!!', stack);
+    // console.log(boardId);
+    // console.log('participant!!!', participant);
     // console.log(participant.participantList.position);
     const position = participant.participantList.position;
 
-    if (position.length > 1) {
+    if (position.length > 0) {
       for (const list of position) {
-        switch (list) {
-          case 'design':
-            --stack[0][2];
-            break;
-          case 'front':
-            --stack[1][2];
-            break;
-          case 'back':
-            --stack[2][2];
-            break;
+        // console.log('list!!!', list);
+        // console.log('stack!!!', stack);
+
+        for (const i in stack) {
+          if (stack[i][0] === list) {
+            --stack[i][2];
+          } else if (stack[i][1] === list) {
+            --stack[i][2];
+          }
         }
-      }
-    } else {
-      switch (position[0]) {
-        case 'design':
-          --stack[0][2];
-          break;
-        case 'front':
-          --stack[1][2];
-          break;
-        case 'back':
-          --stack[2][2];
-          break;
       }
     }
 
+    // console.log('stack2!!!', stack);
     return stack;
   }
 
@@ -98,7 +87,7 @@ export class BoardsService {
     const today = new Date();
     const findBoard = await this.boardModel
       .find({ period: { $gte: today } })
-      .sort({ period: -1 })
+      .sort({ likeCount: -1, period: -1 })
       .skip(skip * num)
       .limit(num);
     const board: b[] = [];
@@ -107,6 +96,11 @@ export class BoardsService {
       const user = await this.userModel.findOne({ _id: list.userId });
       const likeCount = await this.getLikeCount(list._id);
       const stack = await this.getStackCheck(list._id, list.stack);
+
+      // console.log('user 확인!!!', user);
+      if (!user) {
+        user.nickname = 'unknown';
+      }
 
       const tempBoard: b = {
         _id: list._id,
@@ -127,41 +121,37 @@ export class BoardsService {
 
   // 메이트 찾기 만들기
   async mateMake(num: number, skip: number, position: string): Promise<m[]> {
-    const findUser = await this.userModel
-      .find()
-      .sort({ createdAt: -1 })
-      .skip(skip * num)
+    const findUser = await this.UserInfoModel.find({ position })
+      .populate('userId')
       .limit(num);
-    const mate: m[] = [];
 
-    for (const user of findUser) {
-      const findInfo = await this.UserInfoModel.findOne();
-      if (position === 'design' && findInfo.position === position) {
-        const project = await this.userInTheProject(user._id);
-        const tempMate: m = {
-          _id: user._id,
-          nickname: user.nickname,
-          profileUrl: user.profileUrl,
-          position: findInfo.position,
-          portfolioUrl: findInfo.portfolioUrl,
-          project,
-          createdAt: user.createdAt,
-        };
-        mate.push(tempMate);
-      } else {
-        const project = await this.userInTheProject(user._id);
-        const tempMate: m = {
-          _id: user._id,
-          nickname: user.nickname,
-          profileUrl: user.profileUrl,
-          position: findInfo.position,
-          portfolioUrl: findInfo.portfolioUrl,
-          project,
-          createdAt: user.createdAt,
-        };
-        mate.push(tempMate);
-      }
-    }
+    const mate = findUser.map((userInfo: any) => {
+      const payload = {
+        _id: userInfo.userId._id,
+        nickname: userInfo.userId.nickname,
+        profileUrl: userInfo.userId.profileUrl,
+        position: userInfo.position,
+        portfolioUrl: userInfo.portfolioUrl,
+        // project,
+        createdAt: userInfo.userId.createdAt,
+      };
+      return payload;
+    });
+
+    // for (let idx = 0; 5 > idx; idx++) {
+    //   // const project = await this.userInTheProject(findUser[idx]._id);
+
+    //   const tempMate: m = {
+    //     _id: findUser[idx]._id,
+    //     nickname: findUser[idx].nickname,
+    //     profileUrl: findUser[idx].profileUrl,
+    //     position: findInfo.position,
+    //     portfolioUrl: findInfo.portfolioUrl,
+    //     // project,
+    //     createdAt: findUser[idx].createdAt,
+    //   };
+    //   mate.push(tempMate);
+    // }
 
     return mate;
   }
@@ -203,21 +193,23 @@ export class BoardsService {
           (a, b) => +new Date(b.period) - +new Date(a.period),
         );
       case 'design':
-        return newBoard
-          .filter((item) => {
-            return item.stack[0][2] > 0;
-          })
-          .sort((a, b) => {
-            return b.stack[0][2] - a.stack[0][2];
-          });
+        return newBoard.filter((item) => {
+          for (const f of item.stack) {
+            if (f[0] === 'design' && f[2] > 0) {
+              return true;
+            }
+          }
+          return false;
+        });
       case 'dev':
-        return newBoard
-          .filter((item) => {
-            return this.stacktf(item.stack, 'dev');
-          })
-          .sort((a, b) => {
-            return b.stack[1][2] - a.stack[1][2];
-          });
+        return newBoard.filter((item) => {
+          for (const f of item.stack) {
+            if (f[0] === 'dev' && f[2] > 0) {
+              return true;
+            }
+          }
+          return false;
+        });
       case 'design-mate':
         const newMateDesign = await this.mateMake(16, page, 'design');
         return newMateDesign.filter((item) => {
@@ -237,9 +229,11 @@ export class BoardsService {
 
   // 메인페이지 보드 모두 띄우기
   async getAllBoards(): Promise<any> {
-    const tempBoards = await this.boardMake(5, 0, '');
-    const tempDsMate = await this.mateMake(5, 0, 'design');
-    const tempDeMate = await this.mateMake(5, 0, '');
+    const tempBoards = await this.boardMake(4, 0, '');
+    const tempDsMate = await this.mateMake(4, 0, 'design');
+    const tempBMate = await this.mateMake(2, 0, 'back');
+    const tempFMate = await this.mateMake(2, 0, 'front');
+    const tempDeMate = [...tempBMate, ...tempFMate];
 
     // 프로젝트 카드 용도별 정렬
     const tempRank = tempBoards;
@@ -279,7 +273,6 @@ export class BoardsService {
   // Promise<Board>
   // ====================================================================
   // 프로젝트 카드 만들기 => 동시에 프로젝트 룸 생성
-  async createProjectRoom() {}
 
   async createBoard(board: createBoardDto, user: userInfo) {
     // console.log('user', user._id);
@@ -294,26 +287,28 @@ export class BoardsService {
       const findUserInfo = await this.UserInfoModel.findOne({
         userId,
       });
-      console.log('유저 정보: ', findUserInfo);
-      console.log('오늘 날짜: ', createdAt);
+
+      if (!findUserInfo || !findUserInfo.position) {
+        return '포지션이 없어 프로젝트를 생성할 수 없습니다.';
+      }
+
+      // console.log('유저 정보: ', findUserInfo);
+      // console.log('오늘 날짜: ', createdAt);
       await this.boardModel.create(board);
 
-      // const findBoard = await this.boardModel
-      //   .find({ userId })
-      //   .sort({ createdAt: -1 });
       const findBoard = await this.boardModel
         .find()
         .sort({ createdAt: -1 })
         .limit(1);
 
-      console.log('보드 찾기', findBoard);
-
+      // console.log('보드 찾기', findBoard);
+      // console.log('findUserInfo', findUserInfo);
       const participantList = {
         position: [findUserInfo.position],
         userId: [userId],
       };
 
-      const project: projectEntity = {
+      const project: projectDto = {
         boardId: findBoard[0]._id,
         userId: userId,
         participantList,
@@ -341,6 +336,7 @@ export class BoardsService {
     try {
       await this.boardModel.findOne({ _id });
       await this.boardModel.findOneAndDelete({ _id });
+      await this.projectModel.findOneAndDelete({ boardId: _id });
       return '삭제완료';
     } catch (error) {
       return `${user.nickname}님 지울게 없습니다.`;
@@ -355,19 +351,19 @@ export class BoardsService {
   ): Promise<getOneBoard | string> {
     const board_id = new mongoose.Types.ObjectId(boardId);
     const findBoard = await this.boardModel.findById({ _id: board_id });
-    console.log('보드 넘어감');
+    // console.log('보드 넘어감');
     const nickname: string = await this.userModel.findById(
       {
         _id: new mongoose.Types.ObjectId(findBoard.userId),
       },
       { _id: 0, nickname: 1 },
     );
-    console.log('닉네임 찾기 넘어감');
+    // console.log('닉네임 찾기 넘어감');
     const participant: participant = await this.projectModel.findOne(
       { boardId: board_id, userId: findBoard.userId },
       { participantList: 1, _id: 0 },
     );
-    console.log('리스트 찾기 넘어감');
+    // console.log('리스트 찾기 넘어감');
 
     const _id = findBoard._id.toString();
 
@@ -377,26 +373,54 @@ export class BoardsService {
     let frontCount = 0;
     let backCount = 0;
     for (const list of participant.participantList.position) {
-      switch (list[1]) {
+      // console.log('left!!!', list);
+      switch (list) {
         case 'design':
-          designCount += 1;
+          ++designCount;
           break;
         case 'front':
-          frontCount += 1;
+          ++frontCount;
           break;
         case 'back':
-          backCount += 1;
+          ++backCount;
           break;
       }
+      // console.log('leftCount!!', designCount, frontCount, backCount);
     }
-    left.push(designCount);
-    left.push(frontCount);
-    left.push(backCount);
+
+    let stackDesignCount = 0;
+    let stackFrontCount = 0;
+    let stackBackCount = 0;
+    for (const list of findBoard.stack) {
+      // console.log('stack', list, list[2]);
+      switch (list[0].toLowerCase()) {
+        case 'design':
+          stackDesignCount += list[2];
+          break;
+        case 'dev':
+          if (list[1].toLowerCase() === 'front') {
+            stackFrontCount += list[2];
+            break;
+          } else {
+            stackBackCount += list[2];
+            break;
+          }
+      }
+      // console.log(
+      //   'Before left!!!',
+      //   stackDesignCount,
+      //   stackFrontCount,
+      //   stackBackCount,
+      // );
+    }
+
+    left.push(stackDesignCount - designCount);
+    left.push(stackFrontCount - frontCount);
+    left.push(stackBackCount - backCount);
+    // console.log('After left!!!', left);
 
     // 좋아요 수
-    const likeCount = await (
-      await this.LikeModel.find({ boardId: board_id })
-    ).length;
+    const likeCount = findBoard.likeCount;
 
     const board: getOneBoard = {
       _id, // 아이디
@@ -408,11 +432,14 @@ export class BoardsService {
       stack: findBoard.stack, // 직무, 인원
       left, // 남은 인원
       period: findBoard.period, // 모집기간
+      skills: findBoard.skills,
       likeCount, // 좋아요 수
       referURL: findBoard.referURL,
       createdAt: findBoard.createdAt, // 작성일
     };
 
+    const newLike = likeCount + 1;
+    await this.boardModel.updateOne({ _id }, { likeCount: newLike });
     return board;
   }
 
@@ -430,8 +457,30 @@ export class BoardsService {
     } catch (error) {
       return {
         Status: 401,
-        message: '없는 보드 입니다.',
+        message: '없는 프로젝트 입니다.',
       };
     }
+  }
+
+  async updateBoard(id, board: updateBoardDto) {
+    // console.log(board);
+    const _id = new mongoose.Types.ObjectId(id);
+
+    await this.boardModel.findOneAndUpdate(
+      { _id },
+      {
+        $set: {
+          title: board.title,
+          contents: board.contents,
+          subContents: board.subContents,
+          imgUrl: board.imgUrl,
+          stack: board.stack,
+          period: board.period,
+          referURL: board.referURL,
+        },
+      },
+    );
+
+    return { message: '수정이 완료 되었습니다.' };
   }
 }

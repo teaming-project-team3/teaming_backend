@@ -31,11 +31,14 @@ export class Board {
   @Prop({ type: Date, required: true })
   period: Date;
 
+  @Prop({ type: [String] })
+  skills: string[];
+
   @Prop({ type: Number, default: 0 })
   likeCount: number;
 
-  @Prop({ type: [String], default: null })
-  referURL: string[];
+  @Prop({ type: String, default: null })
+  referURL: string;
 
   @Prop({ type: Date })
   createdAt: Date;
