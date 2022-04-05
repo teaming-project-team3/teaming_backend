@@ -49,13 +49,14 @@ export class UsersRepository {
     // 암호화
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
-
+    const defaultProfileUrl =
+      'https://www.dailygaewon.com/news/photo/202105/11330_11828_3159.jpg';
     try {
       const user = await this.userModel.create({
         email,
         nickname,
         password: hashedPassword,
-        profileUrl,
+        profileUrl: profileUrl !== '' ? profileUrl : defaultProfileUrl,
       });
       return user;
     } catch (error) {
