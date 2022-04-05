@@ -16,7 +16,7 @@ export class Mate {
   profileUrl: string;
   position: string;
   portfolioUrl: Array<object>;
-  project: number; // 티밍에서 프로젝트를 진행한 횟수
+  // project: number; // 티밍에서 프로젝트를 진행한 횟수
   createdAt: Date;
 }
 

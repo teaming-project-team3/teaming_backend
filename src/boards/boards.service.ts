@@ -123,50 +123,39 @@ export class BoardsService {
   async mateMake(num: number, skip: number, position: string): Promise<m[]> {
     const findUser = await this.userModel
       .find({ suveyCheck: true })
-      .sort({ createdAt: -1 })
-      .skip(skip * num)
+      .sort({ createdAt: -1 });
+
+    const userTemp = await this.UserInfoModel.find({ position })
+      .populate('userId')
       .limit(num);
 
-    // console.log(findUser);
+    const mate = userTemp.map((userInfo: any) => {
+      const payload = {
+        _id: userInfo._id,
+        nickname: userInfo.userId.nickname,
+        profileUrl: userInfo.userId.profileUrl,
+        position: userInfo.position,
+        portfolioUrl: userInfo.portfolioUrl,
+        // project,
+        createdAt: userInfo.userId.createdAt,
+      };
+      return payload;
+    });
 
-    const mate: m[] = [];
-    // let number = 0;
+    // for (let idx = 0; 5 > idx; idx++) {
+    //   // const project = await this.userInTheProject(findUser[idx]._id);
 
-    for (const user of findUser) {
-      const findInfo = await this.UserInfoModel.findOne({ userId: user._id });
-      // console.log('User info!!!!', number, user, findInfo);
-      // ++number;
-
-      try {
-        if (position === 'design' && findInfo.position === position) {
-          const project = await this.userInTheProject(user._id);
-          const tempMate: m = {
-            _id: user._id,
-            nickname: user.nickname,
-            profileUrl: user.profileUrl,
-            position: findInfo.position,
-            portfolioUrl: findInfo.portfolioUrl,
-            project,
-            createdAt: user.createdAt,
-          };
-          mate.push(tempMate);
-        } else {
-          const project = await this.userInTheProject(user._id);
-          const tempMate: m = {
-            _id: user._id,
-            nickname: user.nickname,
-            profileUrl: user.profileUrl,
-            position: findInfo.position,
-            portfolioUrl: findInfo.portfolioUrl,
-            project,
-            createdAt: user.createdAt,
-          };
-          mate.push(tempMate);
-        }
-      } catch (error) {
-        console.log('User not position!!!', error);
-      }
-    }
+    //   const tempMate: m = {
+    //     _id: findUser[idx]._id,
+    //     nickname: findUser[idx].nickname,
+    //     profileUrl: findUser[idx].profileUrl,
+    //     position: findInfo.position,
+    //     portfolioUrl: findInfo.portfolioUrl,
+    //     // project,
+    //     createdAt: findUser[idx].createdAt,
+    //   };
+    //   mate.push(tempMate);
+    // }
 
     return mate;
   }
@@ -244,9 +233,11 @@ export class BoardsService {
 
   // 메인페이지 보드 모두 띄우기
   async getAllBoards(): Promise<any> {
-    const tempBoards = await this.boardMake(5, 0, '');
-    const tempDsMate = await this.mateMake(5, 0, 'design');
-    const tempDeMate = await this.mateMake(5, 0, '');
+    const tempBoards = await this.boardMake(4, 0, '');
+    const tempDsMate = await this.mateMake(4, 0, 'design');
+    const tempBMate = await this.mateMake(2, 0, 'back');
+    const tempFMate = await this.mateMake(2, 0, 'front');
+    const tempDeMate = [...tempBMate, ...tempFMate];
 
     // 프로젝트 카드 용도별 정렬
     const tempRank = tempBoards;
