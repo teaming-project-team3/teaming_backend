@@ -122,38 +122,49 @@ export class BoardsService {
   // 메이트 찾기 만들기
   async mateMake(num: number, skip: number, position: string): Promise<m[]> {
     const findUser = await this.userModel
-      .find()
+      .find({ suveyCheck: true })
       .sort({ createdAt: -1 })
       .skip(skip * num)
       .limit(num);
+
+    // console.log(findUser);
+
     const mate: m[] = [];
+    // let number = 0;
 
     for (const user of findUser) {
-      const findInfo = await this.UserInfoModel.findOne();
-      if (position === 'design' && findInfo.position === position) {
-        const project = await this.userInTheProject(user._id);
-        const tempMate: m = {
-          _id: user._id,
-          nickname: user.nickname,
-          profileUrl: user.profileUrl,
-          position: findInfo.position,
-          portfolioUrl: findInfo.portfolioUrl,
-          project,
-          createdAt: user.createdAt,
-        };
-        mate.push(tempMate);
-      } else {
-        const project = await this.userInTheProject(user._id);
-        const tempMate: m = {
-          _id: user._id,
-          nickname: user.nickname,
-          profileUrl: user.profileUrl,
-          position: findInfo.position,
-          portfolioUrl: findInfo.portfolioUrl,
-          project,
-          createdAt: user.createdAt,
-        };
-        mate.push(tempMate);
+      const findInfo = await this.UserInfoModel.findOne({ userId: user._id });
+      // console.log('User info!!!!', number, user, findInfo);
+      // ++number;
+
+      try {
+        if (position === 'design' && findInfo.position === position) {
+          const project = await this.userInTheProject(user._id);
+          const tempMate: m = {
+            _id: user._id,
+            nickname: user.nickname,
+            profileUrl: user.profileUrl,
+            position: findInfo.position,
+            portfolioUrl: findInfo.portfolioUrl,
+            project,
+            createdAt: user.createdAt,
+          };
+          mate.push(tempMate);
+        } else {
+          const project = await this.userInTheProject(user._id);
+          const tempMate: m = {
+            _id: user._id,
+            nickname: user.nickname,
+            profileUrl: user.profileUrl,
+            position: findInfo.position,
+            portfolioUrl: findInfo.portfolioUrl,
+            project,
+            createdAt: user.createdAt,
+          };
+          mate.push(tempMate);
+        }
+      } catch (error) {
+        console.log('User not position!!!', error);
       }
     }
 
