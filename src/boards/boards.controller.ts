@@ -9,7 +9,6 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -19,6 +18,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { BoardsService } from './boards.service';
 import { createBoardDto } from './dto/createBoard.dto';
 import { updateBoardDto } from './dto/updateBoard.dto';
@@ -56,7 +56,7 @@ export class BoardsController {
   @ApiUnauthorizedResponse({
     description: '포지션이 없어 프로젝트를 생성할 수 없습니다.',
   })
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtAuthGuard)
   createBoard(@Req() req, @Body() board: createBoardDto) {
     // console.log('유저 정보:', req.user.user);
     return this.boardsService.createBoard(board, req.user.user);
@@ -108,7 +108,7 @@ export class BoardsController {
 
   // 프로젝트 수정
   @Put(':boardId')
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtAuthGuard)
   @ApiParam({
     name: 'boardId',
     required: true,
@@ -134,7 +134,6 @@ export class BoardsController {
     required: true,
     description: 'boards의 _id',
   })
-  @UseGuards(AuthGuard())
   @ApiParam({
     name: 'boardId',
     required: true,
@@ -148,7 +147,7 @@ export class BoardsController {
     description: '삭제완료',
   })
   @ApiUnauthorizedResponse({ description: 'OO님 지울게 없습니다.' })
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtAuthGuard)
   deleteBoard(@Req() req, @Param('boardId') boardId: string) {
     return this.boardsService.deleteBoard(boardId, req.user);
   }

@@ -10,7 +10,6 @@ import {
   UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { UserKakaoDto } from './dto/auth-userkakao.dto';
 import { GetUser } from './get-user.decorator';
@@ -26,6 +25,8 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { KakaoAuthGuard } from './guards/kakao.guard';
+import { JwtAuthGuard } from './guards/jwt.guard';
 
 @Controller('auth')
 @ApiTags('Auth API')
@@ -65,7 +66,7 @@ export class AuthController {
   })
   @Get('/kakao')
   @HttpCode(200)
-  @UseGuards(AuthGuard('kakao'))
+  @UseGuards(KakaoAuthGuard)
   async kakaoLogin() {
     return HttpStatus.OK;
   }
@@ -77,7 +78,7 @@ export class AuthController {
   @ApiOkResponse({ description: '카카오 로그인 성공' })
   @Get('/kakao/redirect')
   @HttpCode(200)
-  @UseGuards(AuthGuard('kakao'))
+  @UseGuards(KakaoAuthGuard)
   async kakaoLoginCallback(@Req() req): Promise<any> {
     return this.authService.kakaoLogin(req.user as UserKakaoDto);
   }
@@ -89,7 +90,7 @@ export class AuthController {
   @ApiOkResponse({ description: '카카오 로그아웃 완료' })
   @Get('/kakao/logout')
   @HttpCode(200)
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtAuthGuard)
   async kakaoLogout(@Req() req): Promise<any> {
     return this.authService.kakaoLogout(req);
   }
@@ -99,7 +100,7 @@ export class AuthController {
     description: '',
   })
   @Post('/test')
-  @UseGuards(AuthGuard())
+  @UseGuards(JwtAuthGuard)
   async test(@GetUser() userObj, @Req() req) {
     return await this.userModel
       .find()
