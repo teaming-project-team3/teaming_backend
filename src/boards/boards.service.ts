@@ -87,7 +87,7 @@ export class BoardsService {
     const today = new Date();
     const findBoard = await this.boardModel
       .find({ period: { $gte: today } })
-      .sort({ period: -1 })
+      .sort({ likeCount: -1, period: -1 })
       .skip(skip * num)
       .limit(num);
     const board: b[] = [];
