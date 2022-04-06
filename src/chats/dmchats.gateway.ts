@@ -109,7 +109,6 @@ export class DmChatsGateway
       await this.dmChatModel.findOneAndUpdate(
         { projectId: socket['myRoomName'] },
         {
-          // $push: { participantList: { name: data.name, socketId: socket.id } },
           $push: { participantList: socket['myNickname'] },
         },
       );

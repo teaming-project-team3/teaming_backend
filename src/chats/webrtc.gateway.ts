@@ -33,7 +33,7 @@ export class WebrtcGateway
   constructor(private chatService: ChatsService) {
     this.logger.log('constructor');
     this.roomObjArr = [];
-    this.MAXIMUM = 10;
+    this.MAXIMUM = 6;
   }
 
   handleDisconnect(@ConnectedSocket() socket: Socket) {
@@ -55,14 +55,10 @@ export class WebrtcGateway
         this.roomObjArr[i].users = newUsers;
         this.roomObjArr[i].currentNum -= 1;
 
-        console.log(
-          '✅=========console.log(this.roomObjArr[i]);==============✅',
-        );
+        console.log(`✅=========${socket['myRoomName']}==============✅`);
 
         console.log(this.roomObjArr[i]);
-        console.log(
-          '✅=========console.log(this.roomObjArr[i]);==============✅',
-        );
+        console.log(`✅=========${socket['myRoomName']}==============✅`);
 
         if (this.roomObjArr[i].currentNum == 0) {
           isRoomEmpty = true;
@@ -150,9 +146,6 @@ export class WebrtcGateway
       usersStack.push(obj);
     }
 
-    console.log('✅=========usersStack==============✅');
-    console.log(usersStack);
-    console.log('✅=========usersStack==============✅');
     socket.emit('accept_join', usersStack);
 
     console.log('✅=========targetRoomObj.users==============✅');
