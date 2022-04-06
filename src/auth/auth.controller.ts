@@ -27,6 +27,7 @@ import {
 } from '@nestjs/swagger';
 import { KakaoAuthGuard } from './guards/kakao.guard';
 import { JwtAuthGuard } from './guards/jwt.guard';
+import { UsersRepository } from './repository/auth.repository';
 
 @Controller('auth')
 @ApiTags('Auth API')
@@ -34,7 +35,8 @@ import { JwtAuthGuard } from './guards/jwt.guard';
 export class AuthController {
   constructor(
     private authService: AuthService,
-    @InjectModel(User.name) private userModel: Model<User>, // 테스트 용
+    @InjectModel(User.name) private userModel: Model<User>,
+    private readonly usersRepository: UsersRepository, // 테스트 용
   ) {}
 
   @ApiOperation({
@@ -95,16 +97,19 @@ export class AuthController {
     return this.authService.kakaoLogout(req);
   }
 
-  @ApiOperation({
-    summary: 'Test API',
-    description: '',
-  })
-  @Post('/test')
-  @UseGuards(JwtAuthGuard)
-  async test(@GetUser() userObj, @Req() req) {
-    return await this.userModel
-      .find()
-      .or([{ nickname: '2222' }, { nickname: '1111' }])
-      .select({ _id: false, nickname: true, profileUrl: true });
-  }
+  // @ApiOperation({
+  //   summary: 'Test API',
+  //   description: '',
+  // })
+  // @Post('/test')
+  // test(@Body() data) {
+  //   console.log(data);
+  //   return this.usersRepository.createKakaoTest({
+  //     kakaoId: '32134324',
+  //     name: 'tytytytyt',
+  //     email: null,
+  //     provider: 'kakao',
+  //     profileUrl: '이거 테스트용',
+  //   });
+  // }
 }

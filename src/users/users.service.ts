@@ -38,7 +38,7 @@ export class UsersService {
     };
   }
 
-  async stackScoring(front, back, design) {
+  stackScoring(front, back, design) {
     const front_ab_score = front.ability.sort(this.dataSort)[0] ?? [];
     const front_sk_score = front.skills.sort(this.dataSort)[0] ?? [];
     const back_ab_score = back.ability.sort(this.dataSort)[0] ?? [];
@@ -226,7 +226,7 @@ export class UsersService {
       .findOne({ userId: userId })
       .populate('userId', { password: false });
 
-    const customInfo = JSON.parse(JSON.stringify(userInfo));
+    const customInfo = JSON.parse(JSON.stringify(userInfo)); //Deep Copy
     customInfo['nickname'] = userInfo.userId['nickname'];
 
     const projectData = await this.projectModel
