@@ -71,8 +71,10 @@ export class UsersRepository {
 
   async createKakao(userKakaoDto: UserKakaoDto) {
     const { kakaoId, name, email, provider, profileUrl } = userKakaoDto;
+    const checkEmail = !email ? kakaoId : email;
+
     return await this.userModel.create({
-      email,
+      email: checkEmail,
       nickname: name,
       profileUrl,
       kakaoId,
