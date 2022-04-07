@@ -121,6 +121,7 @@ export class BoardsService {
 
   // 메이트 찾기 만들기
   async mateMake(num: number, skip: number, position: string): Promise<m[]> {
+
     const findUser = await this.UserInfoModel.find({ position })
       .populate('userId')
       .limit(num);
@@ -137,21 +138,6 @@ export class BoardsService {
       };
       return payload;
     });
-
-    // for (let idx = 0; 5 > idx; idx++) {
-    //   // const project = await this.userInTheProject(findUser[idx]._id);
-
-    //   const tempMate: m = {
-    //     _id: findUser[idx]._id,
-    //     nickname: findUser[idx].nickname,
-    //     profileUrl: findUser[idx].profileUrl,
-    //     position: findInfo.position,
-    //     portfolioUrl: findInfo.portfolioUrl,
-    //     // project,
-    //     createdAt: findUser[idx].createdAt,
-    //   };
-    //   mate.push(tempMate);
-    // }
 
     return mate;
   }
