@@ -94,7 +94,8 @@ export class BoardsService {
 
     for (const list of findBoard) {
       const user = await this.userModel.findOne({ _id: list.userId });
-      const likeCount = await this.getLikeCount(list._id);
+      /* 코드 미사용으로 주석처리 */
+      // const likeCount = await this.getLikeCount(list._id);
       const stack = await this.getStackCheck(list._id, list.stack);
 
       // console.log('user 확인!!!', user);
@@ -111,7 +112,7 @@ export class BoardsService {
         nickname: user.nickname,
         profileUrl: user.profileUrl,
         period: list.period,
-        likeCount,
+        likeCount: list.likeCount,
       };
       board.push(tempBoard);
     }
@@ -224,6 +225,10 @@ export class BoardsService {
     // 프로젝트 카드 용도별 정렬
     const tempRank = tempBoards;
     const rankBoards = tempRank.sort((a, b) => b.likeCount - a.likeCount);
+
+    for (const ran of rankBoards) {
+      console.log(ran.likeCount);
+    }
 
     const tempDeadline = tempBoards;
     const deadlineBoards = tempDeadline.sort((a, b) => +b.period - +a.period);
