@@ -15,11 +15,11 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 @Module({
   imports: [
-    ThrottlerModule.forRoot({
-      // 속도제한 설정
-      ttl: 15 * 60 * 1000,
-      limit: 100,
-    }),
+    // ThrottlerModule.forRoot({
+    //   // 속도제한 설정
+    //   ttl: 15 * 60 * 1000,
+    //   limit: 1000,
+    // }),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -43,10 +43,10 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
   ],
   controllers: [AppController],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerGuard,
+    // },
   ],
 })
 export class AppModule implements NestModule {
