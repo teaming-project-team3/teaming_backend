@@ -195,7 +195,22 @@ export class WebrtcGateway
     console.log('✅========== videoON==========✅');
 
     const videoStatus = true;
+
     socket.to(data.roomName).emit('videoON', data.nickName, videoStatus);
+
+    let targetRoomObj: any;
+
+    for (let i = 0; i < this.roomObjArr.length; ++i) {
+      if (this.roomObjArr[i].roomName === socket['myRoomName']) {
+        targetRoomObj = this.roomObjArr[i];
+        break;
+      }
+    }
+    for (let i = 0; i < this.roomObjArr.length; ++i) {
+      if (targetRoomObj.users[i] === socket['myNickname']) {
+        targetRoomObj.users[i].video = videoStatus;
+      }
+    }
   }
   @SubscribeMessage('videoOFF')
   handleEventVideoOff(
@@ -206,6 +221,20 @@ export class WebrtcGateway
 
     const videoStatus = false;
     socket.to(data.roomName).emit('videoOFF', data.nickName, videoStatus);
+
+    let targetRoomObj: any;
+
+    for (let i = 0; i < this.roomObjArr.length; ++i) {
+      if (this.roomObjArr[i].roomName === socket['myRoomName']) {
+        targetRoomObj = this.roomObjArr[i];
+        break;
+      }
+    }
+    for (let i = 0; i < this.roomObjArr.length; ++i) {
+      if (targetRoomObj.users[i] === socket['myNickname']) {
+        targetRoomObj.users[i].video = videoStatus;
+      }
+    }
   }
   @SubscribeMessage('audioON')
   handleEventAudioOn(
@@ -215,6 +244,20 @@ export class WebrtcGateway
     console.log('✅========== audioON==========✅');
     const audioStatus = true;
     socket.to(data.roomName).emit('audioON', data.nickName, audioStatus);
+
+    let targetRoomObj: any;
+
+    for (let i = 0; i < this.roomObjArr.length; ++i) {
+      if (this.roomObjArr[i].roomName === socket['myRoomName']) {
+        targetRoomObj = this.roomObjArr[i];
+        break;
+      }
+    }
+    for (let i = 0; i < this.roomObjArr.length; ++i) {
+      if (targetRoomObj.users[i] === socket['myNickname']) {
+        targetRoomObj.users[i].audio = audioStatus;
+      }
+    }
   }
   @SubscribeMessage('audioOFF')
   handleEventAudioOff(
@@ -224,5 +267,19 @@ export class WebrtcGateway
     console.log('✅========== audioOFF==========✅');
     const audioStatus = false;
     socket.to(data.roomName).emit('audioOFF', data.nickName, audioStatus);
+
+    let targetRoomObj: any;
+
+    for (let i = 0; i < this.roomObjArr.length; ++i) {
+      if (this.roomObjArr[i].roomName === socket['myRoomName']) {
+        targetRoomObj = this.roomObjArr[i];
+        break;
+      }
+    }
+    for (let i = 0; i < this.roomObjArr.length; ++i) {
+      if (targetRoomObj.users[i] === socket['myNickname']) {
+        targetRoomObj.users[i].audio = audioStatus;
+      }
+    }
   }
 }
