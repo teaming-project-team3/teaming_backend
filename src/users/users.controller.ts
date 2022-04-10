@@ -91,7 +91,7 @@ export class UsersController {
   @ApiOkResponse({ description: '팀원 정보조회 성공' })
   @ApiDefaultResponse({ description: '팀원 정보조회 실패' })
   @Get('/:userId')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   getUserInfo(@Param() { userId }): Promise<any> {
     const _id = new mongoose.Types.ObjectId(userId);
     return this.usersService.getUserInfoByUserId(_id);

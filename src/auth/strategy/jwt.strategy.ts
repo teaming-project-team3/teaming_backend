@@ -29,12 +29,11 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         user,
       };
     } else {
+      userObj = {
+        kakaoAccessToken: null,
+        user,
+      };
     }
-
-    userObj = {
-      kakaoAccessToken: null,
-      user,
-    };
 
     return userObj;
   }

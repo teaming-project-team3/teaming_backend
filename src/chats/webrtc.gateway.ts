@@ -33,7 +33,7 @@ export class WebrtcGateway
   constructor(private chatService: ChatsService) {
     this.logger.log('constructor');
     this.roomObjArr = [];
-    this.MAXIMUM = 10;
+    this.MAXIMUM = 6;
   }
 
   handleDisconnect(@ConnectedSocket() socket: Socket) {
@@ -55,14 +55,10 @@ export class WebrtcGateway
         this.roomObjArr[i].users = newUsers;
         this.roomObjArr[i].currentNum -= 1;
 
-        console.log(
-          '✅=========console.log(this.roomObjArr[i]);==============✅',
-        );
+        console.log(`✅=========${socket['myRoomName']}==============✅`);
 
         console.log(this.roomObjArr[i]);
-        console.log(
-          '✅=========console.log(this.roomObjArr[i]);==============✅',
-        );
+        console.log(`✅=========${socket['myRoomName']}==============✅`);
 
         if (this.roomObjArr[i].currentNum == 0) {
           isRoomEmpty = true;
@@ -150,9 +146,6 @@ export class WebrtcGateway
       usersStack.push(obj);
     }
 
-    console.log('✅=========usersStack==============✅');
-    console.log(usersStack);
-    console.log('✅=========usersStack==============✅');
     socket.emit('accept_join', usersStack);
 
     console.log('✅=========targetRoomObj.users==============✅');
@@ -202,7 +195,22 @@ export class WebrtcGateway
     console.log('✅========== videoON==========✅');
 
     const videoStatus = true;
+
     socket.to(data.roomName).emit('videoON', data.nickName, videoStatus);
+
+    let targetRoomObj: any;
+
+    for (let i = 0; i < this.roomObjArr.length; ++i) {
+      if (this.roomObjArr[i].roomName === socket['myRoomName']) {
+        targetRoomObj = this.roomObjArr[i];
+        break;
+      }
+    }
+    for (let i = 0; i < this.roomObjArr.length; ++i) {
+      if (targetRoomObj.users[i] === socket['myNickname']) {
+        targetRoomObj.users[i].video = videoStatus;
+      }
+    }
   }
   @SubscribeMessage('videoOFF')
   handleEventVideoOff(
@@ -213,6 +221,20 @@ export class WebrtcGateway
 
     const videoStatus = false;
     socket.to(data.roomName).emit('videoOFF', data.nickName, videoStatus);
+
+    let targetRoomObj: any;
+
+    for (let i = 0; i < this.roomObjArr.length; ++i) {
+      if (this.roomObjArr[i].roomName === socket['myRoomName']) {
+        targetRoomObj = this.roomObjArr[i];
+        break;
+      }
+    }
+    for (let i = 0; i < this.roomObjArr.length; ++i) {
+      if (targetRoomObj.users[i] === socket['myNickname']) {
+        targetRoomObj.users[i].video = videoStatus;
+      }
+    }
   }
   @SubscribeMessage('audioON')
   handleEventAudioOn(
@@ -222,6 +244,20 @@ export class WebrtcGateway
     console.log('✅========== audioON==========✅');
     const audioStatus = true;
     socket.to(data.roomName).emit('audioON', data.nickName, audioStatus);
+
+    let targetRoomObj: any;
+
+    for (let i = 0; i < this.roomObjArr.length; ++i) {
+      if (this.roomObjArr[i].roomName === socket['myRoomName']) {
+        targetRoomObj = this.roomObjArr[i];
+        break;
+      }
+    }
+    for (let i = 0; i < this.roomObjArr.length; ++i) {
+      if (targetRoomObj.users[i] === socket['myNickname']) {
+        targetRoomObj.users[i].audio = audioStatus;
+      }
+    }
   }
   @SubscribeMessage('audioOFF')
   handleEventAudioOff(
@@ -231,5 +267,19 @@ export class WebrtcGateway
     console.log('✅========== audioOFF==========✅');
     const audioStatus = false;
     socket.to(data.roomName).emit('audioOFF', data.nickName, audioStatus);
+
+    let targetRoomObj: any;
+
+    for (let i = 0; i < this.roomObjArr.length; ++i) {
+      if (this.roomObjArr[i].roomName === socket['myRoomName']) {
+        targetRoomObj = this.roomObjArr[i];
+        break;
+      }
+    }
+    for (let i = 0; i < this.roomObjArr.length; ++i) {
+      if (targetRoomObj.users[i] === socket['myNickname']) {
+        targetRoomObj.users[i].audio = audioStatus;
+      }
+    }
   }
 }

@@ -52,6 +52,9 @@ export class createBoardDto {
   @IsArray()
   stack: [string, string, number][];
 
+  @ApiProperty({ example: ['스킬1', '스킬2'], description: 'skills' })
+  skills: string[];
+
   @ApiProperty({
     example: '2022-04-05',
     description: 'period',
