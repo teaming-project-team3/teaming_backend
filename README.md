@@ -7,7 +7,7 @@
 <img alt="Html" src ="https://img.shields.io/badge/-Node.js-339933?logo=Node.js&logoColor=white"/>
 <img alt="Html" src ="https://img.shields.io/badge/-NestJS-E0234E?logo=NestJS&logoColor=white"/>
 <img alt="Html" src ="https://img.shields.io/badge/-MongoDB-47A248?logo=MongoDB&logoColor=white"/>
-<img alt="Html" src ="https://img.shields.io/badge/-Amazon AWS
+<img alt="Html" src ="https://img.shields.io/badge/-AmazonAWS
 -232F3E?logo=Amazon AWS
 &logoColor=white"/>
 <img alt="Html" src ="https://img.shields.io/badge/-Socket.io-010101?logo=Socket.io&logoColor=white"/>
