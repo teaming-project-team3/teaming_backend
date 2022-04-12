@@ -2,18 +2,9 @@
 
 # Teaming
 
-<img alt="Html" src ="https://img.shields.io/badge/-GitHub-181717?logo=c&logoColor=white"/>
-<img alt="Html" src ="https://img.shields.io/badge/-TypeScript-3178C6?logo=TypeScript&logoColor=white"/>
-<img alt="Html" src ="https://img.shields.io/badge/-Node.js-339933?logo=Node.js&logoColor=white"/>
-<img alt="Html" src ="https://img.shields.io/badge/-NestJS-E0234E?logo=NestJS&logoColor=white"/>
-<img alt="Html" src ="https://img.shields.io/badge/-MongoDB-47A248?logo=MongoDB&logoColor=white"/>
-<img alt="Html" src ="https://img.shields.io/badge/-AmazonAWS
+<img alt="Html" src ="https://img.shields.io/badge/-GitHub-181717?logo=c&logoColor=white"/><img alt="Html" src ="https://img.shields.io/badge/-TypeScript-3178C6?logo=TypeScript&logoColor=white"/><img alt="Html" src ="https://img.shields.io/badge/-Node.js-339933?logo=Node.js&logoColor=white"/><img alt="Html" src ="https://img.shields.io/badge/-NestJS-E0234E?logo=NestJS&logoColor=white"/><img alt="Html" src ="https://img.shields.io/badge/-MongoDB-47A248?logo=MongoDB&logoColor=white"/><img alt="Html" src ="https://img.shields.io/badge/-AmazonAWS
 -232F3E?logo=Amazon AWS
-&logoColor=white"/>
-<img alt="Html" src ="https://img.shields.io/badge/-Socket.io-010101?logo=Socket.io&logoColor=white"/>
-<img alt="Html" src ="https://img.shields.io/badge/-NGINX-009639?logo=NGINX&logoColor=white"/>
-<img alt="Html" src ="https://img.shields.io/badge/-WebRTC-333333?logo=WebRTC&logoColor=white"/>
-<img alt="Html" src ="https://img.shields.io/badge/-Passport-34E27A?logo=Passport&logoColor=white"/>
+&logoColor=white"/><img alt="Html" src ="https://img.shields.io/badge/-Socket.io-010101?logo=Socket.io&logoColor=white"/><img alt="Html" src ="https://img.shields.io/badge/-NGINX-009639?logo=NGINX&logoColor=white"/><img alt="Html" src ="https://img.shields.io/badge/-WebRTC-333333?logo=WebRTC&logoColor=white"/><img alt="Html" src ="https://img.shields.io/badge/-Passport-34E27A?logo=Passport&logoColor=white"/>
 
 ## 프로젝트 구성
 
