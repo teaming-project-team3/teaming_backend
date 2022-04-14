@@ -13,7 +13,7 @@ import { AuthService } from './auth.service';
 import { UserKakaoDto } from './dto/auth-userkakao.dto';
 import { GetUser } from './get-user.decorator';
 import { SuccessInterceptor } from '../common/interceptors/success.interceptor';
-import { AuthCredentialsDto } from './dto/auth-credential.dto copy';
+import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import { AuthSignInDto } from './dto/auth-signin.dto';
 import {
   ApiDefaultResponse,

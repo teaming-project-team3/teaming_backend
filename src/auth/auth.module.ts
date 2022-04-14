@@ -6,7 +6,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { User, UserSchema } from '../schemas/User.schema';
-import { UsersRepository } from './repository/auth.repository';
+import { AuthRepository } from './repository/auth.repository';
 import { HttpModule } from '@nestjs/axios';
 import { KakaoStrategy } from './strategy/kakao.strategy';
 import { UserInfo, UserInfoSchema } from 'src/schemas/UserInfo.schema';
@@ -27,7 +27,7 @@ import { UserInfo, UserInfoSchema } from 'src/schemas/UserInfo.schema';
     HttpModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, UsersRepository, JwtStrategy, KakaoStrategy],
+  providers: [AuthService, AuthRepository, JwtStrategy, KakaoStrategy],
   exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}
