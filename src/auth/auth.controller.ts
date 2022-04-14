@@ -73,6 +73,8 @@ export class AuthController {
   @HttpCode(200)
   @UseGuards(KakaoAuthGuard)
   async kakaoLoginCallback(@GetUser() user: UserKakaoDto): Promise<object> {
+    console.log('✅=============@GetUser');
+    console.log(user);
     return this.authService.kakaoLogin(user);
   }
 
