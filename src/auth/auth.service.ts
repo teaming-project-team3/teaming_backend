@@ -22,7 +22,7 @@ export class AuthService {
     this.http = new HttpService();
   }
 
-  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<any> {
+  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<object> {
     const user = await this.usersRepository.create(authCredentialsDto);
     await this.usersRepository.createUserTempInfo(user._id);
 
@@ -31,8 +31,8 @@ export class AuthService {
     };
   }
 
-  async signIn(authSignInDto: AuthSignInDto): Promise<any> {
-    const { email, password } = authSignInDto;
+  async signIn(authSignInDto: AuthSignInDto): Promise<object> {
+    const { password } = authSignInDto;
     const user = await this.usersRepository.findOne(authSignInDto);
 
     if (user && (await bcrypt.compare(password, user.password))) {
@@ -54,8 +54,8 @@ export class AuthService {
     }
   }
 
-  async kakaoLogin(userKakaoDto: UserKakaoDto): Promise<any> {
-    const { kakaoId, name, email, provider, kakaoAccessToken } = userKakaoDto;
+  async kakaoLogin(userKakaoDto: UserKakaoDto): Promise<object> {
+    const { name, kakaoAccessToken } = userKakaoDto;
     try {
       let user = await this.usersRepository.findOneByName(name);
       if (!user) {
@@ -72,7 +72,6 @@ export class AuthService {
         suveyCheck: user.suveyCheck,
       };
     } catch (error) {
-      console.log(error);
       if (error.code === 11000) {
         throw new ConflictException(`Exisiting ${Object.keys(error.keyValue)}`);
       } else {
@@ -81,8 +80,8 @@ export class AuthService {
     }
   }
 
-  async kakaoLogout(req: any): Promise<any> {
-    const KAKAO_ACCESS_TOKEN = req.user.kakaoAccessToken;
+  async kakaoLogout(userKakaoDto: UserKakaoDto): Promise<object> {
+    const KAKAO_ACCESS_TOKEN = userKakaoDto.kakaoAccessToken;
     const _url = 'https://kapi.kakao.com/v1/user/unlink';
     const _header = {
       Authorization: `bearer ${KAKAO_ACCESS_TOKEN}`,

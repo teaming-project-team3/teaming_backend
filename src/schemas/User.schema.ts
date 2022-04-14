@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory, SchemaOptions } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
-import { Document, ObjectId, Types } from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
 
 export type UserDocument = User & Document;
 
@@ -50,9 +50,6 @@ export class User extends Document {
     default: false,
   })
   suveyCheck: boolean;
-
-  @Prop({ type: Date })
-  createdAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

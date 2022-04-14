@@ -19,14 +19,6 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     profile: any,
     done: any,
   ): Promise<any> {
-    console.log('accessToken : ', accessToken);
-    console.log('=============================');
-    console.log('refreshToken : ', refreshToken);
-    console.log('=============================');
-    console.log('profile : ', profile);
-    console.log('=============================');
-    console.log('done : ', done);
-
     const profileJson = profile._json;
     const kakao_account = profileJson.kakao_account;
     const provider = profile.provider;
@@ -41,10 +33,6 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
       provider,
       profileUrl: profileJson.properties.profile_image,
     };
-    console.log(
-      'profileJson.properties.profile_image ' +
-        profileJson.properties.profile_image,
-    );
     done(null, payload);
   }
 }
