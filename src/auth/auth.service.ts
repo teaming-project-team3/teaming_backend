@@ -85,13 +85,14 @@ export class AuthService {
       // 유저 토큰 생성
       const payload = { _id: user['_id '] };
       const accessToken = this.jwtService.sign(payload);
-      return {
+      const resPayload = {
         msg: '로그인 성공',
         Authorization: `Bearer ${accessToken}`,
         nickname: user['nickname'],
         profileUrl: user['profileUrl'],
         suveyCheck: user['suveyCheck'],
       };
+      return resPayload;
     } else {
       throw new UnauthorizedException({
         msg: '로그인 실패',
@@ -102,8 +103,8 @@ export class AuthService {
 
   async kakaoLogin(userKakaoDto: UserKakaoDto): Promise<object> {
     const { name, kakaoAccessToken } = userKakaoDto;
+    let user = await this.authRepository.findOneByName(name);
     try {
-      let user = await this.authRepository.findOneByName(name);
       if (!user) {
         user = await this.authRepository.createKakao(userKakaoDto);
         await this.authRepository.createUserInfo(user['_id']);
@@ -129,17 +130,15 @@ export class AuthService {
   async kakaoLogout(userKakaoDto: UserKakaoDto): Promise<object> {
     const KAKAO_ACCESS_TOKEN = userKakaoDto.kakaoAccessToken;
     const _url = 'https://kapi.kakao.com/v1/user/unlink';
-    const _header = {
-      Authorization: `bearer ${KAKAO_ACCESS_TOKEN}`,
-    };
+    const _header = { Authorization: `bearer ${KAKAO_ACCESS_TOKEN}` };
     try {
       await this.http.post(_url, '', { headers: _header });
+      return {
+        msg: '카카오 로그아웃 완료',
+      };
     } catch (error) {
       return error;
     }
-    return {
-      msg: '카카오 로그아웃 완료',
-    };
   }
 
   async UserfindAll(): Promise<any> {
