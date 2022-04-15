@@ -102,15 +102,15 @@ export class AuthService {
   }
 
   async kakaoLogin(userKakaoDto: UserKakaoDto): Promise<object> {
-    const { name, kakaoAccessToken } = userKakaoDto;
-    let user = await this.authRepository.findOneByName(name);
     try {
+      const { name, kakaoAccessToken } = userKakaoDto;
+      let user = await this.authRepository.findOneByName(name);
       if (!user) {
         user = await this.authRepository.createKakao(userKakaoDto);
         await this.authRepository.createUserInfo(user['_id']);
       }
       const payload = { _id: user['_id'], kakaoAccessToken };
-      const accessToken = this.jwtService.sign(payload);
+      const accessToken = await this.jwtService.sign(payload);
       return {
         msg: '카카오 로그인 성공',
         Authorization: `Bearer ${accessToken}`,
