@@ -25,7 +25,7 @@ export class AuthService {
   }
 
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<object> {
-    const { email, nickname, password, passwordCheck, profileUrl } =
+    const { nickname, password, passwordCheck, profileUrl } =
       authCredentialsDto;
 
     const nicknameRule = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
@@ -60,7 +60,7 @@ export class AuthService {
       profileUrl !== '' ? profileUrl : defaultProfileUrl;
 
     try {
-      const user: object = await this.authRepository.createTeamingUser(
+      const user = await this.authRepository.createTeamingUser(
         authCredentialsDto,
       );
       await this.authRepository.createUserInfo(user['_id']);
@@ -110,7 +110,7 @@ export class AuthService {
         await this.authRepository.createUserInfo(user['_id']);
       }
       const payload = { _id: user['_id'], kakaoAccessToken };
-      const accessToken = await this.jwtService.sign(payload);
+      const accessToken = this.jwtService.sign(payload);
       return {
         msg: '카카오 로그인 성공',
         Authorization: `Bearer ${accessToken}`,
@@ -127,12 +127,12 @@ export class AuthService {
     }
   }
 
-  async kakaoLogout(userKakaoDto: UserKakaoDto): Promise<object> {
+  kakaoLogout(userKakaoDto: UserKakaoDto) {
     const KAKAO_ACCESS_TOKEN = userKakaoDto.kakaoAccessToken;
     const _url = 'https://kapi.kakao.com/v1/user/unlink';
     const _header = { Authorization: `bearer ${KAKAO_ACCESS_TOKEN}` };
     try {
-      await this.http.post(_url, '', { headers: _header });
+      this.http.post(_url, '', { headers: _header });
       return {
         msg: '카카오 로그아웃 완료',
       };
@@ -141,7 +141,7 @@ export class AuthService {
     }
   }
 
-  async UserfindAll(): Promise<any> {
+  async UserfindAll(): Promise<object> {
     return await this.authRepository.find();
   }
 }
