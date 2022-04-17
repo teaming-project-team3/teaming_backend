@@ -1,3 +1,9 @@
+/*
+author : @WON-JIN-LEE
+description : 회원관리에 필요한 DB연산을 수행하는 메서드 정의
+updateAt : 2022-04-15
+*/
+
 import { User } from '../../schemas/User.schema';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';

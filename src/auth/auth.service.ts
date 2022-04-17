@@ -1,3 +1,9 @@
+/*
+author : @WON-JIN-LEE
+description : 회원관리에 필요한 service 메서드 정의
+updateAt : 2022-04-15
+*/
+
 import {
   ConflictException,
   HttpException,

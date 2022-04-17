@@ -1,3 +1,9 @@
+/*
+author : @WON-JIN-LEE
+description : 회원관리 API Controller 정의
+updateAt : 2022-04-15
+*/
+
 import {
   Body,
   Controller,
