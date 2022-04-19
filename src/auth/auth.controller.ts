@@ -1,3 +1,9 @@
+/*
+author : @WON-JIN-LEE
+description : 회원관리 API Controller 정의
+updateAt : 2022-04-15
+*/
+
 import {
   Body,
   Controller,
@@ -5,7 +11,6 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Req,
   UseGuards,
   UseInterceptors,
   ValidationPipe,
@@ -14,10 +19,7 @@ import { AuthService } from './auth.service';
 import { UserKakaoDto } from './dto/auth-userkakao.dto';
 import { GetUser } from './get-user.decorator';
 import { SuccessInterceptor } from '../common/interceptors/success.interceptor';
-import { User } from 'src/schemas/User.schema';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { AuthCredentialsDto } from './dto/auth-credential.dto copy';
+import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import { AuthSignInDto } from './dto/auth-signin.dto';
 import {
   ApiDefaultResponse,
@@ -27,17 +29,12 @@ import {
 } from '@nestjs/swagger';
 import { KakaoAuthGuard } from './guards/kakao.guard';
 import { JwtAuthGuard } from './guards/jwt.guard';
-import { UsersRepository } from './repository/auth.repository';
 
 @Controller('auth')
 @ApiTags('Auth API')
 @UseInterceptors(SuccessInterceptor)
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    @InjectModel(User.name) private userModel: Model<User>,
-    private readonly usersRepository: UsersRepository, // 테스트 용
-  ) {}
+  constructor(private authService: AuthService) {}
 
   @ApiOperation({
     summary: '회원가입 API',
@@ -45,10 +42,10 @@ export class AuthController {
   })
   @ApiOkResponse({ description: '회원가입 성공' })
   @Post('/signup')
-  signUp(
+  async signUp(
     @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
-  ): Promise<void> {
-    return this.authService.signUp(authCredentialsDto);
+  ): Promise<object> {
+    return await this.authService.signUp(authCredentialsDto);
   }
 
   @ApiOperation({
@@ -58,8 +55,10 @@ export class AuthController {
   @ApiOkResponse({ description: '로그인 성공' })
   @ApiDefaultResponse({ description: '로그인 실패' })
   @Post('/signin')
-  signIn(@Body(ValidationPipe) authSignInDto: AuthSignInDto): Promise<object> {
-    return this.authService.signIn(authSignInDto);
+  async signIn(
+    @Body(ValidationPipe) authSignInDto: AuthSignInDto,
+  ): Promise<object> {
+    return await this.authService.signIn(authSignInDto);
   }
 
   @ApiOperation({
@@ -81,8 +80,8 @@ export class AuthController {
   @Get('/kakao/redirect')
   @HttpCode(200)
   @UseGuards(KakaoAuthGuard)
-  async kakaoLoginCallback(@Req() req): Promise<any> {
-    return this.authService.kakaoLogin(req.user as UserKakaoDto);
+  async kakaoLoginCallback(@GetUser() user: UserKakaoDto): Promise<object> {
+    return await this.authService.kakaoLogin(user);
   }
 
   @ApiOperation({
@@ -93,23 +92,7 @@ export class AuthController {
   @Get('/kakao/logout')
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
-  async kakaoLogout(@Req() req): Promise<any> {
-    return this.authService.kakaoLogout(req);
+  async kakaoLogout(@GetUser() user: UserKakaoDto): Promise<object> {
+    return await this.authService.kakaoLogout(user);
   }
-
-  // @ApiOperation({
-  //   summary: 'Test API',
-  //   description: '',
-  // })
-  // @Post('/test')
-  // test(@Body() data) {
-  //   console.log(data);
-  //   return this.usersRepository.createKakaoTest({
-  //     kakaoId: '32134324',
-  //     name: 'tytytytyt',
-  //     email: null,
-  //     provider: 'kakao',
-  //     profileUrl: '이거 테스트용',
-  //   });
-  // }
 }
