@@ -122,7 +122,6 @@ export class BoardsService {
 
   // 메이트 찾기 만들기
   async mateMake(num: number, skip: number, position: string): Promise<m[]> {
-
     const findUser = await this.UserInfoModel.find({ position })
       .populate('userId')
       .limit(num);

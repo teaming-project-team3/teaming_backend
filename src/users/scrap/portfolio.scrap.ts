@@ -27,7 +27,7 @@ export class PortfolioScrap {
           method: 'GET',
           responseType: 'arraybuffer',
         });
-
+        
         const contentType = response.headers['content-type'].includes('utf-8')
           ? 'utf8'
           : 'EUC-KR';
