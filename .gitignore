@@ -1,5 +1,6 @@
 cert
 .env
+.gitmessage.txt
 
 # compiled output
 /dist
