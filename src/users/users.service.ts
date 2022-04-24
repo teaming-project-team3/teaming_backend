@@ -1,6 +1,6 @@
 import { PortfolioScrap } from './scrap/portfolio.scrap';
 import { UserInfo } from './../schemas/UserInfo.schema';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { User } from 'src/schemas/User.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -9,7 +9,8 @@ import { UpdateUserInfoDto } from './dto/updateUserInfo.dto';
 import { Project } from 'src/schemas/Project.schema';
 @Injectable()
 export class UsersService {
-  private dataSort;
+  private dataSort: object;
+  private logger = new Logger('usersService');
 
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
@@ -17,7 +18,7 @@ export class UsersService {
     @InjectModel(Project.name) private projectModel: Model<Project>,
     private portfolioScrap: PortfolioScrap,
   ) {
-    this.dataSort = function (a, b) {
+    this.dataSort = function (a: object, b: object) {
       const scoreObj = {
         1: 15,
         2: 30,
@@ -25,25 +26,25 @@ export class UsersService {
         4: 50,
       };
       if (
-        scoreObj[a.time] + scoreObj[a.rate] >
-        scoreObj[b.time] + scoreObj[b.rate]
+        scoreObj[a['time']] + scoreObj[a['rate']] >
+        scoreObj[b['time']] + scoreObj[b['rate']]
       )
         return -1;
       else if (
-        scoreObj[a.time] + scoreObj[a.rate] <
-        scoreObj[b.time] + scoreObj[b.rate]
+        scoreObj[a['time']] + scoreObj[a['rate']] <
+        scoreObj[b['time']] + scoreObj[b['rate']]
       )
         return 1;
       else return 0;
     };
   }
 
-  stackScoring(front, back, design) {
-    const front_ab_score = front.ability.sort(this.dataSort)[0] ?? [];
-    const front_sk_score = front.skills.sort(this.dataSort)[0] ?? [];
-    const back_ab_score = back.ability.sort(this.dataSort)[0] ?? [];
-    const back_sk_score = back.skills.sort(this.dataSort)[0] ?? [];
-    const design_sk_score = design.skills.sort(this.dataSort)[0] ?? [];
+  stackScoring(front: object, back: object, design: object) {
+    const front_ab_score = front['ability'].sort(this.dataSort)[0] ?? [];
+    const front_sk_score = front['skills'].sort(this.dataSort)[0] ?? [];
+    const back_ab_score = back['ability'].sort(this.dataSort)[0] ?? [];
+    const back_sk_score = back['skills'].sort(this.dataSort)[0] ?? [];
+    const design_sk_score = design['skills'].sort(this.dataSort)[0] ?? [];
 
     const scoreObj = {
       1: 15,
@@ -113,9 +114,7 @@ export class UsersService {
       );
 
       const suveyScore = await this.stackScoring(front, back, design);
-      console.log('✅==========suveyScore==========✅');
-      console.log(suveyScore);
-      console.log('✅==========suveyScore==========✅');
+      this.logger.log(suveyScore);
 
       await this.userInfoModel
         .findOneAndUpdate()

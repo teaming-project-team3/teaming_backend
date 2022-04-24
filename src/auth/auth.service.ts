@@ -147,7 +147,7 @@ export class AuthService {
     }
   }
 
-  async UserfindAll(): Promise<object> {
-    return await this.authRepository.find();
+  UserfindAll(): Promise<object> {
+    return this.authRepository.find();
   }
 }
