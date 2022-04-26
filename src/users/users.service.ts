@@ -7,6 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { SuveyInfoDto } from './dto/suveyInfo.dto';
 import { UpdateUserInfoDto } from './dto/updateUserInfo.dto';
 import { Project } from 'src/schemas/Project.schema';
+import mongoose from 'mongoose';
 @Injectable()
 export class UsersService {
   private dataSort: object;
@@ -217,12 +218,13 @@ export class UsersService {
     };
   }
 
-  async getUserInfoByUserId(userId) {
-    console.log('✅================getUserInfoByUserId=================✅');
-    console.log(userId);
+  async getUserInfoByUserId(userId: string) {
+    const _id = new mongoose.Types.ObjectId(userId);
+
+    this.logger.log(`getUserInfoByUserId ${userId}`);
 
     const userInfo = await this.userInfoModel
-      .findOne({ userId: userId })
+      .findOne({ userId: _id })
       .populate('userId', { password: false });
 
     const customInfo = JSON.parse(JSON.stringify(userInfo)); //Deep Copy
@@ -231,7 +233,7 @@ export class UsersService {
     const projectData = await this.projectModel
       .find()
       .where('participantList.userId')
-      .in([userId])
+      .in([_id])
       .populate('boardId', { updateAt: 0, createdAt: 0 })
       .select({ updatedAt: 0, createdAt: 0 });
 

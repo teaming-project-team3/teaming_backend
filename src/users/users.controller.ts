@@ -92,7 +92,6 @@ export class UsersController {
   @ApiDefaultResponse({ description: '팀원 정보조회 실패' })
   @Get('/:userId')
   getUserInfo(@Param() { userId }): Promise<any> {
-    const _id = new mongoose.Types.ObjectId(userId);
-    return this.usersService.getUserInfoByUserId(_id);
+    return this.usersService.getUserInfoByUserId(userId);
   }
 }
