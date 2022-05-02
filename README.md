@@ -38,3 +38,6 @@ API - [Wiki](https://github.com/teaming-project-team3/teaming_backend/wiki/API-%
 
 ERD - [Wiki](https://github.com/teaming-project-team3/teaming_backend/wiki/ERD)
 
+### 트러블 슈팅
+
+API서버 스트레스 테스트 - [Wiki](https://github.com/teaming-project-team3/teaming_backend/wiki/Nginx%EC%9D%98-%EB%A1%9C%EB%93%9C%EB%B2%A8%EB%9F%B0%EC%8B%B1%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%B4-%ED%8A%B8%EB%9E%98%ED%94%BD-%EB%B6%84%EC%82%B0%EC%B2%98%EB%A6%AC)
