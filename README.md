@@ -2,15 +2,25 @@
 
 # Teaming
 
-<img alt="Html" src ="https://img.shields.io/badge/-GitHub-181717?logo=c&logoColor=white"/> <img alt="Html" src ="https://img.shields.io/badge/-TypeScript-3178C6?logo=TypeScript&logoColor=white"/> <img alt="Html" src ="https://img.shields.io/badge/-Node.js-339933?logo=Node.js&logoColor=white"/> <img alt="Html" src ="https://img.shields.io/badge/-NestJS-E0234E?logo=NestJS&logoColor=white"/> <img alt="Html" src ="https://img.shields.io/badge/-MongoDB-47A248?logo=MongoDB&logoColor=white"/> <img alt="Html" src ="https://img.shields.io/badge/-AmazonAWS-232F3E?logo=Amazon AWS&logoColor=white"/> <img alt="Html" src ="https://img.shields.io/badge/-Socket.io-010101?logo=Socket.io&logoColor=white"/> <img alt="Html" src ="https://img.shields.io/badge/-NGINX-009639?logo=NGINX&logoColor=white"/> <img alt="Html" src ="https://img.shields.io/badge/-WebRTC-333333?logo=WebRTC&logoColor=white"/> <img alt="Html" src ="https://img.shields.io/badge/-Passport-34E27A?logo=Passport&logoColor=white"/>
+## 👨‍💻 프로젝트 소개
 
-## 프로젝트 구성
+### **프로젝트 기간**
 
----
+- 2022/03/04 ~ 2022/04/06
 
-### 팀 소개
+### Member
+<!-- 
+|  Name  |  Position  |                               Link                               |
+| :----: | :--------: | :--------------------------------------------------------------: |
+| 장석우 | 프론트엔드 |     [https://github.com/jsw4215](https://github.com/jsw4215)     |
+| 정민수 |   백엔드   |  [https://github.com/jeongmisnu](https://github.com/jeongmisnu)  |
+| 이원진 |   백엔드   | [https://github.com/WON-JIN-LEE](https://github.com/WON-JIN-LEE) |
+| 전도현 |   디자인   |                               [https://www.behance.net/Jeon-Do-Hyeon](https://www.behance.net/8c7e3f9a/appreciated)                               | -->
 
----
+|                                                         [장석우](https://github.com/jsw4215)                                            |                                                         [정민수](https://github.com/jeongmisnu)                                                          |                                                      [이원진](https://github.com/WON-JIN-LEE)                                                       |                                                        [전도현](https://www.behance.net/8c7e3f9a/appreciated)                                                         |                                                                                            
+| :----------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------: | 
+| <img src="https://user-images.githubusercontent.com/46555489/161837676-5a341ff3-5746-47e3-9695-ed2311156346.jpg" alt="프로필 이미지" width="200px"/> |  <img src="https://user-images.githubusercontent.com/46555489/161719951-25b36276-0b36-4f3f-b84e-29d7e7581da0.jpg" alt="프로필 이미지" width="200px"/> | <img src="https://user-images.githubusercontent.com/46555489/161719985-93cbd6ed-399d-4888-9f6c-b883c5ef24c9.jpg" alt="프로필 이미지" width="200px" /> | <img src="https://user-images.githubusercontent.com/46555489/161719970-4e512e8f-5fd9-45b3-8058-7e17b58f89b7.png" alt="프로필 이미지" width="200px" /> 
+|                                                                      `Front-End`                                               |                                                                      `Back-End`                                                                       |                                                                      `Back-End`                                                                          |                                                                       `Designer`                                                                       |   
 
 ### 프로젝트 아키텍처
 
