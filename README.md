@@ -28,7 +28,7 @@
 
 ### 개발 환경
 
-- Server : AWS EC2(Ubuntu 18.82 LTS)
+- Server : AWS EC2(Ubuntu 18.04 LTS)
 - Framework : Nestjs
 - Database: MongoDB
 
